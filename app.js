@@ -1,19 +1,28 @@
+"use strict";
 
 var vertexShaderText = [
     'precision mediump float;',
     '',
-    'attribute vec2 vertPosition;',
+    'attribute vec3 vertPosition;',
+    'attribute vec3 vertColor;',
+    'uniform mat4 mWorld;',
+    'uniform mat4 mView;',
+    'uniform mat4 mProj;',
+    'varying vec4 v_vertColor;',
     '',
     'void main(){',
-    '   gl_Position = vec4(vertPosition, 0.0, 1.0);',
+    '   v_vertColor = vec4(vertColor, 1.0);',
+    '   gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);',
     '}',
 ].join('\n');
 
 var fragmentShaderText = [
     'precision mediump float;',
     '',
+    'varying vec4 v_vertColor;',
+    '',
     'void main(){',
-    '   gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);',
+    '   gl_FragColor = v_vertColor;',
     '}',
 ].join('\n');
 
@@ -48,16 +57,12 @@ var Init = function () {
     if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
         console.error("ERROR compiling vertexShader!", gl.getShaderInfoLog(vertexShader));
         return;
-    } else {
-        console.log("vertexShader compile complete.");
     }
 
     gl.compileShader(fragmentShader);
     if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
         console.error("ERROR compiling fragmentShader!", gl.getShaderInfoLog(fragmentShader));
         return;
-    } else {
-        console.log("fragmentShader compile complete.");
     }
 
     // Create gl program
@@ -73,30 +78,71 @@ var Init = function () {
     /////////////////////////////////////////////////////
 
     // Create buffer
-    var triangleVertices = [
-        // X, Y
-        0.0, 0.5, 
-        -0.5, -0.5, 
-        0.5, -0.5
-    ];
 
     var triangleVertexBufferObject = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(triangleVertices), gl.STATIC_DRAW);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
 
     var positionAttribLocation = gl.getAttribLocation(program, "vertPosition");
+    var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
+
     gl.vertexAttribPointer(
         positionAttribLocation, 
-        2, // number of elements per attribute
+        3, // number of elements per attribute
         gl.FLOAT, 
         gl.FALSE, 
-        2 * Float32Array.BYTES_PER_ELEMENT, 
+        6 * Float32Array.BYTES_PER_ELEMENT, 
         0
+    );
+    gl.vertexAttribPointer(
+        colorAttribLocation, 
+        3, // number of elements per attribute
+        gl.FLOAT, 
+        gl.FALSE, 
+        6 * Float32Array.BYTES_PER_ELEMENT, 
+        3 * Float32Array.BYTES_PER_ELEMENT
     );
 
     gl.enableVertexAttribArray(positionAttribLocation);
+    gl.enableVertexAttribArray(colorAttribLocation);
+
+    //
+
+    gl.useProgram(program);
+
+    var matWorldUniformLocation = gl.getUniformLocation(program, "mWorld");
+    var matViewUniformLocation = gl.getUniformLocation(program, "mView");
+    var matProjUniformLocation = gl.getUniformLocation(program, "mProj");
+
+    var worldMatrix = new Float32Array(16);
+    var viewMatrix = new Float32Array(16);
+    var projMatrix = new Float32Array(16);
+    glMatrix.mat4.identity(worldMatrix);
+    glMatrix.mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0]);
+    //glMatrix.mat4.identity(viewMatrix);
+    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
+    //glMatrix.mat4.identity(projMatrix);
+
+    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+    gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
+    gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+
+
 
     // Main loop
-    gl.useProgram(program);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    var identityMatrix = new Float32Array(16);
+    glMatrix.mat4.identity(identityMatrix);
+    var angle = 0;
+    var loop = function () {
+        angle = performance.now() / 1000 / 6 * 2 * Math.PI;
+        glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0.0, 1, 0.0]);
+        gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
+
+        gl.clearColor(0.75, 0.85, 0.8, 1.0);
+        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
+        gl.drawArrays(gl.TRIANGLES, 0, 12);
+
+        requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);  // call the function for new frame
 };
