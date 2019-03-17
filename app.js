@@ -1,31 +1,5 @@
 "use strict";
 
-var vertexShaderText = [
-    'precision mediump float;',
-    '',
-    'attribute vec3 vertPosition;',
-    'attribute vec3 vertColor;',
-    'uniform mat4 mWorld;',
-    'uniform mat4 mView;',
-    'uniform mat4 mProj;',
-    'varying vec4 v_vertColor;',
-    '',
-    'void main(){',
-    '   v_vertColor = vec4(vertColor, 1.0);',
-    '   gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);',
-    '}',
-].join('\n');
-
-var fragmentShaderText = [
-    'precision mediump float;',
-    '',
-    'varying vec4 v_vertColor;',
-    '',
-    'void main(){',
-    '   gl_FragColor = v_vertColor;',
-    '}',
-].join('\n');
-
 
 var Init = function () {
     console.log("JavaScript Working.");
@@ -43,14 +17,15 @@ var Init = function () {
     }
 
     gl.clearColor(0.75, 0.85, 0.8, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
+    gl.enable(gl.DEPTH_TEST);  // enable z-buffer
 
     // Create both shaders
     var vertexShader = gl.createShader(gl.VERTEX_SHADER);
     var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
 
-    gl.shaderSource(vertexShader, vertexShaderText);
-    gl.shaderSource(fragmentShader, fragmentShaderText);
+    gl.shaderSource(vertexShader, vertexShaderSource);
+    gl.shaderSource(fragmentShader, fragmentShaderSource);
 
     // Compile Shaders
     gl.compileShader(vertexShader);
