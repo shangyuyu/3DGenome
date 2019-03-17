@@ -1,20 +1,49 @@
 <!DOCTYPE html>
 <html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+  precision mediump float;
+  
+  attribute vec3 vertPosition;
+  attribute vec3 vertColor;
+  uniform mat4 mWorld;
+  uniform mat4 mView;
+  uniform mat4 mProj;
+  varying vec4 v_vertColor;
+  
+  void main(){
+      v_vertColor = vec4(vertColor, 1.0);
+      gl_Position = mProj * mView * mWorld * vec4(vertPosition, 1.0);
+  }
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+  precision mediump float;
+  
+  varying vec4 v_vertColor;
+  
+  void main(){
+     gl_FragColor = v_vertColor;
+  }
+</script>
+
+
   <head>
     <title> 3DGenome-Prototype </title>
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
-  <body onload="Init();">
+  </head>
+
+  <body>
     <canvas id="canvas_gl" width="800" height="600">
         Your brower does not support HTML5.
     </canvas>
     <br>
     <p>Bottom line -----------------------</p>
-    <script src="util.js"></script>
-    <script src="VertexShader.js"></script>
-    <script src="FragmentShader.js"></script>
-    <script src="ShaderLoader.js"></script>
-    <script src="gl-matrix.js"></script>
-    <script src="app.js"></script>
+    <script src="gl-matrix.js"></script>  <!-- gl matrix std lib -->>
+    <script src="webgl-utils.js"></script>  <!-- Google webGL utils -->>
+    <script src="initShaders.js"></script>
+    <script src="main.js"></script>
     <script src="model.js"></script>
   </body>
+
 </html>

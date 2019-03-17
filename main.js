@@ -1,54 +1,31 @@
+// main.js
+
 "use strict";
 
+let canvas;
+let gl;
 
-var Init = function () {
-    console.log("JavaScript Working.");
+// The init function
+window.onload = function init() {
 
-    var canvas = document.getElementById("canvas_gl");
-    var gl = canvas.getContext("webgl");
+    console.log("JavaScript init Working.");
 
-    if (!gl) {
-        console.log("WebGL not supported, trying experimental-webgl.");
-        gl = canvas.getContext("experimental-webgl");
-    }
+    canvas = document.getElementById("canvas_gl");
+    
+    
+    gl = WebGLUtils.setupWebGL(canvas);
+    if (!gl) { alert("Your brower does not support WebGL."); }
 
-    if (!gl) {
-        alert("Your brower does not support WebGL.");
-    }
-
+    gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0.75, 0.85, 0.8, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
     gl.enable(gl.DEPTH_TEST);  // enable z-buffer
 
     // Create both shaders
-    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
-    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-
-    gl.shaderSource(vertexShader, vertexShaderSource);
-    gl.shaderSource(fragmentShader, fragmentShaderSource);
-
     // Compile Shaders
-    gl.compileShader(vertexShader);
-    if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
-        console.error("ERROR compiling vertexShader!", gl.getShaderInfoLog(vertexShader));
-        return;
-    }
-
-    gl.compileShader(fragmentShader);
-    if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
-        console.error("ERROR compiling fragmentShader!", gl.getShaderInfoLog(fragmentShader));
-        return;
-    }
-
     // Create gl program
-    var program = gl.createProgram();
-    gl.attachShader(program, vertexShader);
-    gl.attachShader(program, fragmentShader);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.error("ERROR linking program!", gl.getProgramInfoLog(program));
-        return;
-    }
+    var program = initShaders(gl, "vertex-shader", "fragment-shader");
+    gl.useProgram(program);
 
     /////////////////////////////////////////////////////
 
@@ -83,8 +60,6 @@ var Init = function () {
 
     //
 
-    gl.useProgram(program);
-
     var matWorldUniformLocation = gl.getUniformLocation(program, "mWorld");
     var matViewUniformLocation = gl.getUniformLocation(program, "mView");
     var matProjUniformLocation = gl.getUniformLocation(program, "mProj");
@@ -103,17 +78,17 @@ var Init = function () {
     gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
 
 
-
+    //
     // Main loop
+    //
     var identityMatrix = new Float32Array(16);
     glMatrix.mat4.identity(identityMatrix);
     var angle = 0;
     var loop = function () {
-        angle = performance.now() / 1000 / 6 * 2 * Math.PI;
-        glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0.0, 1, 0.0]);
+        angle = performance.now() / 1000 / 12 * 2 * Math.PI;
+        glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0.0, 1, 0.1]);
         gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
 
-        gl.clearColor(0.75, 0.85, 0.8, 1.0);
         gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
         gl.drawArrays(gl.TRIANGLES, 0, 12);
 
