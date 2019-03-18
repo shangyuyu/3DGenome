@@ -19,7 +19,7 @@
   // Model data
   attribute vec3 a_position;
   uniform vec3 u_color;   // dont need to change color in a model
-  attribute vec3 a_normal;
+  ///attribute vec3 a_normal;  // a_normal === a_position numerically
 
   // Passed on to the fragment shader
   varying vec3 v_position;
@@ -29,7 +29,8 @@
   void main(){
       v_position = vec3( u_VM * vec4(a_position, 1.0) );
       v_color = u_color;
-      v_normal = vec3( u_VM * vec4(a_normal, 0.0) );
+      ///v_normal = vec3( u_VM * vec4(a_normal, 0.0) );  // a_normal === a_position numerically
+      v_normal = vec3( u_VM * vec4(a_position, 0.0) );  // Prone to be mis-interpreted
 
       gl_Position = u_PVM * vec4(a_position, 1.0);
   }

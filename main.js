@@ -62,9 +62,12 @@ window.onload = function init() {
         3 * Float32Array.BYTES_PER_ELEMENT, 
         0);
     gl.enableVertexAttribArray(a_position_loc);
-
+    
+    // a_normal === a_position numerically
+    // Prone to be mis-interpreted
+    /*
     let norBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, norBuffer);
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalsArray), gl.STATIC_DRAW);
 
     let a_normal_loc = gl.getAttribLocation(program, "a_normal");
@@ -76,6 +79,7 @@ window.onload = function init() {
         3 * Float32Array.BYTES_PER_ELEMENT, 
         0);
     gl.enableVertexAttribArray(a_normal_loc);
+    */
 
     /////////////////////////////////////////////////////
     // Set uniform values

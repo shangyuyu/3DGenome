@@ -7,7 +7,8 @@
 let index = 0;  // The number of vertex
 
 let pointsArray = [];
-let normalsArray = [];
+// let normalsArray = [];
+// In this case, normalsArray is the same as pointsArray
 
 //-------------------------------------------------------------------------
 
@@ -16,10 +17,6 @@ function Triangle(a, b, c) {
     pointsArray.push(a[0], a[1], a[2]);
     pointsArray.push(b[0], b[1], b[2]);
     pointsArray.push(c[0], c[1], c[2]);
-
-    normalsArray.push(a[0], a[1], a[2]);
-    normalsArray.push(b[0], b[1], b[2]);
-    normalsArray.push(c[0], c[1], c[2]);
 
     index += 3;
 }
