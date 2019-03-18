@@ -1,15 +1,20 @@
 <!DOCTYPE html>
 <html>
 
+<!-- Vertex Shader -->
 <script id="vertex-shader" type="x-shader/x-vertex">
   precision mediump float;
   
-  attribute vec3 vertPosition;
-  attribute vec3 vertColor;
-  uniform mat4 mWorld;
-  uniform mat4 mView;
-  uniform mat4 mProj;
-  varying vec4 v_vertColor;
+  uniform vec4 u_lightPosition;
+  uniform mat3 u_normalMatrix;
+  uniform mat4 u_world;
+  uniform mat4 u_view;
+  uniform mat4 u_proj;
+
+  attribute vec3 a_position;
+  attribute vec3 a_normal;
+
+  varying vec3 v_N, v_L, v_E;
   
   void main(){
       v_vertColor = vec4(vertColor, 1.0);
@@ -17,6 +22,7 @@
   }
 </script>
 
+<!-- Fragment Shader -->
 <script id="fragment-shader" type="x-shader/x-fragment">
   precision mediump float;
   
@@ -27,7 +33,7 @@
   }
 </script>
 
-
+<!-- Main -->
   <head>
     <title> 3DGenome-Prototype </title>
     <script src="http://code.jquery.com/jquery-3.3.1.min.js"   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="   crossorigin="anonymous"></script>
@@ -39,10 +45,12 @@
     </canvas>
     <br>
     <p>Bottom line -----------------------</p>
-    <script src="gl-matrix.js"></script>  <!-- gl matrix std lib -->>
-    <script src="webgl-utils.js"></script>  <!-- Google webGL utils -->>
+    <script src="gl-matrix.js"></script>  <!-- gl matrix std lib -->
+    <script src="webgl-utils.js"></script>  <!-- Google webGL utils -->
     <script src="initShaders.js"></script>
+
     <script src="main.js"></script>
+    <script src="utils.js"></script>
     <script src="model.js"></script>
   </body>
 

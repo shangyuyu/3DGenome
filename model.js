@@ -1,70 +1,57 @@
+//
+// model.js
+//
 
 "use strict";
 
+let index = 0;  // The number of vertex
+
+let pointsArray = [];
+let normalsArray = [];
+
 //-------------------------------------------------------------------------
 
-window.Triangle = function (vertices, colors) {
-  var self = this;
-  self.vertices = vertices;
-  self.colors = colors;
+function Triangle(a, b, c) {
+// Push the vertex coordinates and normal vertors to corresponding arrays
+    pointsArray.push(a);
+    pointsArray.push(b);
+    pointsArray.push(c);
+
+    normalsArray.push(a[0], a[1], a[2], 0);
+    normalsArray.push(b[0], b[1], b[2], 0);
+    normalsArray.push(c[0], c[1], c[2], 0);
+
+    index += 3;
 }
 
-//-------------------------------------------------------------------------
+function DivideTriangle(a, b, c, count) {
+// fractal
+    if (count > 0) {
+        let ab = mix(a, b, 0.5);
+        let ac = mix(a, c, 0.5);
+        let bc = mix(b, c, 0.5);
 
-window.Model = function (name) {
-  var self = this;
-  self.name = name;
-  self.triangles = [];
-}
+        glMatrix.normalize(ab, ab);
+        glMatrix.normalize(ac, ac);
+        glMatrix.normalize(bc, bc);
 
-//-------------------------------------------------------------------------
-
-var data = new Float32Array(72);
-
-window.CreatePyramid = function () {
-  var vertices, triangle1, triangle2, triangle3, triangle4, triangle;
-  var red, green, blue, purple;
-  var i, j, k, count;
-
-  // Vertex data
-  vertices = [  [ 0.0, -0.25, -0.50],
-                [ 0.0,  0.25,  0.00],
-                [ 0.5, -0.25,  0.25],
-                [-0.5, -0.25,  0.25] ];
-
-  // Colors in RGB
-  red    = [1.0, 0.0, 0.0];
-  green  = [0.0, 1.0, 0.0];
-  blue   = [0.0, 0.0, 1.0];
-  purple = [1.0, 0.0, 1.0];
-
-  // Create 4 triangles
-  triangle1 = new Triangle([vertices[2], vertices[1], vertices[3]],
-                            [blue, blue, blue]);
-  triangle2 = new Triangle([vertices[3], vertices[1], vertices[0]],
-                            [purple, purple, purple]);
-  triangle3 = new Triangle([vertices[0], vertices[1], vertices[2]],
-                            [red, red, red]);
-  triangle4 = new Triangle([vertices[0], vertices[2], vertices[3]],
-                            [green, green, green]);
-
-  // Create a model that is composed of 4 triangles
-  var model = new Model("simple");
-  model.triangles = [ triangle1, triangle2, triangle3, triangle4 ];
-
-  count = 0;
-  for (i=0; i<4; i++) {  // i-th face
-    triangle = model.triangles[i];
-
-    for (j=0; j<3; j++) {  // j-th vertice
-        for (k=0; k<3; k++, count++) {  // k-th coordinate
-            data[count] = triangle.vertices[j][k];
-        }
-        for (k=0; k<3; k++, count++) {  // k-th coordinate
-            data[count] = triangle.colors[j][k];
-        }
+        DivideTriangle(a, ab, ac, count-1);
+        DivideTriangle(b, bc, ab, count-1);
+        DivideTriangle(c, ac, bc, count-1);
+        DivideTriangle(ab, ac, bc, count-1);
+    } else {
+        Triangle(a, b, c);
     }
-  }
 }
 
-CreatePyramid();
+function Tetrahedron(a, b, c, d, n) {
+// form a sphere
+// a, b, c, d is four 4-dimensional vector representing vertex
+// n is the time of subdivisions
+    Triangle(a, b, c, n);
+    Triangle(a, b, d, n);
+    Triangle(a, c, d, n);
+    Triangle(b, c, d, n);
+}
+
+// End of model.js

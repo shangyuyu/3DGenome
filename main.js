@@ -1,17 +1,23 @@
+//
 // main.js
+//
 
 "use strict";
 
 let canvas;
 let gl;
 
+let numSubDivide = 3;
+
 // The init function
 window.onload = function init() {
 
     console.log("JavaScript init Working.");
 
+    /////////////////////////////////////////////////////
+    // Initialize canvas and GL
+
     canvas = document.getElementById("canvas_gl");
-    
     
     gl = WebGLUtils.setupWebGL(canvas);
     if (!gl) { alert("Your brower does not support WebGL."); }
@@ -28,6 +34,12 @@ window.onload = function init() {
     gl.useProgram(program);
 
     /////////////////////////////////////////////////////
+    // Generate model
+
+    Tetrahedron([0, 0, -1, 1], [0, 0.942809, 0.333333, 1], 
+                [-0.816497, -0.471405, 0.333333, 1], [0.816497, -0.471405, 0.333333, 1], 
+                numSubDivide);
+
 
     // Create buffer
 
@@ -84,6 +96,7 @@ window.onload = function init() {
     var identityMatrix = new Float32Array(16);
     glMatrix.mat4.identity(identityMatrix);
     var angle = 0;
+
     var loop = function () {
         angle = performance.now() / 1000 / 12 * 2 * Math.PI;
         glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0.0, 1, 0.1]);
