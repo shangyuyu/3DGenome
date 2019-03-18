@@ -7,7 +7,14 @@
 let canvas;
 let gl;
 
-let numSubDivide = 3;
+let numSubDivide = 4;
+
+let materialShininess = 20.0;
+let lightPosition = glMatrix.vec4.fromValues(1.0, 1.0, 1.0, 1.0);
+let lightColor = glMatrix.vec3.fromValues(1.0, 1.0, 1.0);
+let ambientColor = glMatrix.vec3.fromValues(0.2, 0.2, 0.2);
+
+let materialColor = glMatrix.vec3.fromValues(1.0, 0.8, 0.0);
 
 // The init function
 window.onload = function init() {
@@ -24,13 +31,12 @@ window.onload = function init() {
 
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.clearColor(0.75, 0.85, 0.8, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
     gl.enable(gl.DEPTH_TEST);  // enable z-buffer
 
     // Create both shaders
     // Compile Shaders
     // Create gl program
-    var program = initShaders(gl, "vertex-shader", "fragment-shader");
+    let program = initShaders(gl, "vertex-shader", "fragment-shader");
     gl.useProgram(program);
 
     /////////////////////////////////////////////////////
@@ -40,72 +46,94 @@ window.onload = function init() {
                 [-0.816497, -0.471405, 0.333333, 1], [0.816497, -0.471405, 0.333333, 1], 
                 numSubDivide);
 
+    /////////////////////////////////////////////////////
+    // Create and bind buffer
 
-    // Create buffer
+    let posBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pointsArray), gl.STATIC_DRAW);
 
-    var triangleVertexBufferObject = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, triangleVertexBufferObject);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(data), gl.STATIC_DRAW);
-
-    var positionAttribLocation = gl.getAttribLocation(program, "vertPosition");
-    var colorAttribLocation = gl.getAttribLocation(program, "vertColor");
-
+    let a_position_loc = gl.getAttribLocation(program, "a_position");
     gl.vertexAttribPointer(
-        positionAttribLocation, 
-        3, // number of elements per attribute
+        a_position_loc, 
+        3, 
         gl.FLOAT, 
         gl.FALSE, 
-        6 * Float32Array.BYTES_PER_ELEMENT, 
-        0
-    );
+        3 * Float32Array.BYTES_PER_ELEMENT, 
+        0);
+    gl.enableVertexAttribArray(a_position_loc);
+
+    let norBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, norBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalsArray), gl.STATIC_DRAW);
+
+    let a_normal_loc = gl.getAttribLocation(program, "a_normal");
     gl.vertexAttribPointer(
-        colorAttribLocation, 
-        3, // number of elements per attribute
+        a_normal_loc, 
+        3, 
         gl.FLOAT, 
         gl.FALSE, 
-        6 * Float32Array.BYTES_PER_ELEMENT, 
-        3 * Float32Array.BYTES_PER_ELEMENT
-    );
+        3 * Float32Array.BYTES_PER_ELEMENT, 
+        0);
+    gl.enableVertexAttribArray(a_normal_loc);
 
-    gl.enableVertexAttribArray(positionAttribLocation);
-    gl.enableVertexAttribArray(colorAttribLocation);
+    /////////////////////////////////////////////////////
+    // Set uniform values
 
-    //
+    let u_lightPosition_loc = gl.getUniformLocation(program, "u_lightPosition");
+    let u_lightColor_loc = gl.getUniformLocation(program, "u_lightColor");
+    let u_shininess_loc = gl.getUniformLocation(program, "u_shininess");
+    let u_ambientColor_loc = gl.getUniformLocation(program, "u_ambientColor");
+    
+    let u_color_loc = gl.getUniformLocation(program, "u_color");
 
-    var matWorldUniformLocation = gl.getUniformLocation(program, "mWorld");
-    var matViewUniformLocation = gl.getUniformLocation(program, "mView");
-    var matProjUniformLocation = gl.getUniformLocation(program, "mProj");
-
-    var worldMatrix = new Float32Array(16);
-    var viewMatrix = new Float32Array(16);
-    var projMatrix = new Float32Array(16);
-    glMatrix.mat4.identity(worldMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [0, 0, -5], [0, 0, 0], [0, 1, 0]);
+    let u_VM_loc = gl.getUniformLocation(program, "u_VM");  // temporary fix
+    let u_PVM_loc = gl.getUniformLocation(program, "u_PVM");
+    // PVM transformation matrices
+    let modelMatrix = new Float32Array(16);
+    let viewMatrix = new Float32Array(16);
+    let projMatrix = new Float32Array(16);
+    let VMMatrix = new Float32Array(16);
+    let PVMMatrix = new Float32Array(16);
+    glMatrix.mat4.identity(modelMatrix);
+    glMatrix.mat4.lookAt(viewMatrix, [2, 0, 5], [0, 0, 0], [0, 1, 0]);
     //glMatrix.mat4.identity(viewMatrix);
     glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
     //glMatrix.mat4.identity(projMatrix);
+    glMatrix.mat4.mul(VMMatrix, viewMatrix, modelMatrix);
+    glMatrix.mat4.mul(PVMMatrix, projMatrix, VMMatrix);
+    glMatrix.mat4.mul(lightPosition, VMMatrix, lightPosition);  // [ IN CAMERA SPACE ]
 
-    gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
-    gl.uniformMatrix4fv(matViewUniformLocation, gl.FALSE, viewMatrix);
-    gl.uniformMatrix4fv(matProjUniformLocation, gl.FALSE, projMatrix);
+    gl.uniform4fv(u_lightPosition_loc, lightPosition);
+    gl.uniform3fv(u_lightColor_loc, lightColor);
+    gl.uniform3fv(u_ambientColor_loc, ambientColor);
+    gl.uniform3fv(u_color_loc, materialColor);
+    gl.uniform1f(u_shininess_loc, materialShininess);
 
+    /////////////////////////////////////////////////////
+    // Render
 
-    //
-    // Main loop
-    //
-    var identityMatrix = new Float32Array(16);
-    glMatrix.mat4.identity(identityMatrix);
-    var angle = 0;
+    Render();
 
-    var loop = function () {
-        angle = performance.now() / 1000 / 12 * 2 * Math.PI;
-        glMatrix.mat4.rotate(worldMatrix, identityMatrix, angle, [0.0, 1, 0.1]);
-        gl.uniformMatrix4fv(matWorldUniformLocation, gl.FALSE, worldMatrix);
-
-        gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-        gl.drawArrays(gl.TRIANGLES, 0, 12);
-
-        requestAnimationFrame(loop);
-    };
-    requestAnimationFrame(loop);  // call the function for new frame
+    function Render () {
+    
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
+    
+        /////////////////////////////////////////////////////
+        // Set uniform values
+        gl.uniformMatrix4fv(u_VM_loc, gl.FALSE, VMMatrix);
+        gl.uniformMatrix4fv(u_PVM_loc, gl.FALSE, PVMMatrix);
+    
+        // Start rendering
+        for (let i=0; i<index; i+=3)
+            gl.drawArrays(gl.TRIANGLES, i, 3);
+    
+        window.requestAnimationFrame(Render);  // call for new frame
+    
+    }
 };
+
+
+
+
+// End of main.js
