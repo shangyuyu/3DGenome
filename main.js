@@ -5,163 +5,144 @@
 
 "use strict";
 
-let canvas;
-let gl;
+let camera, scene, renderer, stats, material;
+let mouseX = 0, mouseY = 0;
 
-let numSubDivide = 4;
+let windowHalfX = window.innerWidth / 2;
+let windowHalfY = window.innerHeight / 2;
 
-let materialShininess = 20.0;
-let lightPosition = glMatrix.vec4.fromValues(-10, 5, 5, 1.0);
-let lightColor = glMatrix.vec3.fromValues(1.0, 1.0, 1.0);
-let ambientColor = glMatrix.vec3.fromValues(0.2, 0.2, 0.2);
+init();
+animate();
 
-let materialColor = glMatrix.vec3.fromValues(1.0, 0.8, 0.0);
 
-// The init function
-window.onload = function init() {
+function init() {
 
-    console.log("JavaScript init Working.");
+    camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 2, 2000);
+    camera.position.z = 1000;
 
-    /////////////////////////////////////////////////////
-    // Initialize canvas and GL
+    //////////////////////////////////////////////////////////////
 
-    canvas = document.getElementById("canvas_gl");
-    
-    gl = WebGLUtils.setupWebGL(canvas);
-    if (!gl) { alert("Your brower does not support WebGL."); }
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2( 0x000000, 0.001 );
 
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.clearColor(0.75, 0.85, 0.8, 1.0);
-    gl.enable(gl.DEPTH_TEST);  // enable z-buffer
+    // Geometry
+    let geometry = new THREE.BufferGeometry();
 
-    // Create both shaders
-    // Compile Shaders
-    // Create gl program
-    let program = initShaders(gl, "vertex-shader", "fragment-shader");
-    gl.useProgram(program);
+    let sprite = new THREE.TextureLoader().load( "./disc.png" );
 
-    /////////////////////////////////////////////////////
-    // Generate model
+    let vertice = [];
+    for (let i = 0; i < 10000; i++) {
 
-    Tetrahedron([0, 0, -1, 1], [0, 0.942809, 0.333333, 1], 
-                [-0.816497, -0.471405, 0.333333, 1], [0.816497, -0.471405, 0.333333, 1], 
-                numSubDivide);
+        let x = 2000 * Math.random() - 1000;
+        let y = 2000 * Math.random() - 1000;
+        let z = 2000 * Math.random() - 1000;
 
-    /////////////////////////////////////////////////////
-    // Create and bind buffer
-
-    let posBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(pointsArray), gl.STATIC_DRAW);
-
-    let a_position_loc = gl.getAttribLocation(program, "a_position");
-    gl.vertexAttribPointer(
-        a_position_loc, 
-        3, 
-        gl.FLOAT, 
-        gl.FALSE, 
-        3 * Float32Array.BYTES_PER_ELEMENT, 
-        0);
-    gl.enableVertexAttribArray(a_position_loc);
-    
-    // a_normal === a_position numerically
-    // Prone to be mis-interpreted
-    /*
-    let norBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, posBuffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(normalsArray), gl.STATIC_DRAW);
-
-    let a_normal_loc = gl.getAttribLocation(program, "a_normal");
-    gl.vertexAttribPointer(
-        a_normal_loc, 
-        3, 
-        gl.FLOAT, 
-        gl.FALSE, 
-        3 * Float32Array.BYTES_PER_ELEMENT, 
-        0);
-    gl.enableVertexAttribArray(a_normal_loc);
-    */
-
-    /////////////////////////////////////////////////////
-    // Set uniform values
-
-    let u_lightPosition_loc = gl.getUniformLocation(program, "u_lightPosition");
-    let u_lightColor_loc = gl.getUniformLocation(program, "u_lightColor");
-    let u_shininess_loc = gl.getUniformLocation(program, "u_shininess");
-    let u_ambientColor_loc = gl.getUniformLocation(program, "u_ambientColor");
-    
-    let u_color_loc = gl.getUniformLocation(program, "u_color");
-
-    let u_VM_loc = gl.getUniformLocation(program, "u_VM");  // temporary fix
-    let u_PVM_loc = gl.getUniformLocation(program, "u_PVM");
-    // PVM transformation matrices
-    let modelMatrix = new Float32Array(16);
-    let viewMatrix = new Float32Array(16);
-    let projMatrix = new Float32Array(16);
-    let VMMatrix = new Float32Array(16);
-    let PVMMatrix = new Float32Array(16);
-    
-    gl.uniform4fv(u_lightPosition_loc, lightPosition);
-    gl.uniform3fv(u_lightColor_loc, lightColor);
-    gl.uniform3fv(u_ambientColor_loc, ambientColor);
-    gl.uniform3fv(u_color_loc, materialColor);
-    gl.uniform1f(u_shininess_loc, materialShininess);
-
-    /////////////////////////////////////////////////////
-    // Render
-
-    var translateX = [];
-    var translateY = [];
-    var translateZ = [];
-    let scale = [];
-    let angle = 0;
-    for (let num=0; num<100; num++) {
-        translateX.push(getRandomInt(20));
-        translateY.push(getRandomInt(20));
-        translateZ.push(getRandomInt(20));
-        scale.push(getRandomArbitrary(0.3, 1.0));
+        vertice.push(x, y, z);
     }
+    geometry.addAttribute("position", new THREE.Float32BufferAttribute(vertice, 3));
 
-    Render();
+    // Material
+    material = new THREE.PointsMaterial( { 
+        size: 35, 
+        sizeAttenuatation: false, 
+        map: sprite, 
+        alphaTest: 0.5, 
+        transparent: true, 
+    } );
+    material.color.setHSL( 1.0, 0.3, 0.7);
 
-    function Render () {
+    // bind Geometry and Material
+    let particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    //////////////////////////////////////////////////////////////
+
+    renderer = new THREE.WebGLRenderer();
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    //////////////////////////////////////////////////////////////
+
+    stats = new Stats();
+    document.body.appendChild( stats.dom );
+
+    //////////////////////////////////////////////////////////////
+
+    let gui = new dat.GUI();
+
+    gui.add( material, "sizeAttenuation" ).onChange( function () {
+
+        material.needsUpdate = true;
+
+    } );
+
+    gui.open();
+
+    //////////////////////////////////////////////////////////////
+
+    document.addEventListener( "mousemove", onDocumentMouseMove, false );
+    document.addEventListener( "touchstart", onDocumentTouchStart, false );
+    document.addEventListener( "touchmove", onDocumentTouchMove, false );
+
+    document.addEventListener( "resize", onWindowResize, false );
+
+}
+
+
+function onWindowResize(event) {
+
+    windowHalfX = window.innerWidth / 2;
+    windowHalfY = window.innerHeight / 2;
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.resize( window.innerWidth, window.innerHeight );
+}
+
+
+function onDocumentMouseMove(event) {
+
+    mouseX = event.clientX - windowHalfX;
+    mouseY = event.clientY - windowHalfY;
+}
+
+
+function onDocumentTouchMove(event) {
+
+}
+
+
+function onDocumentTouchStart(event) {
     
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
-    
-        for (let num=0; num<100; num++) {
-            /////////////////////////////////////////////////////
-            // Motion Control
+}
 
-            
-            glMatrix.mat4.fromRotationTranslationScale(modelMatrix, 
-                [0, 0, 0, 1], 
-                [translateX[num], translateY[num], translateZ[num]], 
-                [scale[num], scale[num], scale[num]]);
-            //glMatrix.mat4.identity(modelMatrix);
-            glMatrix.mat4.lookAt(viewMatrix, [21, 21, 21], [0, 0, 0], [-1, 1, -1]);
-            //glMatrix.mat4.identity(viewMatrix);
-            glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(60), canvas.width / canvas.height, 0.1, 1000.0);
-            //glMatrix.mat4.identity(projMatrix);
-            glMatrix.mat4.mul(VMMatrix, viewMatrix, modelMatrix);
-            glMatrix.mat4.mul(PVMMatrix, projMatrix, VMMatrix);
-            glMatrix.mat4.mul(lightPosition, VMMatrix, lightPosition);  // [ IN CAMERA SPACE ]
+/////////////////////////////////////////////////////////////////////
 
-            /////////////////////////////////////////////////////
-            // Set uniform values
-            gl.uniformMatrix4fv(u_VM_loc, gl.FALSE, VMMatrix);
-            gl.uniformMatrix4fv(u_PVM_loc, gl.FALSE, PVMMatrix);
-    
-        // Start rendering
-            for (let i=0; i<index; i+=3)
-                gl.drawArrays(gl.TRIANGLES, i, 3);
-        }
-    
-        window.requestAnimationFrame(Render);  // call for new frame
-    
-    }
-};
+function animate() {
+
+    requestAnimationFrame( animate );
+
+    render();
+    stats.update();
+}
 
 
+function render() {
+
+    let time = Date.now() * 0.00005;
+
+    camera.position.x += (mouseX - camera.position.x) * 0.05;
+    camera.position.y += ( - mouseY - camera.position.y) * 0.05;
+
+    camera.lookAt( scene.position );
+
+    let h = (360 * (1.0 + time) % 360) / 360;
+    material.color.setHSL(h, 0.5, 0.5);
+
+    renderer.render( scene, camera );
+}
 
 
 // End of main.js

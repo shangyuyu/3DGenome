@@ -1,93 +1,6 @@
 <!DOCTYPE html>
 <html>
 
-<!-- Vertex Shader -->
-<script id="vertex-shader" type="x-shader/x-vertex">
-  precision mediump int;
-  precision mediump float;
-  
-  // Light model
-  uniform vec3 u_lightPosition;
-  uniform vec3 u_lightColor;
-  uniform float u_shininess;
-  uniform vec3 u_ambientColor;
-
-  // Transformation matrices
-  uniform mat4 u_VM;   // View * Model transformation matrix
-  uniform mat4 u_PVM;  // Project * View * Model transformation matrix
-
-  // Model data
-  attribute vec3 a_position;
-  uniform vec3 u_color;   // dont need to change color in a model
-  ///attribute vec3 a_normal;  // a_normal === a_position numerically
-
-  // Passed on to the fragment shader
-  varying vec3 v_position;
-  varying vec3 v_color;
-  varying vec3 v_normal;
-  
-  void main(){
-      v_position = vec3( u_VM * vec4(a_position, 1.0) );
-      v_color = u_color;
-      ///v_normal = vec3( u_VM * vec4(a_normal, 0.0) );  // a_normal === a_position numerically
-      v_normal = vec3( u_VM * vec4(a_position, 0.0) );  // Prone to be mis-interpreted
-
-      gl_Position = u_PVM * vec4(a_position, 1.0);
-  }
-</script>
-
-<!-- Fragment Shader -->
-<script id="fragment-shader" type="x-shader/x-fragment">
-  precision mediump int;
-  precision mediump float;
-  
-  // Light model
-  uniform vec4 u_lightPosition;  // [ IN CAMERA SPACE ]
-  uniform vec3 u_lightColor;
-  uniform float u_shininess;
-  uniform vec3 u_ambientColor;
-
-  // Passed from the vertex shader
-  varying vec3 v_position;
-  varying vec3 v_color;
-  varying vec3 v_normal;
-  
-  void main(){
-    vec3 ambient;
-    vec3 diffuse;
-    vec3 specular;
-
-    vec3 toLight;
-    vec3 n;  // normalized normal vector
-    vec3 R;  // the reflection vector
-    vec3 toCamera;
-    float cos;
-
-    ambient = u_ambientColor * v_color;
-
-    toLight = normalize(u_lightPosition.xyz - v_position);
-    n = normalize(v_normal);  // interpolation can result in non-normal
-    cos = dot(n, toLight);
-    cos = clamp(cos, 0.0, 1.0);
-    diffuse = v_color * cos;
-
-    R = normalize(2.0 * dot(n, toLight) * n - toLight);
-    toCamera = normalize(-1.0 * v_position);
-    cos = dot(R, toCamera);
-    cos = clamp(cos, 0.0, 1.0);
-    cos = pow(cos, u_shininess);
-    if (cos > 0.0) {
-      specular = u_lightColor * cos;
-      diffuse = diffuse * (1.0 - cos);
-    } else {
-      specular = vec3(0.0, 0.0, 0.0);
-    }
-
-    gl_FragColor = vec4( (ambient + diffuse + specular), 1.0);
-    //gl_FragColor = vec4( u_ambientColor, 1.0);
-  }
-</script>
-
 <!-- Main -->
   <head>
     <title> 3DGenome-Prototype </title>
@@ -95,15 +8,11 @@
   </head>
 
   <body>
-    <canvas id="canvas_gl" width="800" height="600">
-        Your brower does not support HTML5.
-    </canvas>
     <br>
-    <p>Bottom line -----------------------</p>
     <script src="three.min.js"></script>  <!-- three.js -->
+    <script src="stats.min.js"></script>  <!-- stats of FPS/ms/.. -->
+    <script src="dat.gui.min.js"></script><!-- simple GUI -->
     <script src="gl-matrix.js"></script>  <!-- gl matrix std lib -->
-    <script src="webgl-utils.js"></script>  <!-- Google webGL utils -->
-    <script src="initShaders.js"></script>
 
     <script src="main.js"></script>
     <script src="utils.js"></script>
