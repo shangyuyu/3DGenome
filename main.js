@@ -1,6 +1,7 @@
 //
 // main.js
 //
+/* jshint -W117 */
 
 "use strict";
 
@@ -10,7 +11,7 @@ let gl;
 let numSubDivide = 4;
 
 let materialShininess = 20.0;
-let lightPosition = glMatrix.vec4.fromValues(1.0, 1.0, 1.0, 1.0);
+let lightPosition = glMatrix.vec4.fromValues(-10, 5, 5, 1.0);
 let lightColor = glMatrix.vec3.fromValues(1.0, 1.0, 1.0);
 let ambientColor = glMatrix.vec3.fromValues(0.2, 0.2, 0.2);
 
@@ -99,15 +100,7 @@ window.onload = function init() {
     let projMatrix = new Float32Array(16);
     let VMMatrix = new Float32Array(16);
     let PVMMatrix = new Float32Array(16);
-    glMatrix.mat4.identity(modelMatrix);
-    glMatrix.mat4.lookAt(viewMatrix, [2, 0, 5], [0, 0, 0], [0, 1, 0]);
-    //glMatrix.mat4.identity(viewMatrix);
-    glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(45), canvas.width / canvas.height, 0.1, 1000.0);
-    //glMatrix.mat4.identity(projMatrix);
-    glMatrix.mat4.mul(VMMatrix, viewMatrix, modelMatrix);
-    glMatrix.mat4.mul(PVMMatrix, projMatrix, VMMatrix);
-    glMatrix.mat4.mul(lightPosition, VMMatrix, lightPosition);  // [ IN CAMERA SPACE ]
-
+    
     gl.uniform4fv(u_lightPosition_loc, lightPosition);
     gl.uniform3fv(u_lightColor_loc, lightColor);
     gl.uniform3fv(u_ambientColor_loc, ambientColor);
@@ -117,20 +110,51 @@ window.onload = function init() {
     /////////////////////////////////////////////////////
     // Render
 
+    var translateX = [];
+    var translateY = [];
+    var translateZ = [];
+    let scale = [];
+    let angle = 0;
+    for (let num=0; num<100; num++) {
+        translateX.push(getRandomInt(20));
+        translateY.push(getRandomInt(20));
+        translateZ.push(getRandomInt(20));
+        scale.push(getRandomArbitrary(0.3, 1.0));
+    }
+
     Render();
 
     function Render () {
     
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);  // color buffer & z-buffer
     
-        /////////////////////////////////////////////////////
-        // Set uniform values
-        gl.uniformMatrix4fv(u_VM_loc, gl.FALSE, VMMatrix);
-        gl.uniformMatrix4fv(u_PVM_loc, gl.FALSE, PVMMatrix);
+        for (let num=0; num<100; num++) {
+            /////////////////////////////////////////////////////
+            // Motion Control
+
+            
+            glMatrix.mat4.fromRotationTranslationScale(modelMatrix, 
+                [0, 0, 0, 1], 
+                [translateX[num], translateY[num], translateZ[num]], 
+                [scale[num], scale[num], scale[num]]);
+            //glMatrix.mat4.identity(modelMatrix);
+            glMatrix.mat4.lookAt(viewMatrix, [21, 21, 21], [0, 0, 0], [-1, 1, -1]);
+            //glMatrix.mat4.identity(viewMatrix);
+            glMatrix.mat4.perspective(projMatrix, glMatrix.glMatrix.toRadian(60), canvas.width / canvas.height, 0.1, 1000.0);
+            //glMatrix.mat4.identity(projMatrix);
+            glMatrix.mat4.mul(VMMatrix, viewMatrix, modelMatrix);
+            glMatrix.mat4.mul(PVMMatrix, projMatrix, VMMatrix);
+            glMatrix.mat4.mul(lightPosition, VMMatrix, lightPosition);  // [ IN CAMERA SPACE ]
+
+            /////////////////////////////////////////////////////
+            // Set uniform values
+            gl.uniformMatrix4fv(u_VM_loc, gl.FALSE, VMMatrix);
+            gl.uniformMatrix4fv(u_PVM_loc, gl.FALSE, PVMMatrix);
     
         // Start rendering
-        for (let i=0; i<index; i+=3)
-            gl.drawArrays(gl.TRIANGLES, i, 3);
+            for (let i=0; i<index; i+=3)
+                gl.drawArrays(gl.TRIANGLES, i, 3);
+        }
     
         window.requestAnimationFrame(Render);  // call for new frame
     

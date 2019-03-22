@@ -1,6 +1,8 @@
 //
 // model.js
 //
+/* jshint -W117 */
+
 
 "use strict";
 

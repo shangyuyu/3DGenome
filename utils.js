@@ -14,4 +14,14 @@ function mix(u, v, r) {
     return result;
 }
 
+
+function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max));
+}
+
+
+function getRandomArbitrary(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+
 // End of utils.js
