@@ -5,13 +5,7 @@
 
 "use strict";
 
-let camera, scene, renderer, stats, material;
-let mouseX = 0, mouseY = 0;
-
-let windowHalfX = window.innerWidth / 2;
-let windowHalfY = window.innerHeight / 2;
-
-const moveSpeed = 30;
+let camera, scene, renderer, stats, controls, material;
 
 init();
 animate();
@@ -20,7 +14,12 @@ animate();
 function init() {
 
     camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 1, 3500);
-    camera.position.z = 2750;
+    camera.position.z = 1500;
+
+    controls = new THREE.FirstPersonControls( camera );
+    controls.movementSpeed = 10.0;
+    controls.activeLook = true;
+    controls.lookSpeed = 0.0005;
 
     //////////////////////////////////////////////////////////////
 
@@ -155,11 +154,6 @@ function init() {
 
     //////////////////////////////////////////////////////////////
 
-    document.addEventListener( "mousemove", onDocumentMouseMove, false );
-    document.addEventListener( "keydown", onKeyDown, false );
-    document.addEventListener( "touchstart", onDocumentTouchStart, false );
-    document.addEventListener( "touchmove", onDocumentTouchMove, false );
-
     document.addEventListener( "resize", onWindowResize, false );
 
 }
@@ -177,40 +171,6 @@ function onWindowResize(event) {
 }
 
 
-function onDocumentMouseMove(event) {
-
-    mouseX = event.clientX - windowHalfX;
-    mouseY = event.clientY - windowHalfY;
-}
-
-
-function onKeyDown(event) {
-
-    switch (event.keyCode) {
-        case 87:  // w
-            camera.translateZ( -moveSpeed );
-            break;
-        case 83:  // s
-            camera.translateZ( moveSpeed );
-            break;
-        case 65:  // a
-            camera.translateX( -moveSpeed );
-            break;    
-        case 83:  // d
-            camera.translateX( moveSpeed );
-            break;
-    }
-}
-
-
-function onDocumentTouchMove(event) {
-
-}
-
-
-function onDocumentTouchStart(event) {
-    
-}
 
 /////////////////////////////////////////////////////////////////////
 
@@ -218,17 +178,14 @@ function animate() {
 
     requestAnimationFrame( animate );
 
+    controls.update(1);
+
     render();
     stats.update();
 }
 
 
 function render() {
-
-    camera.position.x += (mouseX - camera.position.x) * 0.5;
-    camera.position.y += ( - mouseY - camera.position.y) * 0.5;
-
-    camera.lookAt( scene.position );
 
     renderer.render( scene, camera );
 }
