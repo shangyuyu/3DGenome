@@ -11,6 +11,8 @@ let mouseX = 0, mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
+const moveSpeed = 30;
+
 init();
 animate();
 
@@ -154,6 +156,7 @@ function init() {
     //////////////////////////////////////////////////////////////
 
     document.addEventListener( "mousemove", onDocumentMouseMove, false );
+    document.addEventListener( "keydown", onKeyDown, false );
     document.addEventListener( "touchstart", onDocumentTouchStart, false );
     document.addEventListener( "touchmove", onDocumentTouchMove, false );
 
@@ -178,6 +181,25 @@ function onDocumentMouseMove(event) {
 
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
+}
+
+
+function onKeyDown(event) {
+
+    switch (event.keyCode) {
+        case 87:  // w
+            camera.translateZ( -moveSpeed );
+            break;
+        case 83:  // s
+            camera.translateZ( moveSpeed );
+            break;
+        case 65:  // a
+            camera.translateX( -moveSpeed );
+            break;    
+        case 83:  // d
+            camera.translateX( moveSpeed );
+            break;
+    }
 }
 
 
