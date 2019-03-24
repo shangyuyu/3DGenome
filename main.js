@@ -6,125 +6,67 @@
 "use strict";
 
 let camera, scene, renderer, stats, controls, material;
+let data = [];
 
 init();
-animate();
-
 
 function init() {
 
-    camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 1, 3500);
-    camera.position.z = 1500;
+    let loader = new THREE.FileLoader();
+    loader.load("example.txt", function(data_) {
+        data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
+        initScene();
+    });
 
-    controls = new THREE.FirstPersonControls( camera );
-    controls.movementSpeed = 10.0;
-    controls.activeLook = true;
-    controls.lookSpeed = 0.0005;
+}
+
+function initScene() {
+
+    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 100;
+
+    controls = new THREE.TrackballControls( camera );
+    
+
+    //////////////////////////////////////////////////////////////
+    // Process data
+    for (let i = 0; i < data.length; i+=3) {
+
+        
+    }
 
     //////////////////////////////////////////////////////////////
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x050505 );
-    scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+    //scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
 
     // Light
     scene.add( new THREE.AmbientLight(0x444444) );
 
     let light1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
-    light1.position.set(1, 1, 1);
+    light1.position.set(100, 100, 100);
     scene.add(light1);
 
-    let light2 = new THREE.DirectionalLight( 0xffffff, 1.5 );
-    light2.position.set( 0, -1, 0 );
+    let light2 = new THREE.DirectionalLight( 0xffffff, 1 );
+    light2.position.set( 0, 200, 0 );
     scene.add(light2);
 
     // Geometry
-    let triangles = 160000;
 
-    let geometry = new THREE.BufferGeometry();
+    let curve = new THREE.CatmullRomCurve3( [
+        new THREE.Vector3(-10, 0, 10), new THREE.Vector3(-5, 5, 5),
+        new THREE.Vector3(0, 0, 0), new THREE.Vector3(5, -5, 5),  
+        new THREE.Vector3(10, 0, 10)
+    ] );
 
-    let positions = [];
-    let normals = [];
-    let colors = [];
-
-    let color = new THREE.Color();
-
-    let n = 800, n2 = n / 2;
-    let d = 12, d2 = d / 2;
-
-    let va = new THREE.Vector3();
-    let vb = new THREE.Vector3();
-    let vc = new THREE.Vector3();
-
-    let cb = new THREE.Vector3();
-    let ab = new THREE.Vector3();
-
-    for (let i = 0; i < triangles; i++) {
-
-        // position
-        let x = Math.random() * n - n2;
-        let y = Math.random() * n - n2;
-        let z = Math.random() * n - n2;
-        let ax = x + Math.random() * d - d2;
-        let ay = y + Math.random() * d - d2;
-        let az = z + Math.random() * d - d2;
-        let bx = x + Math.random() * d - d2;
-        let by = y + Math.random() * d - d2;
-        let bz = z + Math.random() * d - d2;
-        let cx = x + Math.random() * d - d2;
-        let cy = y + Math.random() * d - d2;
-        let cz = z + Math.random() * d - d2;
-
-        positions.push(ax, ay, az);
-        positions.push(bx, by, bz);
-        positions.push(cx, cy, cz);
-
-        // face normals
-        va.set(ax, ay, az);
-        vb.set(bx, by, bz);
-        vc.set(cx, cy, cz);
-        cb.subVectors(vc, vb);
-        ab.subVectors(va, vb);
-        cb.cross(ab);
-
-        cb.normalize();
-
-        let nx = cb.x;
-        let ny = cb.y;
-        let nz = cb.z;
-
-        normals.push(nx, ny, nz);
-        normals.push(nx, ny, nz);
-        normals.push(nx, ny, nz);
-
-        // Color
-        let vx = (x/n) + 0.5;
-        let vy = (y/n) + 0.5;
-        let vz = (z/n) + 0.5;
-
-        color.setRGB(vx, vy, vz);
-
-        colors.push(color.r, color.g, color.b);
-        colors.push(color.r, color.g, color.b);
-        colors.push(color.r, color.g, color.b);
-    }
-
-    geometry.addAttribute("position", new THREE.Float32BufferAttribute(positions, 3));
-    geometry.addAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
-    geometry.addAttribute("color", new THREE.Float32BufferAttribute(colors, 3));
-
-    positions = undefined;
-    normals = undefined;
-    colors = undefined;
-
-    geometry.computeBoundingSphere();
+    let geometry = new THREE.TubeBufferGeometry(curve, 20, 2, 8, false);
 
     let material = new THREE.MeshPhongMaterial( {
-        color: 0xaaaaaa, 
-        specular: 0xffffff, 
-        shininess: 250, 
+        color: 0x156289, 
+        emissive: 0x072534, 
         side: THREE.DoubleSide, 
-        vertexColors: THREE.VertexColors
+        flatShading: true
     } );
 
     
@@ -156,6 +98,8 @@ function init() {
 
     document.addEventListener( "resize", onWindowResize, false );
 
+    animate();
+
 }
 
 
@@ -178,7 +122,7 @@ function animate() {
 
     requestAnimationFrame( animate );
 
-    controls.update(1);
+    controls.update();
 
     render();
     stats.update();
