@@ -22,7 +22,7 @@ function init() {
 
 function initScene() {
 
-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 100;
 
     controls = new THREE.TrackballControls( camera );
@@ -30,37 +30,30 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
     // Process data
+    let curveData = [];
     for (let i = 0; i < data.length; i+=3) {
 
-        
+        curveData.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
     }
+    data = [];
 
     //////////////////////////////////////////////////////////////
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x050505 );
-    //scene.fog = new THREE.Fog( 0x050505, 2000, 3500 );
+    scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
     // Light
-    scene.add( new THREE.AmbientLight(0x444444) );
+    //scene.add( new THREE.AmbientLight(0x444444), 0.05 );
 
-    let light1 = new THREE.DirectionalLight( 0xffffff, 0.5 );
-    light1.position.set(100, 100, 100);
-    scene.add(light1);
-
-    let light2 = new THREE.DirectionalLight( 0xffffff, 1 );
-    light2.position.set( 0, 200, 0 );
-    scene.add(light2);
+    let light = new THREE.PointLight( 0xffffff, 1, 0 );
+    light.position.set( 0, 200, 0 );
+    scene.add(light);
 
     // Geometry
+    let curve = new THREE.CatmullRomCurve3( curveData );
 
-    let curve = new THREE.CatmullRomCurve3( [
-        new THREE.Vector3(-10, 0, 10), new THREE.Vector3(-5, 5, 5),
-        new THREE.Vector3(0, 0, 0), new THREE.Vector3(5, -5, 5),  
-        new THREE.Vector3(10, 0, 10)
-    ] );
-
-    let geometry = new THREE.TubeBufferGeometry(curve, 20, 2, 8, false);
+    let geometry = new THREE.TubeBufferGeometry(curve, curveData.length * 2, 0.2, 8, false);
 
     let material = new THREE.MeshPhongMaterial( {
         color: 0x156289, 
@@ -104,9 +97,6 @@ function initScene() {
 
 
 function onWindowResize(event) {
-
-    windowHalfX = window.innerWidth / 2;
-    windowHalfY = window.innerHeight / 2;
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
