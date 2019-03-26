@@ -30,10 +30,16 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
     // Process data
-    let curveData = [];
-    for (let i = 0; i < data.length; i+=3) {
+    let curveData1 = [];
+    let i;
+    for (i = 0; i < data.length / 2; i+=3) {
 
-        curveData.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
+        curveData1.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
+    }
+    let curveData2 = [];
+    for (; i < data.length; i+=3) {
+
+        curveData2.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
     }
     data = [];
 
@@ -51,9 +57,9 @@ function initScene() {
     scene.add(light);
 
     // Geometry
-    let curve = new THREE.CatmullRomCurve3( curveData );
+    let curve = new THREE.CatmullRomCurve3( curveData1 );
 
-    let geometry = new THREE.TubeBufferGeometry(curve, curveData.length * 2, 0.2, 8, false);
+    let geometry = new THREE.TubeBufferGeometry(curve, curveData1.length * 2, 0.2, 8, false);
 
     let material = new THREE.MeshPhongMaterial( {
         color: 0x156289, 
@@ -62,10 +68,23 @@ function initScene() {
         flatShading: true
     } );
 
+    let curve2 = new THREE.CatmullRomCurve3( curveData2 );
+
+    let geometry2 = new THREE.TubeBufferGeometry(curve2, curveData2.length * 2, 0.2, 8, false);
+
+    let material2 = new THREE.MeshPhongMaterial( {
+        color: 0xa7003, 
+        emissive: 0xff0000,
+        specular: 0xc31d1d,  
+        side: THREE.DoubleSide, 
+        flatShading: true
+    } );
+
     
     // bind Geometry and Material
     let mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    let mesh2 = new THREE.Mesh(geometry2, material2);
+    scene.add(mesh, mesh2);
 
     //////////////////////////////////////////////////////////////
 
