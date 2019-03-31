@@ -6,15 +6,25 @@
 "use strict";
 
 let camera, scene, renderer, stats, controls, material;
-let data = [];
+let coordData = [];
+let posData = [];
 
-init();
+loadData();
 
-function init() {
+function loadData() {
 
     let loader = new THREE.FileLoader();
-    loader.load("example.txt", function(data_) {
-        data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
+    loader.load("chr1_5kb_miniMDS_structure.tsv", function(data_) {
+        let data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
+        data.splice(0, 3);  // delete chr, resolution, startPos
+
+        for (let i = 0; i < data.length; i+=4) {
+            if (data[i+1] === "nan") continue;
+            posData.push(Number(data[i]));
+            coordData.push(Number(data[i+1])*50.0, Number(data[i+2])*50.0, Number(data[i+3])*50.0);
+        }
+        data = [];
+
         initScene();
     });
 
@@ -22,7 +32,7 @@ function init() {
 
 function initScene() {
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 100;
 
     controls = new THREE.TrackballControls( camera );
@@ -30,18 +40,12 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
     // Process data
-    let curveData1 = [];
+    let curveData = [];
     let i;
-    for (i = 0; i < data.length / 2; i+=3) {
+    for (i = 0; i < coordData.length; i+=3) {
 
-        curveData1.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
+        curveData.push( new THREE.Vector3(coordData[i], coordData[i+1], coordData[i+2]) );
     }
-    let curveData2 = [];
-    for (; i < data.length; i+=3) {
-
-        curveData2.push( new THREE.Vector3(Number(data[i]), Number(data[i+1]), Number(data[i+2])) );
-    }
-    data = [];
 
     //////////////////////////////////////////////////////////////
 
@@ -57,34 +61,20 @@ function initScene() {
     scene.add(light);
 
     // Geometry
-    let curve = new THREE.CatmullRomCurve3( curveData1 );
+    let curve = new THREE.CatmullRomCurve3( curveData );
 
-    let geometry = new THREE.TubeBufferGeometry(curve, curveData1.length * 2, 0.2, 8, false);
+    let geometry = new THREE.TubeBufferGeometry(curve, curveData.length * 5, 0.15, 4, false);
 
     let material = new THREE.MeshPhongMaterial( {
         color: 0x156289, 
         emissive: 0x072534, 
         side: THREE.DoubleSide, 
-        flatShading: true
+        flatShading: false
     } );
 
-    let curve2 = new THREE.CatmullRomCurve3( curveData2 );
-
-    let geometry2 = new THREE.TubeBufferGeometry(curve2, curveData2.length * 2, 0.2, 8, false);
-
-    let material2 = new THREE.MeshPhongMaterial( {
-        color: 0xa7003, 
-        emissive: 0xff0000,
-        specular: 0xc31d1d,  
-        side: THREE.DoubleSide, 
-        flatShading: true
-    } );
-
-    
     // bind Geometry and Material
     let mesh = new THREE.Mesh(geometry, material);
-    let mesh2 = new THREE.Mesh(geometry2, material2);
-    scene.add(mesh, mesh2);
+    scene.add(mesh);
 
     //////////////////////////////////////////////////////////////
 
