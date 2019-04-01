@@ -126,6 +126,7 @@ function initScene() {
 
     renderConfigFolder.addColor(renderConfig, "background").onChange( function (value) {
         scene.background.set(new THREE.Color( Number(value.replace("#", "0x")) ));
+        scene.fog.color.set(new THREE.Color( Number(value.replace("#", "0x")) ));
     });
     renderConfigFolder.add(renderConfig, "text", 0, 1);
 
