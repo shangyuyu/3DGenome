@@ -11,15 +11,8 @@ let mesh, curve;
 // Global input raw data
 let coordData = [];
 let posData = [];
-// Global configuration
-let renderConfig = {
-    background: "#050505", 
-    materialColor: "#156289", 
-    materialEmissive: "#072534", 
-    tubularSegment: 5, 
-    radialSegment: 3, 
-    radius: 0.2,
-};
+// Global for GUI 
+let ambientLight;
 
 
 loadData();  // Trigger excution
@@ -101,11 +94,25 @@ function initScene() {
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
     // Light
-    //scene.add( new THREE.AmbientLight(0x444444), 0.05 );
+    ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
+    scene.add( ambientLight );
 
-    let light = new THREE.PointLight( 0xffffff, 1, 0 );
-    light.position.set( 0, 200, 0 );
-    scene.add(light);
+    let lights = [];
+    lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+    lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+    lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
+
+    lights[ 0 ].position.set( 0, 0, 200 );
+    lights[ 1 ].position.set( 100, 200, 100 );
+    lights[ 2 ].position.set( - 100, - 200, - 100 );
+
+    scene.add( lights[ 0 ] );
+    // scene.add( lights[ 1 ] );
+    // scene.add( lights[ 2 ] );
+
+    // GUI logic
+    let gui = new dat.GUI();
+    guiHandler(gui, scene);
 
     // Geometry
     let parent = new THREE.Object3D();
@@ -132,31 +139,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    let gui = new dat.GUI();
-
-    let renderConfigFolder= gui.addFolder( "Render Configuration" );
-
-    renderConfigFolder.addColor(renderConfig, "background").onChange( function (value) {
-        scene.background.set(new THREE.Color( Number(value.replace("#", "0x")) ));
-        scene.fog.color.set(new THREE.Color( Number(value.replace("#", "0x")) ));
-    } );
-    renderConfigFolder.addColor(renderConfig, "materialColor").onChange( function () {
-        bindTube(parent);
-    } );
-    renderConfigFolder.addColor(renderConfig, "materialEmissive").onChange( function () {
-        bindTube(parent);
-    } );
-    renderConfigFolder.add(renderConfig, "tubularSegment", 1, 15, 1).onFinishChange( function () {
-        bindTube(parent);
-    } );
-    renderConfigFolder.add(renderConfig, "radialSegment", 1, 10, 1).onFinishChange( function () {
-        bindTube(parent);
-    } );
-    renderConfigFolder.add(renderConfig, "radius", 0.05, 1).onFinishChange( function () {
-        bindTube(parent);
-    } );
-
-    renderConfigFolder.open();
+    
 
     //////////////////////////////////////////////////////////////
 
