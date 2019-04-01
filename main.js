@@ -5,11 +5,21 @@
 
 "use strict";
 
+// Global core elements
 let camera, scene, renderer, stats, controls, material;
+let mesh, curve;
+// Global input raw data
 let coordData = [];
 let posData = [];
+// Global configuration
+let renderConfig = {
+    background: "#050505", 
+    text: 0.5,
+};
 
-loadData();
+
+loadData();  // Trigger excution
+
 
 function loadData() {
 
@@ -30,9 +40,35 @@ function loadData() {
 
 }
 
+
+function addTube(parent) {
+    // Re-create Geometry and Material, bind them to mesh and add to Object3D
+
+    if (mesh !== undefined) {
+        parent.removeEventListener(mesh);
+        mesh.geometry.dispose();
+    }
+
+    let geometry = new THREE.TubeBufferGeometry(curve, posData.length * 5, 0.15, 4, false);
+
+    let material = new THREE.MeshPhongMaterial( {
+        color: 0x156289, 
+        emissive: 0x072534, 
+        side: THREE.DoubleSide, 
+        flatShading: false
+    } );
+
+    // bind Geometry and Material
+    mesh = new THREE.Mesh(geometry, material);
+    parent.add(mesh);
+}
+
+
 function initScene() {
 
-    camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 1000);
+    // camera
+
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 100;    
 
     //////////////////////////////////////////////////////////////
@@ -44,9 +80,11 @@ function initScene() {
         curveData.push( new THREE.Vector3(coordData[i], coordData[i+1], coordData[i+2]) );
     }
 
+    curve = new THREE.CatmullRomCurve3( curveData );
+
     //////////////////////////////////////////////////////////////
 
-    scene = new THREE.Scene();  // Number(renderConfig.background.replace("#", "0x"))
+    scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x050505 );
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
@@ -58,20 +96,10 @@ function initScene() {
     scene.add(light);
 
     // Geometry
-    let curve = new THREE.CatmullRomCurve3( curveData );
+    let parent = new THREE.Object3D();
+    scene.add(parent);
 
-    let geometry = new THREE.TubeBufferGeometry(curve, curveData.length * 5, 0.15, 4, false);
-
-    let material = new THREE.MeshPhongMaterial( {
-        color: 0x156289, 
-        emissive: 0x072534, 
-        side: THREE.DoubleSide, 
-        flatShading: false
-    } );
-
-    // bind Geometry and Material
-    let mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    addTube(parent);
 
     //////////////////////////////////////////////////////////////
 
@@ -79,6 +107,7 @@ function initScene() {
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
 
+    // gamma correction
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
 
@@ -91,15 +120,13 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    var renderConfig = {
-        background: "#050505", 
-        text: 0.5,
-    };
-
     let gui = new dat.GUI();
 
     let renderConfigFolder= gui.addFolder( "Render Configuration" );
 
+    renderConfigFolder.addColor(renderConfig, "background").onChange( function (value) {
+        scene.background.set(new THREE.Color( Number(value.replace("#", "0x")) ));
+    });
     renderConfigFolder.add(renderConfig, "text", 0, 1);
 
     renderConfigFolder.open();
@@ -114,7 +141,6 @@ function initScene() {
     document.addEventListener( "resize", onWindowResize, false );
 
     animate();
-
 }
 
 
