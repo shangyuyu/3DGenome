@@ -33,10 +33,7 @@ function loadData() {
 function initScene() {
 
     camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 100;
-
-    controls = new THREE.TrackballControls( camera );
-    
+    camera.position.z = 100;    
 
     //////////////////////////////////////////////////////////////
     // Process data
@@ -49,7 +46,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    scene = new THREE.Scene();
+    scene = new THREE.Scene();  // Number(renderConfig.background.replace("#", "0x"))
     scene.background = new THREE.Color( 0x050505 );
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
@@ -94,7 +91,23 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
+    var renderConfig = {
+        background: "#050505", 
+        text: 0.5,
+    };
 
+    let gui = new dat.GUI();
+
+    let renderConfigFolder= gui.addFolder( "Render Configuration" );
+
+    renderConfigFolder.add(renderConfig, "text", 0, 1);
+
+    renderConfigFolder.open();
+
+    //////////////////////////////////////////////////////////////
+
+    controls = new THREE.TrackballControls( camera, renderer.domElement );
+    // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
 
     //////////////////////////////////////////////////////////////
 
