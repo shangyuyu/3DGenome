@@ -9,6 +9,7 @@
 let container, camera, scene, renderer, stats, controls, rayCaster;
 let mouse = new THREE.Vector2();
 let curve = [];
+let chromosome, sphere;
 // Global input raw data
 let coordData = [];
 let posData = [];
@@ -66,6 +67,13 @@ function initScene() {
     scene.background = new THREE.Color( 0x050505 );
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
+    // temp
+    let geo = new THREE.SphereBufferGeometry( 1 );
+    let mat = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+    sphere = new THREE.Mesh(geo, mat);
+    sphere.visible = false;
+    scene.add(sphere);
+
     // Light
     let ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
     scene.add( ambientLight );
@@ -84,7 +92,7 @@ function initScene() {
     // scene.add( lights[ 2 ] );
 
     // Geometry
-    let chromosome = new THREE.Object3D();
+    chromosome = new THREE.Object3D();
     scene.add(chromosome);
 
     bindTube(chromosome);
@@ -149,10 +157,11 @@ function render() {
 
     if (intersects.length > 0) {
 
-
+        sphere.visible = true;
+        sphere.position.copy( intersects[0].point );
     } else {
 
-        
+        sphere.visible = false;
     }
 
     renderer.render( scene, camera );
