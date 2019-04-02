@@ -7,7 +7,8 @@
 
 // Global core elements
 let camera, scene, renderer, stats, controls, material;
-let mesh, curve;
+let mesh;
+let curve = [];
 // Global input raw data
 let coordData = [];
 let posData = [];
@@ -39,31 +40,36 @@ function loadData() {
 function bindTube(parent) {
     // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
+    /*
     if (mesh !== undefined) {
         parent.remove(mesh);
         mesh.geometry.dispose();
         mesh.material.dispose();
     }
+    */
 
-    let geometry = new THREE.TubeBufferGeometry(
-        curve, 
-        posData.length * renderConfig.tubularSegment, 
-        renderConfig.radius, 
-        renderConfig.radialSegment, 
-        false  // 'closed' should be kept false
-    );  
+    for (let i=0; i<200; i+=1) {
 
-    let material = new THREE.MeshPhongMaterial( {
-        color: Number( renderConfig.materialColor.replace("#", "0x") ), 
-        emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
-        specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
-        side: THREE.DoubleSide, 
-        flatShading: false
-    } );
+        let geometry = new THREE.TubeBufferGeometry(
+            curve[i], 
+            100 * renderConfig.tubularSegment, 
+            renderConfig.radius, 
+            renderConfig.radialSegment, 
+            false  // 'closed' should be kept false
+        );  
 
-    // bind Geometry and Material
-    mesh = new THREE.Mesh(geometry, material);
-    parent.add(mesh);
+        let material = new THREE.MeshPhongMaterial( {
+            color: Number( renderConfig.materialColor.replace("#", "0x") ), 
+            emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
+            specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
+            side: THREE.DoubleSide, 
+            flatShading: false
+        } );
+
+        // bind Geometry and Material
+        mesh = new THREE.Mesh(geometry, material);
+        parent.add(mesh);
+    }
 }
 
 
@@ -83,7 +89,10 @@ function initScene() {
         curveData.push( new THREE.Vector3(coordData[i], coordData[i+1], coordData[i+2]) );
     }
 
-    curve = new THREE.CatmullRomCurve3( curveData );
+    for (i=0; i<200; i+=1) {
+        
+        curve[i] = new THREE.CatmullRomCurve3( curveData.slice(i*100, (i+1)*100) );
+    }
 
     //////////////////////////////////////////////////////////////
 
@@ -109,14 +118,14 @@ function initScene() {
     // scene.add( lights[ 2 ] );
 
     // Geometry
-    let parent = new THREE.Object3D();
-    scene.add(parent);
+    let chromosome = new THREE.Object3D();
+    scene.add(chromosome);
 
-    bindTube(parent);
+    bindTube(chromosome);
 
     // GUI logic
     let gui = new dat.GUI();
-    guiHandler(gui, scene, parent, ambientLight);
+    guiHandler(gui, scene, chromosome, ambientLight);
 
     //////////////////////////////////////////////////////////////
 
