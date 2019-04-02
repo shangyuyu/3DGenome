@@ -114,6 +114,15 @@ function disposeHierarchy (node, callback) {
 }
 
 
+function onDocumentMouseMove(event) {
+
+    event.preventDefault();
+
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+
 function onWindowResize(event) {
 
     camera.aspect = window.innerWidth / window.innerHeight;

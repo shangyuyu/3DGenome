@@ -6,7 +6,8 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, renderer, stats, controls;
+let container, camera, scene, renderer, stats, controls, rayCaster;
+let mouse = new THREE.Vector2();
 let curve = [];
 // Global input raw data
 let coordData = [];
@@ -111,7 +112,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    
+    rayCaster = new THREE.Raycaster();
 
     //////////////////////////////////////////////////////////////
 
@@ -120,6 +121,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
+    document.addEventListener( "mousemove", onDocumentMouseMove, false );
     window.addEventListener( "resize", onWindowResize, false );
 
     animate();
