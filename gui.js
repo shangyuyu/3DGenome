@@ -9,8 +9,9 @@
 let renderConfig = {
     background: "#050505", 
     ambientColor: "#ffffff",
-    materialColor: "#156289", 
+    materialColor: "#2194ce",  // 156289
     materialEmissive: "#072534", 
+    materialSpecular: "#111111",
     ambientIntensity: 0.10,
     tubularSegment: 5, 
     radialSegment: 4, 
@@ -33,7 +34,7 @@ function colorUpdate(color) {
 }
 
 
-function guiHandler(gui, scene) {
+function guiHandler(gui, scene, parent, ambientLight) {
 
     let renderConfigFolder= gui.addFolder( "Render Configuration" );
 
@@ -42,12 +43,15 @@ function guiHandler(gui, scene) {
         scene.fog.color.setHex( value.replace("#", "0x") );
     } );
 
-    renderConfigFolder.addColor(renderConfig, "materialColor").onChange( function () {
-        bindTube(parent);
-    } );
-    renderConfigFolder.addColor(renderConfig, "materialEmissive").onChange( function () {
-        bindTube(parent);
-    } );
+    renderConfigFolder.addColor(renderConfig, "materialColor").onChange( 
+        colorUpdate( parent.children[0].material.color )
+    );
+    renderConfigFolder.addColor(renderConfig, "materialEmissive").onChange(
+        colorUpdate( parent.children[0].material.emissive )
+    );
+    renderConfigFolder.addColor(renderConfig, "materialSpecular").onChange(
+        colorUpdate( parent.children[0].material.specular )
+    );
     renderConfigFolder.add(renderConfig, "ambientIntensity", 0, 1, 0.01).onChange( function (value) {
         ambientLight.intensity = value;
     } );

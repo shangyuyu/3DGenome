@@ -11,8 +11,6 @@ let mesh, curve;
 // Global input raw data
 let coordData = [];
 let posData = [];
-// Global for GUI 
-let ambientLight;
 
 
 loadData();  // Trigger excution
@@ -54,11 +52,11 @@ function bindTube(parent) {
         renderConfig.radialSegment, 
         false  // 'closed' should be kept false
     );  
-    
 
     let material = new THREE.MeshPhongMaterial( {
         color: Number( renderConfig.materialColor.replace("#", "0x") ), 
         emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
+        specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
         side: THREE.DoubleSide, 
         flatShading: false
     } );
@@ -94,7 +92,7 @@ function initScene() {
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
     // Light
-    ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
+    let ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
     scene.add( ambientLight );
 
     let lights = [];
@@ -110,15 +108,15 @@ function initScene() {
     // scene.add( lights[ 1 ] );
     // scene.add( lights[ 2 ] );
 
-    // GUI logic
-    let gui = new dat.GUI();
-    guiHandler(gui, scene);
-
     // Geometry
     let parent = new THREE.Object3D();
     scene.add(parent);
 
     bindTube(parent);
+
+    // GUI logic
+    let gui = new dat.GUI();
+    guiHandler(gui, scene, parent, ambientLight);
 
     //////////////////////////////////////////////////////////////
 
