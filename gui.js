@@ -19,9 +19,9 @@ let renderConfig = {
 };
 
 
-function colorUpdate(color) {
+function colorUpdate(parent, type) {
     // Used for dat.GUI 'addColor' method
-    // update CSS-strye string 'value' to THREE.color 'color'
+    // update CSS-strye string 'value' to Object3D 'parent'
 
     return function (value) {
 
@@ -29,7 +29,17 @@ function colorUpdate(color) {
             value = value.replace("#", "0x");
         }
 
-        color.setHex(value);
+        for (let i=0; i<200; i+=1) {
+            
+            if (type === "color")
+                parent.children[i].material.color.setHex(value);
+            else if (type === "emissive")
+                parent.children[i].material.emissive.setHex(value);
+            else if (type === "specular")
+                parent.children[i].material.specular.setHex(value);
+            else 
+                alert("Error gui.jhs::colorUpdate unknown type.");
+        }
     };
 }
 
@@ -44,18 +54,18 @@ function guiHandler(gui, scene, parent, ambientLight) {
     } );
 
     renderConfigFolder.addColor(renderConfig, "materialColor").onChange( 
-        colorUpdate( parent.children[0].material.color )
+        colorUpdate( parent, "color" )
     );
     renderConfigFolder.addColor(renderConfig, "materialEmissive").onChange(
-        colorUpdate( parent.children[0].material.emissive )
+        colorUpdate( parent, "emissive" )
     );
     renderConfigFolder.addColor(renderConfig, "materialSpecular").onChange(
-        colorUpdate( parent.children[0].material.specular )
+        colorUpdate( parent, "specular" )
     );
     renderConfigFolder.add(renderConfig, "ambientIntensity", 0, 1, 0.01).onChange( function (value) {
         ambientLight.intensity = value;
     } );
-    renderConfigFolder.add(renderConfig, "tubularSegment", 1, 15, 1).onFinishChange( function () {
+    renderConfigFolder.add(renderConfig, "tubularSegment", 1, 20, 1).onFinishChange( function () {
         bindTube(parent);
     } );
     renderConfigFolder.add(renderConfig, "radialSegment", 1, 10, 1).onFinishChange( function () {

@@ -6,8 +6,7 @@
 "use strict";
 
 // Global core elements
-let camera, scene, renderer, stats, controls, material;
-let mesh;
+let camera, scene, renderer, stats, controls;
 let curve = [];
 // Global input raw data
 let coordData = [];
@@ -40,13 +39,10 @@ function loadData() {
 function bindTube(parent) {
     // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
-    /*
-    if (mesh !== undefined) {
-        parent.remove(mesh);
-        mesh.geometry.dispose();
-        mesh.material.dispose();
+    if (parent.children.length > 0) {
+        // memory leak?
+        disposeHierarchy(parent, disposeNode);
     }
-    */
 
     for (let i=0; i<200; i+=1) {
 
@@ -67,7 +63,7 @@ function bindTube(parent) {
         } );
 
         // bind Geometry and Material
-        mesh = new THREE.Mesh(geometry, material);
+        let mesh = new THREE.Mesh(geometry, material);
         parent.add(mesh);
     }
 }
