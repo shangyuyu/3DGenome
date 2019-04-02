@@ -142,6 +142,19 @@ function animate() {
 
 function render() {
 
+    // Find intersects
+    rayCaster.setFromCamera( mouse, camera );
+
+    let intersects = rayCaster.intersectObjects( chromosome.children, true );
+
+    if (intersects.length > 0) {
+
+
+    } else {
+
+        
+    }
+
     renderer.render( scene, camera );
 }
 
