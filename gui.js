@@ -29,7 +29,7 @@ function colorUpdate(parent, type) {
             value = value.replace("#", "0x");
         }
 
-        for (let i=0; i<200; i+=1) {
+        for (let i=0; i<200; i+=1) {  // WARNING: Change the 200 later
             
             if (type === "color")
                 parent.children[i].material.color.setHex(value);
@@ -77,6 +77,5 @@ function guiHandler(gui, scene, parent, ambientLight) {
 
     renderConfigFolder.open();
 }
-
 
 // End of main.js

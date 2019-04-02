@@ -1,6 +1,7 @@
 //
 //  utils.js
 //
+/* jshint -W117 */
 
 "use strict";
 
@@ -22,6 +23,39 @@ function getRandomInt(max) {
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
+}
+
+
+function bindTube(parent) {
+    // Re-create Geometry and Material, bind them to mesh and add to Object3D
+
+    if (parent.children.length > 0) {
+        // memory leak?
+        disposeHierarchy(parent, disposeNode);
+    }
+
+    for (let i=0; i<200; i+=1) {
+
+        let geometry = new THREE.TubeBufferGeometry(
+            curve[i], 
+            100 * renderConfig.tubularSegment, 
+            renderConfig.radius, 
+            renderConfig.radialSegment, 
+            false  // 'closed' should be kept false
+        );  
+
+        let material = new THREE.MeshPhongMaterial( {
+            color: Number( renderConfig.materialColor.replace("#", "0x") ), 
+            emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
+            specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
+            side: THREE.DoubleSide, 
+            flatShading: false
+        } );
+
+        // bind Geometry and Material
+        let mesh = new THREE.Mesh(geometry, material);
+        parent.add(mesh);
+    }
 }
 
 
@@ -77,6 +111,15 @@ function disposeHierarchy (node, callback) {
         callback (child);
     }
     node.children = [];
+}
+
+
+function onWindowResize(event) {
+
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+
+    renderer.resize( window.innerWidth, window.innerHeight );
 }
 
 // End of utils.js

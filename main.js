@@ -6,7 +6,7 @@
 "use strict";
 
 // Global core elements
-let camera, scene, renderer, stats, controls;
+let container, camera, scene, renderer, stats, controls;
 let curve = [];
 // Global input raw data
 let coordData = [];
@@ -19,7 +19,7 @@ loadData();  // Trigger excution
 function loadData() {
 
     let loader = new THREE.FileLoader();
-    loader.load("chr1_5kb_miniMDS_structure.tsv", function(data_) {
+    loader.load("./data/chr1_5kb_miniMDS_structure.tsv", function(data_) {
         let data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
         data.splice(0, 3);  // delete chr, resolution, startPos
 
@@ -36,43 +36,12 @@ function loadData() {
 }
 
 
-function bindTube(parent) {
-    // Re-create Geometry and Material, bind them to mesh and add to Object3D
-
-    if (parent.children.length > 0) {
-        // memory leak?
-        disposeHierarchy(parent, disposeNode);
-    }
-
-    for (let i=0; i<200; i+=1) {
-
-        let geometry = new THREE.TubeBufferGeometry(
-            curve[i], 
-            100 * renderConfig.tubularSegment, 
-            renderConfig.radius, 
-            renderConfig.radialSegment, 
-            false  // 'closed' should be kept false
-        );  
-
-        let material = new THREE.MeshPhongMaterial( {
-            color: Number( renderConfig.materialColor.replace("#", "0x") ), 
-            emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
-            specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
-            side: THREE.DoubleSide, 
-            flatShading: false
-        } );
-
-        // bind Geometry and Material
-        let mesh = new THREE.Mesh(geometry, material);
-        parent.add(mesh);
-    }
-}
-
-
 function initScene() {
 
-    // camera
+    container = document.createElement( "div" );
+    document.body.appendChild( container );
 
+    // camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.z = 100;    
 
@@ -133,12 +102,12 @@ function initScene() {
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
 
-    document.body.appendChild( renderer.domElement );
+    container.appendChild( renderer.domElement );
 
     //////////////////////////////////////////////////////////////
 
     stats = new Stats();
-    document.body.appendChild( stats.dom );
+    container.appendChild( stats.dom );
 
     //////////////////////////////////////////////////////////////
 
@@ -151,21 +120,10 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    document.addEventListener( "resize", onWindowResize, false );
+    window.addEventListener( "resize", onWindowResize, false );
 
     animate();
 }
-
-
-function onWindowResize(event) {
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.resize( window.innerWidth, window.innerHeight );
-}
-
-
 
 /////////////////////////////////////////////////////////////////////
 
