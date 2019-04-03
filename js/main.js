@@ -6,7 +6,7 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, selectScene, renderer, stats, controls, rayCaster;
+let container, camera, scene, auxiScene, renderer, stats, controls, rayCaster;
 let mouse = new THREE.Vector2();
 let curve = [];
 // Global input raw data
@@ -66,7 +66,7 @@ function initScene() {
     scene.background = new THREE.Color( 0x050505 );
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
-    selectScene = new THREE.Scene();
+    auxiScene = new THREE.Scene();
 
     // temp
     let geo = new THREE.SphereBufferGeometry( 0.5 );
@@ -98,10 +98,10 @@ function initScene() {
 
     bindTube(chromosome);
 
-    let selectChromosome = new THREE.Object3D();
-    selectScene.add(selectChromosome);
+    let auxiChromosome = new THREE.Object3D();
+    auxiScene.add(auxiChromosome);
 
-    bindLine(selectChromosome);
+    bindLine(auxiChromosome);
 
     // GUI logic
     let gui = new dat.GUI();
@@ -155,13 +155,15 @@ function animate() {
 
 function render() {
 
+    let preRenderTime = Date.now();
+
     // Find intersects
     rayCaster.setFromCamera( mouse, camera );
-
-    // let time = Date.now();
     rayCaster.linePrecision = renderConfig.radius;
-    let intersects = rayCaster.intersectObjects( selectChromosome.children, false );
-    // console.log(Date.now() - time, " ms");
+    let intersects = rayCaster.intersectObjects( auxiChromosome.children, false );
+    if (advancedConfig.mouseSelTime === true) {
+        console.log( "Mouse selection time cost " + String(Date.now() - preRenderTime) + "ms");
+    }
 
     if (intersects.length > 0) {
 
@@ -174,12 +176,14 @@ function render() {
     }
 
     if (advancedConfig.auxiScene === true) {
+
         renderer.autoClear = false;
         renderer.clear();
         renderer.render( scene, camera );
         renderer.clearDepth();
-        renderer.render( selectScene, camera );
+        renderer.render( auxiScene, camera );
     } else {
+        
         renderer.autoClear = true;
         renderer.render( scene, camera );
     }
