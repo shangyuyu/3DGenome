@@ -84,7 +84,9 @@ function bindLine(parent) {
         let lineGeometry = new THREE.BufferGeometry();
 
         // Retrieve position data from curve
-        let temp = curve[i].getPoints(100 * renderConfig.tubularSegment);
+        let temp = curve[i].getPoints(100 * 
+            (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : renderConfig.tubularSegment)
+        );
         let tempCoordData = [];
         for (let j=0; j<temp.length; j+=1) {
 

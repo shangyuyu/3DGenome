@@ -9,7 +9,6 @@
 let container, camera, scene, selectScene, renderer, stats, controls, rayCaster;
 let mouse = new THREE.Vector2();
 let curve = [];
-let chromosome, selectChromosome, sphere;  // used in function 'Render'
 // Global input raw data
 let coordData = [];
 let posData = [];
@@ -72,7 +71,7 @@ function initScene() {
     // temp
     let geo = new THREE.SphereBufferGeometry( 0.5 );
     let mat = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-    sphere = new THREE.Mesh(geo, mat);
+    let sphere = new THREE.Mesh(geo, mat);
     sphere.visible = false;
     scene.add(sphere);
 
@@ -94,12 +93,12 @@ function initScene() {
     // scene.add( lights[ 2 ] );
 
     // Geometry
-    chromosome = new THREE.Object3D();
+    let chromosome = new THREE.Object3D();
     scene.add(chromosome);
 
     bindTube(chromosome);
 
-    selectChromosome = new THREE.Object3D();
+    let selectChromosome = new THREE.Object3D();
     selectScene.add(selectChromosome);
 
     bindLine(selectChromosome);
@@ -140,7 +139,6 @@ function initScene() {
     window.addEventListener( "resize", onWindowResize, false );
 
     animate();
-}
 
 /////////////////////////////////////////////////////////////////////
 
@@ -161,6 +159,7 @@ function render() {
     rayCaster.setFromCamera( mouse, camera );
 
     // let time = Date.now();
+    rayCaster.linePrecision = renderConfig.radius;
     let intersects = rayCaster.intersectObjects( selectChromosome.children, false );
     // console.log(Date.now() - time, " ms");
 
@@ -174,12 +173,18 @@ function render() {
         sphere.visible = false;
     }
 
-    //renderer.autoClear = false;
-    //renderer.clear();
-    renderer.render( scene, camera );
-    //renderer.clearDepth();
-    //renderer.render( selectScene, camera );
+    if (advancedConfig.auxiScene === true) {
+        renderer.autoClear = false;
+        renderer.clear();
+        renderer.render( scene, camera );
+        renderer.clearDepth();
+        renderer.render( selectScene, camera );
+    } else {
+        renderer.autoClear = true;
+        renderer.render( scene, camera );
+    }
 }
 
+}  // End of initScene()
 
 // End of main.js
