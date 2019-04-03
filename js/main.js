@@ -110,7 +110,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    renderer = new THREE.WebGLRenderer();
+    renderer = new THREE.WebGLRenderer( {precision: "mediump"} );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
 
