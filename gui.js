@@ -13,7 +13,7 @@ let renderConfig = {
     materialEmissive: "#072534", 
     materialSpecular: "#111111",
     ambientIntensity: 0.10,
-    tubularSegment: 5, 
+    tubularSegment: 6, 
     radialSegment: 4, 
     radius: 0.2,
 };

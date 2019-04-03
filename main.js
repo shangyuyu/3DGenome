@@ -6,10 +6,10 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, renderer, stats, controls, rayCaster;
+let container, camera, scene, selectScene, renderer, stats, controls, rayCaster;
 let mouse = new THREE.Vector2();
 let curve = [];
-let chromosome, sphere;
+let chromosome, selectChromosome, sphere;  // used in function 'Render'
 // Global input raw data
 let coordData = [];
 let posData = [];
@@ -62,13 +62,15 @@ function initScene() {
     }
 
     //////////////////////////////////////////////////////////////
-
+    // Scene
     scene = new THREE.Scene();
     scene.background = new THREE.Color( 0x050505 );
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
+    selectScene = new THREE.Scene();
+
     // temp
-    let geo = new THREE.SphereBufferGeometry( 1 );
+    let geo = new THREE.SphereBufferGeometry( 0.5 );
     let mat = new THREE.MeshBasicMaterial( {color: 0xff0000} );
     sphere = new THREE.Mesh(geo, mat);
     sphere.visible = false;
@@ -96,6 +98,11 @@ function initScene() {
     scene.add(chromosome);
 
     bindTube(chromosome);
+
+    selectChromosome = new THREE.Object3D();
+    selectScene.add(selectChromosome);
+
+    bindLine(selectChromosome);
 
     // GUI logic
     let gui = new dat.GUI();
@@ -153,18 +160,25 @@ function render() {
     // Find intersects
     rayCaster.setFromCamera( mouse, camera );
 
-    let intersects = rayCaster.intersectObjects( chromosome.children, true );
+    // let time = Date.now();
+    let intersects = rayCaster.intersectObjects( selectChromosome.children, false );
+    // console.log(Date.now() - time, " ms");
 
     if (intersects.length > 0) {
 
         sphere.visible = true;
         sphere.position.copy( intersects[0].point );
+        // console.log(intersects.length);
     } else {
 
         sphere.visible = false;
     }
 
+    //renderer.autoClear = false;
+    //renderer.clear();
     renderer.render( scene, camera );
+    //renderer.clearDepth();
+    //renderer.render( selectScene, camera );
 }
 
 

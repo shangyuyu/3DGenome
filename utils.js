@@ -5,6 +5,18 @@
 
 "use strict";
 
+
+Object.defineProperty(Array.prototype, 'flat', {
+    // .flat() has not been implemented in common browsers
+
+    value: function(depth = 1) {
+      return this.reduce(function (flat, toFlatten) {
+        return flat.concat((Array.isArray(toFlatten) && (depth-1)) ? toFlatten.flat(depth-1) : toFlatten);
+      }, []);
+    }
+});
+
+
 function mix(u, v, r) {
 // mix vector u and v with a ratio r
     let result = [];
@@ -48,13 +60,44 @@ function bindTube(parent) {
             color: Number( renderConfig.materialColor.replace("#", "0x") ), 
             emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
             specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
-            side: THREE.DoubleSide, 
-            flatShading: false
+            //side: THREE.DoubleSide, 
+            flatShading: true
         } );
 
         // bind Geometry and Material
         let mesh = new THREE.Mesh(geometry, material);
         parent.add(mesh);
+    }
+}
+
+
+function bindLine(parent) {
+    // Re-create Geometry and Material, bind them to line and add to Object3D
+
+    if (parent.children.length > 0) {
+        // memory leak?
+        disposeHierarchy(parent, disposeNode);
+    }
+
+    for (let i=0; i<200; i+=1) {
+
+        let lineGeometry = new THREE.BufferGeometry();
+
+        // Retrieve position data from curve
+        let temp = curve[i].getPoints(100 * renderConfig.tubularSegment);
+        let tempCoordData = [];
+        for (let j=0; j<temp.length; j+=1) {
+
+            tempCoordData.push(temp[j].x, temp[j].y, temp[j].z);
+        }
+
+        lineGeometry.addAttribute( 
+            "position", 
+            new THREE.Float32BufferAttribute(tempCoordData, 3) 
+        );
+
+        let line = new THREE.Line(lineGeometry);
+        parent.add(line);
     }
 }
 
