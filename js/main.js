@@ -7,7 +7,7 @@
 
 // Global core elements
 let container, camera, scene, auxiScene, renderer, stats, controls, rayCaster;
-let mouse = new THREE.Vector2();
+let mouse = {position: new THREE.Vector2(), lastMoveTime: 0};
 let curve = [];
 // Global input raw data
 let coordData = [];
@@ -39,6 +39,10 @@ function loadData() {
 
 function initScene() {
 
+    // Non-global variables
+    let lastMouseSelTime = Date.now();
+
+    //////////////////////////////////////////////////////////////
     container = document.createElement( "div" );
     document.body.appendChild( container );
 
@@ -157,22 +161,28 @@ function render() {
 
     let preRenderTime = Date.now();
 
-    // Find intersects
-    rayCaster.setFromCamera( mouse, camera );
-    rayCaster.linePrecision = renderConfig.radius;
-    let intersects = rayCaster.intersectObjects( auxiChromosome.children, false );
-    if (advancedConfig.mouseSelTime === true) {
-        console.log( "Mouse selection time cost " + String(Date.now() - preRenderTime) + "ms");
-    }
+    if (preRenderTime - lastMouseSelTime > advancedConfig.mouseSelInterval) {
+        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mouseSelInterval-100) {
 
-    if (intersects.length > 0) {
+            lastMouseSelTime = preRenderTime;
+            // Find intersects
+            rayCaster.setFromCamera( mouse.position, camera );
+            rayCaster.linePrecision = renderConfig.radius;
+            let intersects = rayCaster.intersectObjects( auxiChromosome.children, false );
+            if (advancedConfig.mouseSelTimeDisp === true) {
+                console.log( "Mouse selection time cost " + String(Date.now() - preRenderTime) + "ms");
+            }
 
-        sphere.visible = true;
-        sphere.position.copy( intersects[0].point );
-        // console.log(intersects.length);
-    } else {
-
-        sphere.visible = false;
+            if (intersects.length > 0) {
+                sphere.visible = true;
+                sphere.position.copy( intersects[0].point );
+                // console.log(intersects.length);
+            } else {
+                sphere.visible = false;
+            }
+        } else {
+            sphere.visible = false;
+        }
     }
 
     if (advancedConfig.auxiScene === true) {
@@ -183,7 +193,7 @@ function render() {
         renderer.clearDepth();
         renderer.render( auxiScene, camera );
     } else {
-        
+
         renderer.autoClear = true;
         renderer.render( scene, camera );
     }

@@ -61,7 +61,7 @@ function bindTube(parent) {
             emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
             specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
             //side: THREE.DoubleSide, 
-            flatShading: true
+            flatShading: false  // false for better visual effect
         } );
 
         // bind Geometry and Material
@@ -163,8 +163,9 @@ function onDocumentMouseMove(event) {
 
     event.preventDefault();
 
-    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    mouse.position.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.position.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    mouse.lastMoveTime = Date.now();
 }
 
 
