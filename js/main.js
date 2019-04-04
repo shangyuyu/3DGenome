@@ -6,7 +6,7 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, auxiScene, renderer, stats, controls, rayCaster;
+let container, camera, scene, auxiScene, renderer, stats, controls, mousePick;
 let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
 let curve = [];
 // Global input raw data
@@ -40,7 +40,6 @@ function loadData() {
 function initScene() {
 
     // Non-global variables
-    let lastMouseSelTime = Date.now();
     let intersected, tempHex;
 
     //////////////////////////////////////////////////////////////
@@ -124,7 +123,7 @@ function initScene() {
 
     //////////////////////////////////////////////////////////////
 
-    rayCaster = new THREE.Raycaster();
+    mousePick = new MousePick();
 
     //////////////////////////////////////////////////////////////
 
@@ -147,6 +146,7 @@ function animate() {
     controls.update();
 
     render();
+    
     stats.update();
 }
 
@@ -155,37 +155,15 @@ function render() {
 
     let preRenderTime = Date.now();
 
-    if (preRenderTime - lastMouseSelTime > advancedConfig.mouseSelInterval) {
-    // Two calls of rayCaster should wait at least 'advancedConfig.mouseSelInterval' ms
-        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mouseSelInterval-100) {
-        // Mouse should keep stayed for at least 'advancedConfig.mouseSelInterval'-100 ms
+    if (preRenderTime - mousePick.lastMousePickCallTime > advancedConfig.mousePickInterval) {
+    // Two calls of rayCaster should wait at least 'advancedConfig.mousePickInterval' ms
+        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mousePickInterval-100) {
+        // Mouse should keep stayed for at least 'advancedConfig.mousePickInterval'-100 ms
 
-            lastMouseSelTime = preRenderTime;
-            // Find intersects
-            rayCaster.setFromCamera( mouse.position, camera );
-            rayCaster.linePrecision = renderConfig.radius;
-            let intersects = rayCaster.intersectObjects( auxiChromosome.children, false );
-            if (advancedConfig.mouseSelTimeDisp === true) {
-                console.log( "Mouse selection time cost " + String(Date.now() - preRenderTime) + "ms");
-            }
-
-            if (intersects.length > 0) {
-                if (intersected != intersects[0].object) {
-                    if (intersected) intersected.material.emissive.setHex(tempHex);
-
-                    // The index in 'chromosome' and 'auxiChromosome' must match
-                    intersected = chromosome.children[ Number(intersects[0].object.name.slice(4)) ];
-
-                    tempHex = intersected.material.emissive.getHex();
-                    intersected.material.emissive.setHex(0xff0000);
-                }
-            } else {
-                if (intersected) intersected.material.emissive.setHex(tempHex);
-                intersected = null;
-            }
+            mousePick.call(auxiChromosome.children, chromosome.children);
         } else {
-            if (intersected) intersected.material.emissive.setHex(tempHex);
-            intersected = null;
+
+            mousePick.onLeft();
         }
     }
 
@@ -196,9 +174,9 @@ function render() {
         renderer.render( scene, camera );
         renderer.clearDepth();
         renderer.render( auxiScene, camera );
+        renderer.autoClear = true;
     } else {
 
-        renderer.autoClear = true;
         renderer.render( scene, camera );
     }
 }
