@@ -38,7 +38,7 @@ function colorUpdate(parent, type) {
             else if (type === "specular")
                 parent.children[i].material.specular.setHex(value);
             else 
-                alert("Error gui.jhs::colorUpdate unknown type.");
+                alert("Error gui.js::colorUpdate unknown type.");
         }
     };
 }

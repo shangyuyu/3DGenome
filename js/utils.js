@@ -66,6 +66,7 @@ function bindTube(parent) {
 
         // bind Geometry and Material
         let mesh = new THREE.Mesh(geometry, material);
+        mesh.name = "Mesh" + String(i);
         parent.add(mesh);
     }
 }
@@ -99,6 +100,7 @@ function bindLine(parent) {
         );
 
         let line = new THREE.Line(lineGeometry);
+        line.name = "Line" + String(i);
         parent.add(line);
     }
 }

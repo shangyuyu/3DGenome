@@ -41,6 +41,7 @@ function initScene() {
 
     // Non-global variables
     let lastMouseSelTime = Date.now();
+    let intersected, tempHex;
 
     //////////////////////////////////////////////////////////////
     container = document.createElement( "div" );
@@ -71,13 +72,6 @@ function initScene() {
     scene.fog = new THREE.Fog( 0x050505, 10, 400);
 
     auxiScene = new THREE.Scene();
-
-    // temp
-    let geo = new THREE.SphereBufferGeometry( 0.5 );
-    let mat = new THREE.MeshBasicMaterial( {color: 0xff0000} );
-    let sphere = new THREE.Mesh(geo, mat);
-    sphere.visible = false;
-    scene.add(sphere);
 
     // Light
     let ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
@@ -162,7 +156,9 @@ function render() {
     let preRenderTime = Date.now();
 
     if (preRenderTime - lastMouseSelTime > advancedConfig.mouseSelInterval) {
+    // Two calls of rayCaster should wait at least 'advancedConfig.mouseSelInterval' ms
         if (preRenderTime - mouse.lastMoveTime > advancedConfig.mouseSelInterval-100) {
+        // Mouse should keep stayed for at least 'advancedConfig.mouseSelInterval'-100 ms
 
             lastMouseSelTime = preRenderTime;
             // Find intersects
@@ -174,14 +170,26 @@ function render() {
             }
 
             if (intersects.length > 0) {
-                sphere.visible = true;
-                sphere.position.copy( intersects[0].point );
-                // console.log(intersects.length);
+                if (intersected != intersects[0].object) {
+                    if (intersected) intersected.material.emissive.setHex(tempHex);
+
+                    for (let i=0, ch=chromosome.children; i<ch.length; i+=1) {
+                        if (ch[i].name.slice(4) === intersects[0].object.name.slice(4)) {
+                            intersected = ch[i];
+                            break;
+                        }
+                    }
+
+                    tempHex = intersected.material.emissive.getHex();
+                    intersected.material.emissive.setHex(0xff0000);
+                }
             } else {
-                sphere.visible = false;
+                if (intersected) intersected.material.emissive.setHex(tempHex);
+                intersected = null;
             }
         } else {
-            sphere.visible = false;
+            if (intersected) intersected.material.emissive.setHex(tempHex);
+            intersected = null;
         }
     }
 
