@@ -25,6 +25,9 @@ class GUIManager {
             radialSegment: 4, 
             radius: 0.2,
         };
+        this.mousePickConfig = {
+            enable: true, 
+        };
     }
 }
 
@@ -56,9 +59,9 @@ Object.assign(GUIManager.prototype, {
 
     activate: function () {
 
-        this.folders[0] = this.gui.addFolder( "Render Configuration" );
-
         // NOTE: 'this' does not represent this class in the following callback functions
+        this.folders[0] = this.gui.addFolder( "Model and Render" );
+
         this.folders[0].addColor(this.renderConfig, "background").onChange( function (value) {
             scene.background.setHex( value.replace("#", "0x") );
             scene.fog.color.setHex( value.replace("#", "0x") );
@@ -80,14 +83,21 @@ Object.assign(GUIManager.prototype, {
             bindTube(gui.parent);
             bindLine(gui.shadowParent);
         } );
-        this.folders[0].add(this.renderConfig, "radialSegment", 1, 10, 1).onFinishChange( function () {
+        this.folders[0].add(this.renderConfig, "radialSegment", 1, 8, 1).onFinishChange( function () {
             bindTube(gui.parent);
         } );
         this.folders[0].add(this.renderConfig, "radius", 0.05, 1).onFinishChange( function () {
             bindTube(gui.parent);
         } );
 
-        this.folders[0].open();
+        ////////////////////////////////////////////////////////////////////////////////////
+        this.folders[1] = this.gui.addFolder( "Mouse Pick" );
+
+        this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
+            mousePick.enable = value;
+        } );
+
+        this.folders[1].open();
     },
 
     bindParent: function (parent) {

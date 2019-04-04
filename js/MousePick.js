@@ -9,6 +9,7 @@ class MousePick {
 
     constructor () {
         
+        this.enable = true;
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
@@ -20,6 +21,7 @@ Object.assign(MousePick.prototype, {
 
     call: function (objectArray, shadowArray) {
 
+        if (this.enable === false) return;
         this.lastMousePickCallTime = Date.now();
 
         this.rayCaster.setFromCamera( mouse.position, camera );
