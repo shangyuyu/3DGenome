@@ -73,6 +73,7 @@ function init() {
     
     // GUI
     gui.bindParent(chromosome);
+    gui.bindShadowParent(auxiChromosome);
     gui.activate();
 
     // Renderer

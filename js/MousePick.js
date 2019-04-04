@@ -46,6 +46,8 @@ Object.assign(MousePick.prototype, {
 
         if (advancedConfig.mousePickTimeDisp === true) {
             console.log( "Mouse pick time cost: " + String(Date.now() - this.lastMousePickCallTime) + "ms");
+        } else if (Date.now() - this.lastMousePickCallTime > 100) {
+            console.log( "Mouse pick cost too much time: " + String(Date.now() - this.lastMousePickCallTime) + "ms. Consider refresh page or suppress render quality.");
         }
     }, 
 

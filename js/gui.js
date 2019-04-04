@@ -7,9 +7,10 @@
 
 class GUIManager {
 
-    constructor (scene = null, parent = null) {
+    constructor (parent = null, shadowParent = null) {
 
         this.parent = parent;
+        this.shadowParent = shadowParent;
         this.gui = new dat.GUI();
         this.folders = [];
 
@@ -77,6 +78,7 @@ Object.assign(GUIManager.prototype, {
         } );
         this.folders[0].add(this.renderConfig, "tubularSegment", 1, 20, 1).onFinishChange( function () {
             bindTube(gui.parent);
+            bindLine(gui.shadowParent);
         } );
         this.folders[0].add(this.renderConfig, "radialSegment", 1, 10, 1).onFinishChange( function () {
             bindTube(gui.parent);
@@ -86,11 +88,16 @@ Object.assign(GUIManager.prototype, {
         } );
 
         this.folders[0].open();
-    }, 
+    },
 
     bindParent: function (parent) {
 
         this.parent = parent;
+    },
+
+    bindShadowParent: function (shadowParent) {
+
+        this.shadowParent = shadowParent;
     }
 
 } );
