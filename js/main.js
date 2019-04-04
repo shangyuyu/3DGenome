@@ -7,7 +7,7 @@
 
 // Global core elements
 let container, camera, scene, auxiScene, renderer, stats, controls, rayCaster;
-let mouse = {position: new THREE.Vector2(), lastMoveTime: 0};
+let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
 let curve = [];
 // Global input raw data
 let coordData = [];
@@ -173,12 +173,8 @@ function render() {
                 if (intersected != intersects[0].object) {
                     if (intersected) intersected.material.emissive.setHex(tempHex);
 
-                    for (let i=0, ch=chromosome.children; i<ch.length; i+=1) {
-                        if (ch[i].name.slice(4) === intersects[0].object.name.slice(4)) {
-                            intersected = ch[i];
-                            break;
-                        }
-                    }
+                    // The index in 'chromosome' and 'auxiChromosome' must match
+                    intersected = chromosome.children[ Number(intersects[0].object.name.slice(4)) ];
 
                     tempHex = intersected.material.emissive.getHex();
                     intersected.material.emissive.setHex(0xff0000);
