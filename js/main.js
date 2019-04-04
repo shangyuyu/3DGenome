@@ -65,7 +65,8 @@ function init() {
 
     // camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 100;
+    camera.position.set(0, 0, 140);
+    camera.lookAt(0, 0, 0);
 
     // Scene
     let chromosome, auxiChromosome;
@@ -77,7 +78,7 @@ function init() {
     gui.activate();
 
     // Renderer
-    renderer = new THREE.WebGLRenderer( {precision: "mediump"} );
+    renderer = new THREE.WebGLRenderer( {precision: "mediump", antialias: false} );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.gammaInput = true;
@@ -99,6 +100,9 @@ function init() {
     //////////////////////////////////////////////////////////////
 
     document.addEventListener( "mousemove", onDocumentMouseMove, false );
+    // document.addEventListener( "mousedown", onDocumentMouseDown, false );
+    // WARNING: call of 'onDocumentMouseDown' has been moved to 'controls.js'
+    //          due to serious confict of event listener
     window.addEventListener( "resize", onWindowResize, false );
 
     animate();

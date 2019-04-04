@@ -5,5 +5,10 @@
 - [ ] Loader
 - [ ] Backstage data structure
 - [ ] Better TrackballControl
-- [ ] MousePick config GUI
-- [ ] MousePick multi-select
+- [x] MousePick config GUI
+- [x] MousePick multi-select
+- [ ] Disp selected object info
+- [ ] Global
+
+- [ ] User input desired range
+- [ ] TypeScript?

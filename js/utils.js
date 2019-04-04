@@ -171,12 +171,22 @@ function onDocumentMouseMove(event) {
 }
 
 
+function onDocumentMouseDown(event) {
+
+    event.preventDefault();
+    
+    // make the picked object stay focused
+    if (mousePick.INTERSECTED)
+        mousePick.onFocus();
+}
+
+
 function onWindowResize(event) {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
-    renderer.resize( window.innerWidth, window.innerHeight );
+    renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
 // End of utils.js

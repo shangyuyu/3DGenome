@@ -13,7 +13,7 @@ class MousePick {
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
-        this.tempHex = null;
+        this.pickedArray = [];
     }
 }
 
@@ -55,7 +55,7 @@ Object.assign(MousePick.prototype, {
 
     onPick: function () {
 
-        this.tempHex = this.INTERSECTED.material.emissive.getHex();
+        this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
         this.INTERSECTED.material.emissive.setHex(0xff0000);
     }, 
 
@@ -63,9 +63,37 @@ Object.assign(MousePick.prototype, {
     // undo onPick changes
 
         if (this.INTERSECTED) {
-            this.INTERSECTED.material.emissive.setHex(this.tempHex);
+
+            this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.recoverHex);
             this.INTERSECTED = null;
         }
+    },
+
+    onFocus: function () {
+
+        let index = Number( this.INTERSECTED.name.slice(4) );
+        
+        if (!this.pickedArray.find( e => e.name.slice(4) == index )) {
+
+            // WARNING: The sequence here is non-interchangeable and bug-prone
+            this.pickedArray.push( this.INTERSECTED );  // push by reference (not copy)?
+            this.INTERSECTED.protected = true;
+            this.INTERSECTED.protectedRecoverHex = this.INTERSECTED.recoverHex;
+            this.INTERSECTED.material.emissive.setHex(0x00ff00);
+            this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
+        }
+    }, 
+
+    reset: function (shadowArray) {
+
+        console.log("MousePick.js::Reset " + this.pickedArray.length + " protected selections.");
+        for (let i=0; i<this.pickedArray.length; i+=1) {
+
+            let INTERSECTED = this.pickedArray[i];
+            INTERSECTED.protected = false;
+            INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
+        }
+        this.pickedArray = [];
     }
 
 } );

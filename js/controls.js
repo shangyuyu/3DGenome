@@ -4,6 +4,9 @@
  * @author Simone Manini / http://daron1337.github.io
  * @author Luca Antiga 	/ http://lantiga.github.io
  */
+/* jshint -W117 */
+
+"use strict";
 
 THREE.TrackballControls = function ( object, domElement ) {
 
@@ -381,6 +384,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 	}
 
 	function mousedown( event ) {
+
+		// Moved from main function to here
+		onDocumentMouseDown(event);
 
 		if ( _this.enabled === false ) return;
 

@@ -27,6 +27,7 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
+            reset: function(){mousePick.reset();},  // FIX ME
         };
     }
 }
@@ -90,12 +91,15 @@ Object.assign(GUIManager.prototype, {
             bindTube(gui.parent);
         } );
 
+        this.folders[0].open();
+
         ////////////////////////////////////////////////////////////////////////////////////
         this.folders[1] = this.gui.addFolder( "Mouse Pick" );
 
         this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
             mousePick.enable = value;
         } );
+        this.folders[1].add(this.mousePickConfig, "reset");
 
         this.folders[1].open();
     },
