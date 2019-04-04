@@ -60,7 +60,7 @@ function bindTube(parent) {
             color: Number( gui.renderConfig.materialColor.replace("#", "0x") ), 
             emissive: Number( gui.renderConfig.materialEmissive.replace("#", "0x") ), 
             specular: Number( gui.renderConfig.materialSpecular.replace("#", "0x") ),
-            //side: THREE.DoubleSide, 
+            // side: THREE.DoubleSide, 
             flatShading: false  // 'false' for better visual effect
         } );
 
