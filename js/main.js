@@ -6,7 +6,7 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, auxiScene, renderer, stats, controls, mousePick;
+let container, camera, scene, auxiScene, renderer, stats, controls, mousePick, gui;
 let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
 let curve = [];
 // Global input raw data
@@ -31,104 +31,69 @@ function loadData() {
         }
         data = [];
 
-        initScene();
+        init();
     });
 
 }
 
 
-function initScene() {
+function init() {
 
-    // Non-global variables
-    let intersected, tempHex;
-
-    //////////////////////////////////////////////////////////////
     container = document.createElement( "div" );
     document.body.appendChild( container );
 
-    // camera
-    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = 100;    
-
     //////////////////////////////////////////////////////////////
     // Process data
+    // FIX ME
     let curveData = [];
     let i;
     for (i = 0; i < coordData.length; i+=3) {
 
         curveData.push( new THREE.Vector3(coordData[i], coordData[i+1], coordData[i+2]) );
     }
+    coordData = [];
 
     for (i=0; i<200; i+=1) {
         
         curve[i] = new THREE.CatmullRomCurve3( curveData.slice(i*100, (i+1)*100) );
     }
+    curveData = [];
 
     //////////////////////////////////////////////////////////////
+    // Init configuration
+    gui = new GUIManager();
+
+    // camera
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 100;
+
     // Scene
-    scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x050505 );
-    scene.fog = new THREE.Fog( 0x050505, 10, 400);
+    let chromosome, auxiChromosome;
+    createScene();
+    
+    // GUI
+    gui.bindParent(chromosome);
+    gui.activate();
 
-    auxiScene = new THREE.Scene();
-
-    // Light
-    let ambientLight = new THREE.AmbientLight(0x444444, renderConfig.ambientIntensity);
-    scene.add( ambientLight );
-
-    let lights = [];
-    lights[ 0 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-    lights[ 1 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-    lights[ 2 ] = new THREE.PointLight( 0xffffff, 1, 0 );
-
-    lights[ 0 ].position.set( 0, 0, 200 );
-    lights[ 1 ].position.set( 100, 200, 100 );
-    lights[ 2 ].position.set( - 100, - 200, - 100 );
-
-    scene.add( lights[ 0 ] );
-    // scene.add( lights[ 1 ] );
-    // scene.add( lights[ 2 ] );
-
-    // Geometry
-    let chromosome = new THREE.Object3D();
-    scene.add(chromosome);
-
-    bindTube(chromosome);
-
-    let auxiChromosome = new THREE.Object3D();
-    auxiScene.add(auxiChromosome);
-
-    bindLine(auxiChromosome);
-
-    // GUI logic
-    let gui = new dat.GUI();
-    guiHandler(gui, scene, chromosome, ambientLight);
-
-    //////////////////////////////////////////////////////////////
-
+    // Renderer
     renderer = new THREE.WebGLRenderer( {precision: "mediump"} );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
-
-    // gamma correction
     renderer.gammaInput = true;
     renderer.gammaOutput = true;
-
+        // gamma correction
     container.appendChild( renderer.domElement );
 
-    //////////////////////////////////////////////////////////////
-
+    // Stats
     stats = new Stats();
     container.appendChild( stats.dom );
 
-    //////////////////////////////////////////////////////////////
-
+    // MousePick
     mousePick = new MousePick();
 
-    //////////////////////////////////////////////////////////////
-
+    // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );
-    // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
+        // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
 
     //////////////////////////////////////////////////////////////
 
@@ -139,6 +104,34 @@ function initScene() {
 
 /////////////////////////////////////////////////////////////////////
 
+function createScene() {
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color( 0x050505 );
+    scene.fog = new THREE.Fog( 0x050505, 10, 400);
+
+    auxiScene = new THREE.Scene();
+
+    // Light
+    let ambientLight = new THREE.AmbientLight(0x444444, 0.10);
+    scene.add( ambientLight );
+
+    let lights = [];
+    lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+    lights[0].position.set(0, 0, 200);
+    scene.add( lights[0] );
+
+    // Objects
+    chromosome = new THREE.Object3D();
+    scene.add(chromosome);
+    bindTube(chromosome);
+
+    auxiChromosome = new THREE.Object3D();
+    auxiScene.add(auxiChromosome);
+    bindLine(auxiChromosome);
+}
+
+
 function animate() {
 
     requestAnimationFrame( animate );
@@ -146,7 +139,7 @@ function animate() {
     controls.update();
 
     render();
-    
+
     stats.update();
 }
 
@@ -157,8 +150,8 @@ function render() {
 
     if (preRenderTime - mousePick.lastMousePickCallTime > advancedConfig.mousePickInterval) {
     // Two calls of rayCaster should wait at least 'advancedConfig.mousePickInterval' ms
-        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mousePickInterval-100) {
-        // Mouse should keep stayed for at least 'advancedConfig.mousePickInterval'-100 ms
+        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mouseStayTime) {
+        // Mouse should keep stayed for at least 'advancedConfig.mouseStayTime' ms
 
             mousePick.call(auxiChromosome.children, chromosome.children);
         } else {

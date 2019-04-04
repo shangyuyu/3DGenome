@@ -8,6 +8,7 @@
 class MousePick {
 
     constructor () {
+        
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
@@ -22,7 +23,7 @@ Object.assign(MousePick.prototype, {
         this.lastMousePickCallTime = Date.now();
 
         this.rayCaster.setFromCamera( mouse.position, camera );
-        this.rayCaster.linePrecision = renderConfig.radius;
+        this.rayCaster.linePrecision = gui.renderConfig.radius;
 
         let intersects = this.rayCaster.intersectObjects( objectArray, false );
 
@@ -44,7 +45,7 @@ Object.assign(MousePick.prototype, {
         }
 
         if (advancedConfig.mousePickTimeDisp === true) {
-            console.log( "Mouse pick time cost: " + String(Date.now() - this.lastMousePickTime) + "ms");
+            console.log( "Mouse pick time cost: " + String(Date.now() - this.lastMousePickCallTime) + "ms");
         }
     }, 
 

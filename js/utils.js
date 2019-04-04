@@ -50,23 +50,23 @@ function bindTube(parent) {
 
         let geometry = new THREE.TubeBufferGeometry(
             curve[i], 
-            100 * renderConfig.tubularSegment, 
-            renderConfig.radius, 
-            renderConfig.radialSegment, 
+            100 * gui.renderConfig.tubularSegment, 
+            gui.renderConfig.radius, 
+            gui.renderConfig.radialSegment, 
             false  // 'closed' should be kept false
         );  
 
         let material = new THREE.MeshPhongMaterial( {
-            color: Number( renderConfig.materialColor.replace("#", "0x") ), 
-            emissive: Number( renderConfig.materialEmissive.replace("#", "0x") ), 
-            specular: Number( renderConfig.materialSpecular.replace("#", "0x") ),
+            color: Number( gui.renderConfig.materialColor.replace("#", "0x") ), 
+            emissive: Number( gui.renderConfig.materialEmissive.replace("#", "0x") ), 
+            specular: Number( gui.renderConfig.materialSpecular.replace("#", "0x") ),
             //side: THREE.DoubleSide, 
-            flatShading: false  // false for better visual effect
+            flatShading: false  // 'false' for better visual effect
         } );
 
         // bind Geometry and Material
         let mesh = new THREE.Mesh(geometry, material);
-        mesh.name = "Mesh" + String(i);
+        mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick
         parent.add(mesh);
     }
 }
@@ -86,7 +86,7 @@ function bindLine(parent) {
 
         // Retrieve position data from curve
         let temp = curve[i].getPoints(100 * 
-            (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : renderConfig.tubularSegment)
+            (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : gui.renderConfig.tubularSegment)
         );
         let tempCoordData = [];
         for (let j=0; j<temp.length; j+=1) {
@@ -100,7 +100,7 @@ function bindLine(parent) {
         );
 
         let line = new THREE.Line(lineGeometry);
-        line.name = "Line" + String(i);
+        line.name = "Line" + String(i);  // Name used for shadow mouse pick
         parent.add(line);
     }
 }
