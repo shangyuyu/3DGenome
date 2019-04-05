@@ -12,7 +12,8 @@
 THREE.TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
-	var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4 };
+	var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4, 
+				  FORWARD: 5, BACKWARD: 6, LEFT: 7, RIGHT: 8 };
 
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
@@ -26,6 +27,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.rotateSpeed = 1.0;
 	this.zoomSpeed = 1.2;
 	this.panSpeed = 0.3;
+	this.moveSpeed = 1.0;
 
 	this.noRotate = false;
 	this.noZoom = false;
@@ -37,7 +39,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.minDistance = 0;
 	this.maxDistance = Infinity;
 
-	this.keys = [ 65 /*A*/, 83 /*S*/, 68 /*D*/ ];
+	this.keys = [ 90 /*Z*/, 88 /*X*/, 67 /*C*/, 0 /*null*/, 0 /*null*/, 
+				  87 /*W*/, 83 /*S*/, 65 /*A*/, 68 /*D*/];
 
 	// internals
 
@@ -67,7 +70,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 		_panStart = new THREE.Vector2(),
 		_panEnd = new THREE.Vector2(),
 
-		_keyDown = false;  // Detect keyDown state
+		_keyDown = false,  // Detect keyDown state
+
+		backwardVector = new THREE.Vector3();
 
 	// for reset
 
@@ -299,22 +304,35 @@ THREE.TrackballControls = function ( object, domElement ) {
 		if ( ! _this.noRotate ) {
 
 			_this.rotateCamera();
-
 		}
-
 		if ( ! _this.noZoom ) {
 
 			_this.zoomCamera();
-
 		}
-
 		if ( ! _this.noPan ) {
 
 			_this.panCamera();
-
 		}
 
-		// Why bother change again??
+		backwardVector.copy(_eye).normalize();
+
+		if ( _state === STATE.FORWARD ) {
+
+			_this.target.add( backwardVector.multiplyScalar(-1.0 * this.moveSpeed) );
+		}
+		if ( _state === STATE.BACKWARD ) {
+
+			_this.target.add( backwardVector.multiplyScalar(this.moveSpeed) );
+		}
+		if ( _state === STATE.LEFT ) {
+
+			_this.target.add( backwardVector.crossVectors(backwardVector, _this.object.up).normalize().multiplyScalar(this.moveSpeed) );
+		}
+		if ( _state === STATE.RIGHT ) {
+
+			_this.target.add( backwardVector.crossVectors(backwardVector, _this.object.up).normalize().multiplyScalar(-1 * this.moveSpeed) );
+		}
+
 		_this.object.position.addVectors( _this.target, _eye );
 
 		_this.checkDistances();
@@ -378,6 +396,22 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			_state = STATE.PAN;
 
+		} else if ( event.keyCode === _this.keys[ STATE.FORWARD ]) {
+
+			_state = STATE.FORWARD;
+
+		} else if ( event.keyCode === _this.keys[ STATE.BACKWARD ]) {
+
+			_state = STATE.BACKWARD;
+
+		} else if ( event.keyCode === _this.keys[ STATE.LEFT ]) {
+
+			_state = STATE.LEFT;
+
+		} else if ( event.keyCode === _this.keys[ STATE.RIGHT ]) {
+
+			_state = STATE.RIGHT;
+
 		}
 
 	}
@@ -397,6 +431,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		// Moved from main function to here
 		onDocumentMouseDown(event);
+		// Moved from main function to here
 
 		if ( _this.enabled === false ) return;
 
