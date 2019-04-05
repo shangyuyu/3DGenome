@@ -11,7 +11,7 @@
 
 Critical
 - [ ] Loader
-- [ ] Backstage data structure
+- [ ] Backstage data structure + (name system -> mousePick)
 - [ ] All 23 CHRs
 
 Long Term
@@ -21,3 +21,7 @@ Long Term
 Minor Improvement
 - [ ] Reset trackball location
 - [ ] Auto-rotation
+
+WARNING
+- All objects may be destructed by re-render
+- Change of onPick/onFocus behavior is bug-prone

@@ -41,10 +41,22 @@ function getRandomArbitrary(min, max) {
 function bindTube(parent) {
     // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
+    // Save mousePick.pickedArray info
+    let indexArray = [];
+    if (mousePick.pickedArray.length > 0) {
+
+        for (let i=0; i<mousePick.pickedArray.length; i+=1) {
+
+            indexArray.push( Number(mousePick.pickedArray[i].name.slice(4)) );
+        }
+    }
+
+    // Deep destruction
     if (parent.children.length > 0) {
         // memory leak?
         disposeHierarchy(parent, disposeNode);
     }
+    mousePick.onModelDestruct();
 
     // Re-construct
     for (let i=0; i<200; i+=1) {
@@ -68,11 +80,14 @@ function bindTube(parent) {
         // bind Geometry and Material
         let mesh = new THREE.Mesh(geometry, material);
         mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick
+        mesh.protectedRecoverHex = "";
+        mesh.recoverHex = "";
+        
         parent.add(mesh);
     }
 
     // resume pickedArray
-    
+    mousePick.setAsFocus(parent, indexArray);
 }
 
 

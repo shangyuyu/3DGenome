@@ -62,6 +62,7 @@ function init() {
     //////////////////////////////////////////////////////////////
     // Init configuration
     gui = new GUIManager();
+    mousePick = new MousePick();
 
     // camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
@@ -89,9 +90,6 @@ function init() {
     // Stats
     stats = new Stats();
     container.appendChild( stats.dom );
-
-    // MousePick
-    mousePick = new MousePick();
 
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );

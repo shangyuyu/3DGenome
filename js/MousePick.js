@@ -6,6 +6,8 @@
 "use strict";
 
 class MousePick {
+// MousePick shall only be substantiated once but can be binded to
+// different Object3Ds. pickedArray will be shared among them.
 
     constructor () {
         
@@ -49,18 +51,19 @@ Object.assign(MousePick.prototype, {
         if (advancedConfig.mousePickTimeDisp === true) {
             console.log( "Mouse pick time cost: " + String(Date.now() - this.lastMousePickCallTime) + "ms");
         } else if (Date.now() - this.lastMousePickCallTime > 100) {
-            console.log( "Mouse pick cost too much time: " + String(Date.now() - this.lastMousePickCallTime) + "ms. Consider refresh page or suppress render quality.");
+            console.log( "Mouse pick cost too much time: " + String(Date.now() - this.lastMousePickCallTime) + "ms. Consider disable mouse pick, refresh page or suppress render quality.");
         }
     }, 
 
     onPick: function () {
+    // Assume INTERSECTED not null
 
         this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
         this.INTERSECTED.material.emissive.setHex(0xff0000);
     }, 
 
     onLeft: function () {
-    // undo onPick changes
+    // Undo onPick changes
 
         if (this.INTERSECTED) {
 
@@ -84,7 +87,19 @@ Object.assign(MousePick.prototype, {
         }
     }, 
 
-    reset: function (shadowArray) {
+    setAsFocus: function(parent, indexArray) {
+        // Put objects of 'parent' whose index in 'indexArray' into pickedArray
+        // FIX ME Will not check whether existed
+    
+        for (let i=0; i<indexArray.length; i+=1) {
+
+            this.INTERSECTED = parent.children[indexArray[i]];
+            this.onPick();
+            this.onFocus();
+        }
+    },
+
+    reset: function () {
 
         console.log("MousePick.js::Reset " + this.pickedArray.length + " protected selections.");
         for (let i=0; i<this.pickedArray.length; i+=1) {
@@ -93,6 +108,13 @@ Object.assign(MousePick.prototype, {
             INTERSECTED.protected = false;
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
         }
+        this.pickedArray = [];
+    },
+
+    onModelDestruct: function() {
+    // on the destruction of models, NOT mousePick itself
+        
+        this.INTERSECTED = null;
         this.pickedArray = [];
     }
 

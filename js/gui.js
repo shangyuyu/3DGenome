@@ -44,12 +44,18 @@ Object.assign(GUIManager.prototype, {
                 value = value.replace("#", "0x");
             }
 
-            for (let i=0; i<200; i+=1) {  // WARNING: Change the 200 later
+            for (let i=0; i<200; i+=1) {  // WARNING: Change the 200 later FIX ME
                 
                 if (type === "color")
                     parent.children[i].material.color.setHex(value);
-                else if (type === "emissive")
-                    parent.children[i].material.emissive.setHex(value);
+                else if (type === "emissive") {
+                    if (!parent.children[i].protected)
+                        // When changing emissive color, protected cannot be changed
+                        parent.children[i].material.emissive.setHex(value);
+                    else
+                        // but later if reset...
+                        parent.children[i].protectedRecoverHex = value;
+                }
                 else if (type === "specular")
                     parent.children[i].material.specular.setHex(value);
                 else 
