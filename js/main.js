@@ -96,6 +96,8 @@ function init() {
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
+    controls.minDistance = 1;
+    controls.maxDistance = 400;
 
     //////////////////////////////////////////////////////////////
 

@@ -27,7 +27,7 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
-            reset: function(){mousePick.reset();},  // FIX ME
+            reset: function(){mousePick.reset();},
         };
     }
 }

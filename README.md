@@ -9,6 +9,7 @@
 - [x] MousePick multi-select
 - [ ] Disp selected object info
 - [ ] Global
+- [ ] Auto-rotation
 
 - [ ] User input desired range
 - [ ] TypeScript?

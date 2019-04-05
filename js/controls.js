@@ -3,6 +3,7 @@
  * @author Mark Lundin 	/ http://mark-lundin.com
  * @author Simone Manini / http://daron1337.github.io
  * @author Luca Antiga 	/ http://lantiga.github.io
+ * Modified by Ziyi to better meet requirements
  */
 /* jshint -W117 */
 
@@ -64,7 +65,9 @@ THREE.TrackballControls = function ( object, domElement ) {
 		_touchZoomDistanceEnd = 0,
 
 		_panStart = new THREE.Vector2(),
-		_panEnd = new THREE.Vector2();
+		_panEnd = new THREE.Vector2(),
+
+		_keyDown = false;  // Detect keyDown state
 
 	// for reset
 
@@ -155,7 +158,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			if ( angle ) {
 
-				_eye.copy( _this.object.position ).sub( _this.target );
+				// _eye.copy( _this.object.position ).sub( _this.target );  // useless
 
 				eyeDirection.copy( _eye ).normalize();
 				objectUpDirection.copy( _this.object.up ).normalize();
@@ -240,12 +243,15 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 			if ( mouseChange.lengthSq() ) {
 
+				// Correct mouseChange with distance from camera to trackball
 				mouseChange.multiplyScalar( _eye.length() * _this.panSpeed );
 
+				// Distance trackball should move 
 				pan.copy( _eye ).cross( _this.object.up ).setLength( mouseChange.x );
 				pan.add( objectUp.copy( _this.object.up ).setLength( mouseChange.y ) );
 
-				_this.object.position.add( pan );
+				// Move trackball
+				// _this.object.position.add( pan );  // useless
 				_this.target.add( pan );
 
 				if ( _this.staticMoving ) {
@@ -308,12 +314,14 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
+		// Why bother change again??
 		_this.object.position.addVectors( _this.target, _eye );
 
 		_this.checkDistances();
 
 		_this.object.lookAt( _this.target );
 
+		// If this update changes larger than EPS...
 		if ( lastPosition.distanceToSquared( _this.object.position ) > EPS ) {
 
 			_this.dispatchEvent( changeEvent );
@@ -352,6 +360,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 		window.removeEventListener( 'keydown', keydown );
 
 		_prevState = _state;
+		_keyDown = true;
 
 		if ( _state !== STATE.NONE ) {
 
@@ -378,6 +387,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 		if ( _this.enabled === false ) return;
 
 		_state = _prevState;
+		_keyDown = false;
 
 		window.addEventListener( 'keydown', keydown, false );
 
@@ -454,7 +464,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		_state = STATE.NONE;
+		if (!_keyDown)
+			_state = STATE.NONE;
 
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
