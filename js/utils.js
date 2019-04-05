@@ -41,22 +41,16 @@ function getRandomArbitrary(min, max) {
 function bindTube(parent) {
     // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
-    // Save mousePick.pickedArray info
+    // Save mousePick.focusArray info
     let indexArray = [];
-    if (mousePick.pickedArray.length > 0) {
-
-        for (let i=0; i<mousePick.pickedArray.length; i+=1) {
-
-            indexArray.push( Number(mousePick.pickedArray[i].name.slice(4)) );
-        }
-    }
+    mousePick.getFocusIndexArray( indexArray );
 
     // Deep destruction
     if (parent.children.length > 0) {
         // memory leak?
         disposeHierarchy(parent, disposeNode);
     }
-    mousePick.onModelDestruct();
+    mousePick.clearFocused();
 
     // Re-construct
     for (let i=0; i<200; i+=1) {
@@ -86,7 +80,7 @@ function bindTube(parent) {
         parent.add(mesh);
     }
 
-    // resume pickedArray
+    // resume focusArray
     mousePick.setAsFocus(parent, indexArray);
 }
 

@@ -27,6 +27,8 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
+            onPickColor: "#ff0000",
+            onFocusColor: "#00ff00",
             reset: function(){mousePick.reset();},
         };
     }
@@ -104,6 +106,13 @@ Object.assign(GUIManager.prototype, {
 
         this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
             mousePick.enable = value;
+        } );
+        this.folders[1].addColor(this.mousePickConfig, "onPickColor");
+        this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
+            let indexArray = [];
+            mousePick.getFocusIndexArray( indexArray );
+            mousePick.clearFocused();
+            mousePick.setAsFocus( this.shadowParent, indexArray );
         } );
         this.folders[1].add(this.mousePickConfig, "reset");
 

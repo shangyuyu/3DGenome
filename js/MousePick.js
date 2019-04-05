@@ -7,7 +7,7 @@
 
 class MousePick {
 // MousePick shall only be substantiated once but can be binded to
-// different Object3Ds. pickedArray will be shared among them.
+// different Object3Ds. focusArray will be shared among them.
 
     constructor () {
         
@@ -15,7 +15,7 @@ class MousePick {
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
-        this.pickedArray = [];
+        this.focusArray = [];
     }
 }
 
@@ -59,7 +59,7 @@ Object.assign(MousePick.prototype, {
     // Assume INTERSECTED not null
 
         this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
-        this.INTERSECTED.material.emissive.setHex(0xff0000);
+        this.INTERSECTED.material.emissive.setHex( gui.mousePickConfig.onPickColor.replace("#", "0x") );
     }, 
 
     onLeft: function () {
@@ -76,19 +76,19 @@ Object.assign(MousePick.prototype, {
 
         let index = Number( this.INTERSECTED.name.slice(4) );
         
-        if (!this.pickedArray.find( e => e.name.slice(4) == index )) {
+        if (!this.focusArray.find( e => e.name.slice(4) == index )) {
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
-            this.pickedArray.push( this.INTERSECTED );  // push by reference (not copy)?
+            this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
             this.INTERSECTED.protected = true;
             this.INTERSECTED.protectedRecoverHex = this.INTERSECTED.recoverHex;
-            this.INTERSECTED.material.emissive.setHex(0x00ff00);
+            this.INTERSECTED.material.emissive.setHex( gui.mousePickConfig.onFocusColor.replace("#", "0x") );
             this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
         }
     }, 
 
     setAsFocus: function(parent, indexArray) {
-        // Put objects of 'parent' whose index in 'indexArray' into pickedArray
+        // Put objects of 'parent' whose index in 'indexArray' into focusArray
         // FIX ME Will not check whether existed
     
         for (let i=0; i<indexArray.length; i+=1) {
@@ -101,21 +101,34 @@ Object.assign(MousePick.prototype, {
 
     reset: function () {
 
-        console.log("MousePick.js::Reset " + this.pickedArray.length + " protected selections.");
-        for (let i=0; i<this.pickedArray.length; i+=1) {
+        console.log("MousePick.js::Reset " + this.focusArray.length + " protected selections.");
+        for (let i=0; i<this.focusArray.length; i+=1) {
 
-            let INTERSECTED = this.pickedArray[i];
+            let INTERSECTED = this.focusArray[i];
             INTERSECTED.protected = false;
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
         }
-        this.pickedArray = [];
+        this.focusArray = [];
     },
 
-    onModelDestruct: function() {
-    // on the destruction of models, NOT mousePick itself
+    getFocusIndexArray: function ( targetArray ) {
+    // return focusArray index
+
+        targetArray = [];
+        if (this.focusArray.length > 0) {
+
+            for (let i=0; i<this.focusArray.length; i+=1) {
+
+                targetArray.push( Number(mousePick.focusArray[i].name.slice(4)) );  // FIXME
+            }
+        }
+    },
+
+    clearFocused: function() {
+    // Clear focusArray and INTERSECTED
         
         this.INTERSECTED = null;
-        this.pickedArray = [];
+        this.focusArray = [];
     }
 
 } );

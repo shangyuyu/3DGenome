@@ -5,7 +5,7 @@
 - [x] Better TrackballControl
 - [x] MousePick config GUI
 - [x] MousePick multi-select
-- [ ] Multi-select trigger
+- [x] Multi-select trigger
 - [ ] Disp selected object info
 - [ ] Global
 
