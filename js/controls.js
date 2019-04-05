@@ -13,7 +13,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	var _this = this;
 	var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4, 
-				  FORWARD: 5, BACKWARD: 6, LEFT: 7, RIGHT: 8 };
+				  FORWARD: 5, BACKWARD: 6, LEFT: 7, RIGHT: 8, UP: 9, DOWN: 10, 
+				  ROLLLEFT: 11, ROLLRIGHT: 12 };
 
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
@@ -28,6 +29,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.zoomSpeed = 1.2;
 	this.panSpeed = 0.3;
 	this.moveSpeed = 1.0;
+	this.rollSpeed = 0.01;
 
 	this.noRotate = false;
 	this.noZoom = false;
@@ -40,7 +42,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.maxDistance = Infinity;
 
 	this.keys = [ 90 /*Z*/, 88 /*X*/, 67 /*C*/, 0 /*null*/, 0 /*null*/, 
-				  87 /*W*/, 83 /*S*/, 65 /*A*/, 68 /*D*/];
+				  87 /*W*/, 83 /*S*/, 65 /*A*/, 68 /*D*/, 82 /*R*/, 70 /*F*/, 
+				  81 /*Q*/, 69 /*E*/];
 
 	// internals
 
@@ -314,6 +317,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 			_this.panCamera();
 		}
 
+		// auxi vector
 		backwardVector.copy(_eye).normalize();
 
 		if ( _state === STATE.FORWARD ) {
@@ -330,7 +334,25 @@ THREE.TrackballControls = function ( object, domElement ) {
 		}
 		if ( _state === STATE.RIGHT ) {
 
-			_this.target.add( backwardVector.crossVectors(backwardVector, _this.object.up).normalize().multiplyScalar(-1 * this.moveSpeed) );
+			_this.target.add( backwardVector.crossVectors(backwardVector, _this.object.up).normalize().multiplyScalar(-1.0 * this.moveSpeed) );
+		}
+		if ( _state === STATE.UP ) {
+
+			_this.target.add( backwardVector.copy(_this.object.up).normalize().multiplyScalar(this.moveSpeed) );
+		}
+		if ( _state === STATE.DOWN ) {
+
+			_this.target.add( backwardVector.copy(_this.object.up).normalize().multiplyScalar(-1.0 * this.moveSpeed) );
+		}
+		if ( _state === STATE.ROLLLEFT ) {
+
+			backwardVector.crossVectors(_this.object.up, backwardVector).multiplyScalar(this.rollSpeed);
+			_this.object.up.add(backwardVector).normalize();
+		}
+		if ( _state === STATE.ROLLRIGHT ) {
+
+			backwardVector.crossVectors(backwardVector, _this.object.up).multiplyScalar(this.rollSpeed);
+			_this.object.up.add(backwardVector).normalize();
 		}
 
 		_this.object.position.addVectors( _this.target, _eye );
@@ -411,6 +433,22 @@ THREE.TrackballControls = function ( object, domElement ) {
 		} else if ( event.keyCode === _this.keys[ STATE.RIGHT ]) {
 
 			_state = STATE.RIGHT;
+
+		} else if ( event.keyCode === _this.keys[ STATE.UP ]) {
+
+			_state = STATE.UP;
+
+		} else if ( event.keyCode === _this.keys[ STATE.DOWN ]) {
+
+			_state = STATE.DOWN;
+
+		} else if ( event.keyCode === _this.keys[ STATE.ROLLLEFT ]) {
+
+			_state = STATE.ROLLLEFT;
+
+		} else if ( event.keyCode === _this.keys[ STATE.ROLLRIGHT ]) {
+
+			_state = STATE.ROLLRIGHT;
 
 		}
 
