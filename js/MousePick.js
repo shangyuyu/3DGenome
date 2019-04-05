@@ -76,7 +76,7 @@ Object.assign(MousePick.prototype, {
 
         let index = Number( this.INTERSECTED.name.slice(4) );
         
-        if (!this.focusArray.find( e => e.name.slice(4) == index )) {
+        if (!this.focusArray.find( e => e.name.slice(4) == index )) {  // FIXME
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
             this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
@@ -91,12 +91,15 @@ Object.assign(MousePick.prototype, {
         // Put objects of 'parent' whose index in 'indexArray' into focusArray
         // FIX ME Will not check whether existed
     
+        let temp = this.INTERSECTED;
         for (let i=0; i<indexArray.length; i+=1) {
 
             this.INTERSECTED = parent.children[indexArray[i]];
             this.onPick();
             this.onFocus();
+            // this.onLeft(); Logically should onLeft, but does not change anything
         }
+        this.INTERSECTED = temp;
     },
 
     reset: function () {
@@ -114,7 +117,6 @@ Object.assign(MousePick.prototype, {
     getFocusIndexArray: function ( targetArray ) {
     // return focusArray index
 
-        targetArray = [];
         if (this.focusArray.length > 0) {
 
             for (let i=0; i<this.focusArray.length; i+=1) {

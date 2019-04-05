@@ -112,7 +112,7 @@ Object.assign(GUIManager.prototype, {
             let indexArray = [];
             mousePick.getFocusIndexArray( indexArray );
             mousePick.clearFocused();
-            mousePick.setAsFocus( this.shadowParent, indexArray );
+            mousePick.setAsFocus( gui.parent, indexArray );
         } );
         this.folders[1].add(this.mousePickConfig, "reset");
 
