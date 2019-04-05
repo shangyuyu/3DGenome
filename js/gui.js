@@ -27,8 +27,8 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
-            onPickColor: "#ff0000",
-            onFocusColor: "#00ff00",
+            onPickColor: "#ac0000",
+            onFocusColor: "#007d1d",
             reset: function(){mousePick.reset();},
         };
     }
@@ -109,10 +109,7 @@ Object.assign(GUIManager.prototype, {
         } );
         this.folders[1].addColor(this.mousePickConfig, "onPickColor");
         this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
-            let indexArray = [];
-            mousePick.getFocusIndexArray( indexArray );
-            mousePick.clearFocused();
-            mousePick.setAsFocus( gui.parent, indexArray );
+            mousePick.reRenderFocusArray();
         } );
         this.folders[1].add(this.mousePickConfig, "reset");
 

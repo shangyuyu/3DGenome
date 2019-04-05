@@ -89,7 +89,7 @@ Object.assign(MousePick.prototype, {
 
     setAsFocus: function(parent, indexArray) {
         // Put objects of 'parent' whose index in 'indexArray' into focusArray
-        // FIX ME Will not check whether existed
+        // FIXME : did not check whether existed
     
         let temp = this.INTERSECTED;
         for (let i=0; i<indexArray.length; i+=1) {
@@ -103,6 +103,7 @@ Object.assign(MousePick.prototype, {
     },
 
     reset: function () {
+    // Use 'clearFocused' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.focusArray.length + " protected selections.");
         for (let i=0; i<this.focusArray.length; i+=1) {
@@ -128,10 +129,20 @@ Object.assign(MousePick.prototype, {
 
     clearFocused: function() {
     // Clear focusArray and INTERSECTED
+    // Use 'reset' instead if the model is not destructed
         
         this.INTERSECTED = null;
         this.focusArray = [];
-    }
+    },
+
+    reRenderFocusArray: function () {
+    // Not completely re-render
+
+        for (let i=0; i<this.focusArray.length; i+=1) {
+
+            this.focusArray[i].material.emissive.setHex( gui.mousePickConfig.onFocusColor.replace("#", "0x") );
+        }
+    },
 
 } );
 
