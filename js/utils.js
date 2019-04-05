@@ -46,6 +46,7 @@ function bindTube(parent) {
         disposeHierarchy(parent, disposeNode);
     }
 
+    // Re-construct
     for (let i=0; i<200; i+=1) {
 
         let geometry = new THREE.TubeBufferGeometry(
@@ -69,6 +70,9 @@ function bindTube(parent) {
         mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick
         parent.add(mesh);
     }
+
+    // resume pickedArray
+    
 }
 
 
@@ -175,9 +179,16 @@ function onDocumentMouseDown(event) {
 
     event.preventDefault();
     
+}
+
+
+function onDocumentDoubleClick(event) {
+
+    event.preventDefault();
+
     // make the picked object stay focused
     if (mousePick.INTERSECTED)
-        mousePick.onFocus();
+    mousePick.onFocus();
 }
 
 

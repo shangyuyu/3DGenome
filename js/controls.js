@@ -467,10 +467,6 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	function mousedown( event ) {
 
-		// Moved from main function to here
-		onDocumentMouseDown(event);
-		// Moved from main function to here
-
 		if ( _this.enabled === false ) return;
 
 		event.preventDefault();
@@ -501,6 +497,10 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		document.addEventListener( 'mousemove', mousemove, false );
 		document.addEventListener( 'mouseup', mouseup, false );
+
+		// Moved from main function to here
+		onDocumentMouseDown(event);
+		// Moved from main function to here
 
 		_this.dispatchEvent( startEvent );
 

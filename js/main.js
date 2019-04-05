@@ -105,6 +105,7 @@ function init() {
     // document.addEventListener( "mousedown", onDocumentMouseDown, false );
     // WARNING: call of 'onDocumentMouseDown' has been moved to 'controls.js'
     //          due to serious confict of event listener
+    document.addEventListener( "dblclick", onDocumentDoubleClick, false );
     window.addEventListener( "resize", onWindowResize, false );
 
     animate();
