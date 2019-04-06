@@ -40,7 +40,6 @@ function loadData() {
 function init() {
 
     container = document.getElementById("webGLContainer");
-    // document.body.appendChild( container );
 
     //////////////////////////////////////////////////////////////
     // Process data
@@ -74,8 +73,8 @@ function init() {
     createScene();
     
     // GUI
-    let custom = document.getElementById("my-gui-container");
-    custom.appendChild(gui.gui.domElement);
+    document.getElementById("guiContainer").append(gui.gui.domElement);
+        // Re-append GUI to custom div
     gui.bindParent(chromosome);
     gui.bindShadowParent(auxiChromosome);
     gui.activate();

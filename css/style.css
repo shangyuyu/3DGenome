@@ -5,6 +5,21 @@ body {
     background-color: #050505;
     overflow: hidden;
 }
+#topInfoContainer {
+    position: absolute;
+    z-index: 10;
+}
+#webGLContainer {
+    position: absolute;
+    z-index: 8;
+}
+#guiContainer {
+    position: absolute;
+    top: 0em;
+    right: 0em;
+    z-index: 12;
+}
+
 #topInfoPanel {
     padding-left: 0;
     padding-right: 0;
@@ -13,12 +28,4 @@ body {
     display: block;
     width: 500px;
     height: 100px;
-}
-#top {
-    position: absolute;
-    z-index: 10;
-}
-#webGLContainer {
-    position: absolute;
-    z-index: 8;
 }
