@@ -91,6 +91,11 @@ function init() {
     stats = new Stats();
     container.appendChild( stats.dom );
 
+    // temp
+    let sprite = makeTextSprite("Hello");
+    sprite.position.set(0, 0, 100);
+    scene.add(sprite);
+
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
@@ -183,3 +188,31 @@ function render() {
 }  // End of initScene()
 
 // End of main.js
+
+function makeTextSprite(message, opts) {
+    var parameters = opts || {};
+    var fontface = parameters.fontface || 'Helvetica';
+    var fontsize = parameters.fontsize || 120;
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.font = fontsize + "px " + fontface;
+
+    // get size data (height depends only on font size)
+    var metrics = context.measureText(message);
+    var textWidth = metrics.width;
+
+    // text color
+    context.fillStyle = 'rgba(0, 0, 0, 1.0)';
+    context.fillText(message, 0, fontsize);
+
+    // canvas contents will be used for a texture
+    var texture = new THREE.Texture(canvas)
+    texture.minFilter = THREE.LinearFilter;
+    texture.needsUpdate = true;
+
+    var spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+    var sprite = new THREE.Sprite( spriteMaterial );
+    sprite.scale.set( 10, 5, 1.0 );
+    sprite.center.set( 0,1 );
+    return sprite;
+}

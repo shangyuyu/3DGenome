@@ -6,10 +6,11 @@
 - [x] MousePick config GUI
 - [x] MousePick multi-select
 - [x] Multi-select trigger
-- [ ] Disp selected object info
+- [ ] Disp mouse pick info
 - [ ] Global
 
 Critical
+- [ ] Disp selected object info (info panal)
 - [ ] Loader
 - [ ] Backstage data structure + (name system -> mousePick)
 - [ ] All 23 CHRs
