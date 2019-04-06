@@ -11,7 +11,7 @@ class GUIManager {
 
         this.parent = parent;
         this.shadowParent = shadowParent;
-        this.gui = new dat.GUI();
+        this.gui = new dat.GUI( {autoPlace: true} );
         this.folders = [];
 
         this.renderConfig = {
