@@ -15,7 +15,7 @@ class GUIManager {
         this.folders = [];
 
         this.renderConfig = {
-            background: "#050505", 
+            background: "#1a1a1a", 
             ambientColor: "#ffffff",
             materialColor: "#2194ce",  // 156289
             materialEmissive: "#072534", 

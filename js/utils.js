@@ -207,6 +207,10 @@ function onWindowResize(event) {
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
+
+    // Override CSS setting on resize
+    $("#topInfoPanel").css("margin-left" , Math.floor((window.innerWidth - 200)/2.0));
+
 }
 
 // End of utils.js

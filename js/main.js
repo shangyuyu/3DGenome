@@ -14,7 +14,7 @@ let coordData = [];
 let posData = [];
 
 
-loadData();  // Trigger excution
+loadData();  // Trigger execution
 
 
 function loadData() {
@@ -40,6 +40,9 @@ function loadData() {
 function init() {
 
     container = document.getElementById("webGLContainer");
+
+    // Override CSS setting to center "topInfoPanel"
+    $("#topInfoPanel").css("margin-left" , Math.floor((window.innerWidth - 200)/2.0));
 
     //////////////////////////////////////////////////////////////
     // Process data

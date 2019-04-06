@@ -21,7 +21,7 @@ Object.assign(TEXT.prototype, {
         let canvas = document.getElementById("topInfoPanel");
         let context = canvas.getContext("2d");
 
-        context.font = "48px Arial";
+        context.font = "24px Arial";
         context.fillStyle = "rgba(255, 0, 0, 1.0)";
         context.fillText("123312", 0, 48);
 
