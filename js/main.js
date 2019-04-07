@@ -120,8 +120,8 @@ function init() {
 function createScene() {
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color( 0x050505 );
-    scene.fog = new THREE.Fog( 0x050505, 10, 400);
+    scene.background = new THREE.Color( 0x1a1a1a );
+    scene.fog = new THREE.Fog( 0x1a1a1a, 10, 400);
 
     auxiScene = new THREE.Scene();
 

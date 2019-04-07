@@ -21,8 +21,8 @@ Object.assign(TEXT.prototype, {
         let canvas = document.getElementById("topInfoPanel");
         let context = canvas.getContext("2d");
 
-        context.font = "24px Arial";
-        context.fillStyle = "rgba(0, 0, 0, 1.0)";
+        context.font = "12px Arial";
+        context.fillStyle = "rgba(255, 255, 255, 1.0)";
 
         return {canvas: canvas, context: context};
     },
@@ -70,10 +70,15 @@ Object.assign(TEXT.prototype, {
     setText: function (object, message) {
     // object: {canvas:..., context:...}
 
-        // clear canvas
+        // Clear canvas
         object.context.clearRect(0, 0, object.canvas.width, object.canvas.height);
-
-        object.context.fillText(message, 0, 48);
+        // Border rect
+        object.context.rect(0, 0, object.canvas.width, object.canvas.height);
+        object.context.strokeStyle = "#333333";
+        object.context.lineWidth = 5;
+        object.context.stroke();
+        // Fill text
+        object.context.fillText(message, 10, 17);
     },
 
     showTopInfoPanel: function () {

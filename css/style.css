@@ -24,7 +24,5 @@ body {
 
 #topInfoPanel {
     display: block;
-    background: #aaaaaa;
-    width: 200px;
-    height: 100px;
+    background: #1a1a1a;
 }
