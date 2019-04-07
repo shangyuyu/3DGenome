@@ -59,8 +59,10 @@ Object.assign(MousePick.prototype, {
     // Assume INTERSECTED not null
 
         // TEXT disp logic
-        text.setText(text.topInfoPanel, this.INTERSECTED.name);
-        text.showTopInfoPanel();
+        if (text.topInfoPanelEnable === true) {
+            text.setText(text.topInfoPanel, this.INTERSECTED.name);
+            text.showTopInfoPanel();
+        }
 
         // MousePick logic
         this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();

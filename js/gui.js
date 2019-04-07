@@ -31,6 +31,9 @@ class GUIManager {
             onFocusColor: "#007d1d",
             reset: function(){mousePick.reset();},
         };
+        this.infoDispConfig = {
+            topInfoPanelEnable: true,
+        };
     }
 }
 
@@ -114,6 +117,15 @@ Object.assign(GUIManager.prototype, {
         this.folders[1].add(this.mousePickConfig, "reset");
 
         this.folders[1].open();
+        
+        ////////////////////////////////////////////////////////////////////////////////////
+        this.folders[2] = this.gui.addFolder( "Info Display" );
+
+        this.folders[2].add(this.infoDispConfig, "topInfoPanelEnable").onChange( function (value) {
+            text.topInfoPanelEnable = value;
+        } );
+
+        this.folders[2].open();
     },
 
     bindParent: function (parent) {

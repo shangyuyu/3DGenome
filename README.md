@@ -6,7 +6,7 @@
 - [x] MousePick config GUI
 - [x] MousePick multi-select
 - [x] Multi-select trigger
-- [ ] Disp mouse pick info
+- [x] Disp mouse pick info
 - [ ] Global
 
 Critical

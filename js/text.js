@@ -9,6 +9,7 @@ class TEXT {
 
     constructor () {
 
+        this.topInfoPanelEnable = true;
         this.topInfoPanel = this.newTopInfoPanel();
         this.array = [];
     }
