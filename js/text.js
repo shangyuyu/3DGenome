@@ -16,15 +16,34 @@ class TEXT {
 
 Object.assign(TEXT.prototype, {
 
+    pixelRatio: function (ctx) {
+
+        let dpr = window.devicePixelRatio || 1;
+        console.log(dpr);
+        let bsr = ctx.webkitBackingStorePixelRatio ||
+                  ctx.mozBackingStorePixelRatio ||
+                  ctx.msBackingStorePixelRatio ||
+                  ctx.oBackingStorePixelRatio ||
+                  ctx.backingStorePixelRatio || 1;
+        console.log(bsr);
+
+        return dpr / bsr;
+    },
+
     newTopInfoPanel: function () {
 
         let canvas = document.getElementById("topInfoPanel");
         let context = canvas.getContext("2d");
 
-        context.font = "12px Arial";
+        // Fix pixel ratio blurry bug
+        let ratio = this.pixelRatio(context);
+        canvas.width *= ratio;
+        canvas.height *= ratio;
+
+        context.font = "21px Verdana";
         context.fillStyle = "rgba(255, 255, 255, 1.0)";
 
-        return {canvas: canvas, context: context};
+        return {canvas: canvas, context: context, ratio: ratio};
     },
 
     newInfoPanel: function () {
@@ -68,7 +87,7 @@ Object.assign(TEXT.prototype, {
     },
 
     setText: function (object, message) {
-    // object: {canvas:..., context:...}
+    // object: {canvas:..., context:..., ratio:...}
 
         // Clear canvas
         object.context.clearRect(0, 0, object.canvas.width, object.canvas.height);
@@ -78,7 +97,7 @@ Object.assign(TEXT.prototype, {
         object.context.lineWidth = 5;
         object.context.stroke();
         // Fill text
-        object.context.fillText(message, 10, 17);
+        object.context.fillText(message, 78*object.ratio, 22*object.ratio);  // FIXME
     },
 
     showTopInfoPanel: function () {

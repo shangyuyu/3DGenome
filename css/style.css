@@ -25,4 +25,6 @@ body {
 #topInfoPanel {
     display: block;
     background: #1a1a1a;
+    width: 200px;
+    height: 40px;
 }
