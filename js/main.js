@@ -65,6 +65,7 @@ function init() {
     // Init configuration
     gui = new GUIManager();
     mousePick = new MousePick();
+    text = new TEXT();
 
     // camera
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
@@ -96,16 +97,16 @@ function init() {
     stats.domElement.style.position = "absolute";
     document.getElementById("statsContainer").append(stats.domElement);
 
-    // TEXT
-    text = new TEXT();
-
     // temp
     jsPanel.create( {
         position: "left-top",
         panelSize: "300 " + String(window.innerHeight),
         theme: "#1a1a1a filled",
         border: "2px #333333",
+        header: false,
+        content: text.leftInfoPanel,
         contentOverflow: "scroll",
+        dragit: false,
     } );
 
     // Controls

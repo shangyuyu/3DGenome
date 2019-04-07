@@ -89,6 +89,9 @@ Object.assign(MousePick.prototype, {
         
         if (!this.focusArray.find( e => e.name.slice(4) == index )) {  // FIXME
 
+            // TEXT Left Info Panel
+            text.addToLeftInfoPanel(this.INTERSECTED.name);
+
             // WARNING: The sequence here is non-interchangeable and bug-prone
             this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
             this.INTERSECTED.protected = true;
@@ -120,6 +123,10 @@ Object.assign(MousePick.prototype, {
         for (let i=0; i<this.focusArray.length; i+=1) {
 
             let INTERSECTED = this.focusArray[i];
+
+            // TEXT Left Info Panel
+            text.removeFromLeftInfoPanel(INTERSECTED.name);
+            
             INTERSECTED.protected = false;
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
         }

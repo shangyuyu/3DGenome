@@ -10,7 +10,9 @@ class TEXT {
     constructor () {
 
         this.topInfoPanelEnable = true;
+        this.leftInfoPanelEnable = true;
         this.topInfoPanel = this.newTopInfoPanel();
+        this.leftInfoPanel = this.newLeftInfoPanel();
         this.array = [];
     }
 }
@@ -43,6 +45,13 @@ Object.assign(TEXT.prototype, {
         context.fillStyle = "rgba(255, 255, 255, 1.0)";
 
         return {canvas: canvas, context: context, ratio: ratio};
+    },
+
+    newLeftInfoPanel: function () {
+
+        let content = document.createElement("div");
+
+        return content;
     },
 
     newInfoPanel: function () {
@@ -93,10 +102,33 @@ Object.assign(TEXT.prototype, {
         // Border rect
         object.context.rect(0, 0, object.canvas.width, object.canvas.height);
         object.context.strokeStyle = "#333333";
-        object.context.lineWidth = 5;
+        object.context.lineWidth = 6;
         object.context.stroke();
         // Fill text
         object.context.fillText(message, 78*object.ratio, 24*object.ratio);  // FIXME
+    },
+
+    addToLeftInfoPanel: function (name) {
+
+        let para = document.createElement("p");
+        para.textContent = name;
+        para.setAttribute("id", name);
+
+        this.leftInfoPanel.appendChild(para);
+    },
+
+    removeFromLeftInfoPanel: function (name) {
+        // FIXME on re-generate
+
+        let node = document.getElementById(name);
+        if (node.parentNode)
+            node.parentNode.removeChild(node);
+    },
+
+    removeAllLeftInfoPanel: function () {
+
+        while (this.leftInfoPanel.lastChild)
+            this.leftInfoPanel.removeChild(this.leftInfoPanel.lastChild);
     },
 
     showTopInfoPanel: function () {
