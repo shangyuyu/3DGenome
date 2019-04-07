@@ -21,18 +21,10 @@ Object.assign(TEXT.prototype, {
         let canvas = document.getElementById("topInfoPanel");
         let context = canvas.getContext("2d");
 
+        context.font = "24px Arial";
+        context.fillStyle = "rgba(0, 0, 0, 1.0)";
+
         return {canvas: canvas, context: context};
-    },
-
-    setText: function (object, message) {
-    // object: {canvas:..., context:...}
-
-        // clear canvas
-        object.context.clearRect(0, 0, object.canvas.width, object.canvas.height);
-
-        object.context.font = "24px Arial";
-        object.context.fillStyle = "rgba(255, 0, 0, 1.0)";
-        object.context.fillText(message, 0, 48);
     },
 
     newInfoPanel: function () {
@@ -73,6 +65,25 @@ Object.assign(TEXT.prototype, {
         scene.add(sprite);      
 
         return sprite;
+    },
+
+    setText: function (object, message) {
+    // object: {canvas:..., context:...}
+
+        // clear canvas
+        object.context.clearRect(0, 0, object.canvas.width, object.canvas.height);
+
+        object.context.fillText(message, 0, 48);
+    },
+
+    showTopInfoPanel: function () {
+
+        $("#topInfoContainer").css("display", "block");
+    },
+
+    hideTopInfoPanel: function () {
+
+        $("#topInfoContainer").css("display", "none");
     },
 } );
 

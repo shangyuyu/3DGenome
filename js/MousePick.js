@@ -58,7 +58,11 @@ Object.assign(MousePick.prototype, {
     onPick: function () {
     // Assume INTERSECTED not null
 
+        // TEXT disp logic
         text.setText(text.topInfoPanel, this.INTERSECTED.name);
+        text.showTopInfoPanel();
+
+        // MousePick logic
         this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
         this.INTERSECTED.material.emissive.setHex( gui.mousePickConfig.onPickColor.replace("#", "0x") );
     }, 
@@ -68,6 +72,10 @@ Object.assign(MousePick.prototype, {
 
         if (this.INTERSECTED) {
 
+            // TEXT disp logic
+            text.hideTopInfoPanel();
+
+            // MousePick logic
             this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.recoverHex);
             this.INTERSECTED = null;
         }
