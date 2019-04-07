@@ -51,6 +51,21 @@ Object.assign(TEXT.prototype, {
 
         let content = document.createElement("div");
 
+        // Initialize JS Panel
+        jsPanel.create( {
+            id: "leftInfoPanel",
+            position: "left-top",
+            panelSize: "300 " + String(window.innerHeight),
+            theme: "#1a1a1a filled",
+            border: "2px #333333",
+            header: false,
+            content: content,
+            contentOverflow: "scroll",
+            dragit: false,
+        } );
+
+        $("#leftInfoPanel").css("opacity", 0.8);
+
         return content;
     },
 
@@ -139,6 +154,16 @@ Object.assign(TEXT.prototype, {
     hideTopInfoPanel: function () {
 
         $("#topInfoContainer").css("display", "none");
+    },
+
+    showLeftInfoPanel: function () {
+
+        $("#leftInfoPanel").css("display", "block");
+    },
+
+    hideLeftInfoPanel: function () {
+
+        $("#leftInfoPanel").css("display", "none");
     },
 } );
 

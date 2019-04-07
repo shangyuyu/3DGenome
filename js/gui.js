@@ -33,6 +33,7 @@ class GUIManager {
         };
         this.infoDispConfig = {
             topInfoPanelEnable: true,
+            leftInfoPanelEnable: true,
         };
     }
 }
@@ -123,6 +124,13 @@ Object.assign(GUIManager.prototype, {
 
         this.folders[2].add(this.infoDispConfig, "topInfoPanelEnable").onChange( function (value) {
             text.topInfoPanelEnable = value;
+        } );
+        this.folders[2].add(this.infoDispConfig, "leftInfoPanelEnable").onChange( function (value) {
+            text.leftInfoPanelEnable = value;
+            if (value)
+                text.showLeftInfoPanel();
+            else
+                text.hideLeftInfoPanel();
         } );
 
         this.folders[2].open();

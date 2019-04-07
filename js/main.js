@@ -97,18 +97,6 @@ function init() {
     stats.domElement.style.position = "absolute";
     document.getElementById("statsContainer").append(stats.domElement);
 
-    // temp
-    jsPanel.create( {
-        position: "left-top",
-        panelSize: "300 " + String(window.innerHeight),
-        theme: "#1a1a1a filled",
-        border: "2px #333333",
-        header: false,
-        content: text.leftInfoPanel,
-        contentOverflow: "scroll",
-        dragit: false,
-    } );
-
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
