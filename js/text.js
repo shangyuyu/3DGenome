@@ -21,11 +21,23 @@ Object.assign(TEXT.prototype, {
         let canvas = document.getElementById("topInfoPanel");
         let context = canvas.getContext("2d");
 
-        context.font = "24px Arial";
-        context.fillStyle = "rgba(255, 0, 0, 1.0)";
-        context.fillText("123312", 0, 48);
+        return {canvas: canvas, context: context};
+    },
 
-        return context;
+    setText: function (object, message) {
+    // object: {canvas:..., context:...}
+
+        // clear canvas
+        object.context.clearRect(0, 0, object.canvas.width, object.canvas.height);
+
+        object.context.font = "24px Arial";
+        object.context.fillStyle = "rgba(255, 0, 0, 1.0)";
+        object.context.fillText(message, 0, 48);
+    },
+
+    newInfoPanel: function () {
+
+
     },
 
     newTextSprite: function (message, opts) {
@@ -55,10 +67,12 @@ Object.assign(TEXT.prototype, {
 
         let spriteMaterial = new THREE.SpriteMaterial({ map: texture });
         let sprite = new THREE.Sprite( spriteMaterial );
-        sprite.scale.set( 20, 10, 1.0 );
-        sprite.position.set(0, 0, 100);
+        sprite.scale.set( 20, 10, 1.0 );            
+        //sprite.position.set(0, 0, 100);
         // copy or = ?
         scene.add(sprite);      
+
+        return sprite;
     },
 } );
 

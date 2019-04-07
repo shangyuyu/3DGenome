@@ -6,7 +6,7 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, auxiScene, renderer, stats, controls, mousePick, gui;
+let container, camera, scene, auxiScene, renderer, stats, controls, mousePick, gui, text;
 let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
 let curve = [];
 // Global input raw data
@@ -95,9 +95,8 @@ function init() {
     stats = new Stats();
     container.appendChild( stats.dom );
 
-    // temp
-    let text = new TEXT();
-    text.newTextSprite("Chr1-12421");
+    // TEXT
+    text = new TEXT();
 
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );
