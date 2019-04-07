@@ -93,10 +93,20 @@ function init() {
 
     // Stats
     stats = new Stats();
-    container.appendChild( stats.dom );
+    stats.domElement.style.position = "absolute";
+    document.getElementById("statsContainer").append(stats.domElement);
 
     // TEXT
     text = new TEXT();
+
+    // temp
+    jsPanel.create( {
+        position: "left-top",
+        panelSize: "300 " + String(window.innerHeight),
+        theme: "#1a1a1a filled",
+        border: "2px #333333",
+        contentOverflow: "scroll",
+    } );
 
     // Controls
     controls = new THREE.TrackballControls( camera, renderer.domElement );

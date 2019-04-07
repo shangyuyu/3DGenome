@@ -20,13 +20,11 @@ Object.assign(TEXT.prototype, {
     pixelRatio: function (ctx) {
 
         let dpr = window.devicePixelRatio || 1;
-        console.log(dpr);
         let bsr = ctx.webkitBackingStorePixelRatio ||
                   ctx.mozBackingStorePixelRatio ||
                   ctx.msBackingStorePixelRatio ||
                   ctx.oBackingStorePixelRatio ||
                   ctx.backingStorePixelRatio || 1;
-        console.log(bsr);
 
         return dpr / bsr;
     },
@@ -41,7 +39,7 @@ Object.assign(TEXT.prototype, {
         canvas.width *= ratio;
         canvas.height *= ratio;
 
-        context.font = "21px Verdana";
+        context.font = "24px Verdana";
         context.fillStyle = "rgba(255, 255, 255, 1.0)";
 
         return {canvas: canvas, context: context, ratio: ratio};
@@ -98,7 +96,7 @@ Object.assign(TEXT.prototype, {
         object.context.lineWidth = 5;
         object.context.stroke();
         // Fill text
-        object.context.fillText(message, 78*object.ratio, 22*object.ratio);  // FIXME
+        object.context.fillText(message, 78*object.ratio, 24*object.ratio);  // FIXME
     },
 
     showTopInfoPanel: function () {

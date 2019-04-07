@@ -22,6 +22,8 @@ Long Term
 Minor Improvement
 - [ ] Reset trackball location
 - [ ] Auto-rotation
+- [ ] Auto-adjust camera
+- [ ] Mouse position detection potential bug
 
 WARNING
 - All objects may be destructed by re-render

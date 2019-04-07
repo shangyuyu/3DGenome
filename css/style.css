@@ -21,6 +21,12 @@ body {
     right: 0em;
     z-index: 12;
 }
+#statsContainer {
+    position: absolute;
+    top: 0px;
+    left: 300px;
+    z-index: 12;
+}
 
 #topInfoPanel {
     display: block;
