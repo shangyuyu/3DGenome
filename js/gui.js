@@ -50,7 +50,7 @@ Object.assign(GUIManager.prototype, {
                 value = value.replace("#", "0x");
             }
 
-            for (let i=0; i<200; i+=1) {  // WARNING: Change the 200 later FIXME
+            for (let i=0; i<data.objects.length; i+=1) { 
                 
                 if (type === "color")
                     parent.children[i].material.color.setHex(value);

@@ -54,11 +54,14 @@ function bindTube (parent) {
     text.removeAllLeftInfoPanel();
 
     // Re-construct
-    for (let i=0; i<200; i+=1) {
+    // TIME-CONSUMING!  FIXME
+    for (let i=0; i<data.objects.length; i+=1) {
+
+        if (data.objects[i].objectSize === 0) continue;
 
         let geometry = new THREE.TubeBufferGeometry(
-            curve[i], 
-            100 * gui.renderConfig.tubularSegment, 
+            data.objects[i].geometry, 
+            data.objects[i].objectSize * gui.renderConfig.tubularSegment, 
             gui.renderConfig.radius, 
             gui.renderConfig.radialSegment, 
             false  // 'closed' should be kept false
@@ -74,7 +77,7 @@ function bindTube (parent) {
 
         // bind Geometry and Material
         let mesh = new THREE.Mesh(geometry, material);
-        mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick
+        mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick FIXME
         mesh.protectedRecoverHex = "";
         mesh.recoverHex = "";
         
@@ -94,15 +97,17 @@ function bindLine (parent) {
         disposeHierarchy(parent, disposeNode);
     }
 
-    for (let i=0; i<200; i+=1) {
+    for (let i=0; i<data.objects.length; i+=1) {
+
+        if (data.objects[i].objectSize === 0) continue;
 
         let lineGeometry = new THREE.BufferGeometry();
 
         // Retrieve position data from curve
-        let temp = curve[i].getSpacedPoints(100 * 
+        let temp = data.objects[i].geometry.getSpacedPoints(data.objects[i].objectSize * 
             (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : gui.renderConfig.tubularSegment)
         );
-        let tempCoordData = [];
+        let tempCoordData = [];  // FIXME temp?
         for (let j=0; j<temp.length; j+=1) {
 
             tempCoordData.push(temp[j].x, temp[j].y, temp[j].z);
@@ -114,7 +119,7 @@ function bindLine (parent) {
         );
 
         let line = new THREE.Line(lineGeometry);
-        line.name = "Line" + String(i);  // Name used for shadow mouse pick
+        line.name = "Line" + String(i);  // Name used for shadow mouse pick FIXME
         parent.add(line);
     }
 }

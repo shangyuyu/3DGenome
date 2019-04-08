@@ -6,35 +6,9 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, auxiScene, renderer, stats, controls, mousePick, gui, text;
+let container, camera, scene, auxiScene, renderer, 
+    stats, controls, mousePick, gui, text;
 let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
-let curve = [];
-// Global input raw data
-let coordData = [];
-let posData = [];
-
-
-loadData();  // Trigger execution
-
-
-function loadData() {
-
-    let loader = new THREE.FileLoader();
-    loader.load("./data/chr1_5kb_miniMDS_structure.tsv", function(data_) {
-        let data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
-        data.splice(0, 3);  // delete chr, resolution, startPos
-
-        for (let i = 0; i < data.length; i+=4) {
-            if (data[i+1] === "nan") continue;
-            posData.push(Number(data[i]));
-            coordData.push(Number(data[i+1])*50.0, Number(data[i+2])*50.0, Number(data[i+3])*50.0);
-        }
-        data = [];
-
-        init();
-    });
-
-}
 
 
 function init() {
@@ -43,23 +17,6 @@ function init() {
 
     // Override CSS setting to center "topInfoPanel"
     $("#topInfoPanel").css("margin-left" , Math.floor((window.innerWidth - 200)/2.0));
-
-    //////////////////////////////////////////////////////////////
-    // Process data
-    // FIX ME
-    let curveData = [];
-    let i;
-    for (i = 0; i < coordData.length; i+=3) {
-
-        curveData.push( new THREE.Vector3(coordData[i], coordData[i+1], coordData[i+2]) );
-    }
-    coordData = [];
-
-    for (i=0; i<200; i+=1) {
-        
-        curve[i] = new THREE.CatmullRomCurve3( curveData.slice(i*100, (i+1)*100) );
-    }
-    curveData = [];
 
     //////////////////////////////////////////////////////////////
     // Init configuration

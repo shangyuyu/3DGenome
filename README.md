@@ -9,6 +9,7 @@
 - [x] Disp mouse pick info
 - [ ] Global
 - [ ] Invalidate picked object
+- [ ] Favicon
 
 Critical
 - [x] Disp selected object info (info panal)
