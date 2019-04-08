@@ -93,11 +93,11 @@ function createScene() {
     // Objects
     chromosome = new THREE.Object3D();
     scene.add(chromosome);
-    bindTube(chromosome);
+    data.bindTube(chromosome);
 
     auxiChromosome = new THREE.Object3D();
     auxiScene.add(auxiChromosome);
-    bindLine(auxiChromosome);
+    data.bindLine(auxiChromosome);
 }
 
 

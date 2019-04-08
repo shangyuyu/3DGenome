@@ -93,14 +93,14 @@ Object.assign(GUIManager.prototype, {
             ambientLight.intensity = value;
         } );
         this.folders[0].add(this.renderConfig, "tubularSegment", 1, 20, 1).onFinishChange( function () {
-            bindTube(gui.parent);
-            bindLine(gui.shadowParent);
+            data.bindTube(gui.parent);
+            data.bindLine(gui.shadowParent);
         } );
         this.folders[0].add(this.renderConfig, "radialSegment", 1, 8, 1).onFinishChange( function () {
-            bindTube(gui.parent);
+            data.bindTube(gui.parent);
         } );
         this.folders[0].add(this.renderConfig, "radius", 0.05, 1).onFinishChange( function () {
-            bindTube(gui.parent);
+            data.bindTube(gui.parent);
         } );
 
         this.folders[0].open();

@@ -33,4 +33,5 @@ Minor Improvement
 
 WARNING
 - All objects may be destructed by re-render
+- Empty geometry object is not allowed.
 - Change of onPick/onFocus behavior is bug-prone

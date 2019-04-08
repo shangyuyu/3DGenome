@@ -38,93 +38,6 @@ function getRandomArbitrary (min, max) {
 }
 
 
-function bindTube (parent) {
-    // Re-create Geometry and Material, bind them to mesh and add to Object3D
-
-    // Save mousePick.focusArray info
-    let indexArray = [];
-    mousePick.getFocusIndexArray( indexArray );
-
-    // Deep destruction
-    if (parent.children.length > 0) {
-        // memory leak?
-        disposeHierarchy(parent, disposeNode);
-    }
-    mousePick.clearFocused();
-    text.removeAllLeftInfoPanel();
-
-    // Re-construct
-    // TIME-CONSUMING!  FIXME
-    for (let i=0; i<data.objects.length; i+=1) {
-
-        if (data.objects[i].objectSize === 0) continue;
-
-        let geometry = new THREE.TubeBufferGeometry(
-            data.objects[i].geometry, 
-            data.objects[i].objectSize * gui.renderConfig.tubularSegment, 
-            gui.renderConfig.radius, 
-            gui.renderConfig.radialSegment, 
-            false  // 'closed' should be kept false
-        );  
-
-        let material = new THREE.MeshPhongMaterial( {
-            color: Number( gui.renderConfig.materialColor.replace("#", "0x") ), 
-            emissive: Number( gui.renderConfig.materialEmissive.replace("#", "0x") ), 
-            specular: Number( gui.renderConfig.materialSpecular.replace("#", "0x") ),
-            // side: THREE.DoubleSide, 
-            flatShading: false  // 'false' for better visual effect
-        } );
-
-        // bind Geometry and Material
-        let mesh = new THREE.Mesh(geometry, material);
-        mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick FIXME
-        mesh.protectedRecoverHex = "";
-        mesh.recoverHex = "";
-        
-        parent.add(mesh);
-    }
-
-    // resume focusArray
-    mousePick.setAsFocus(parent, indexArray);
-}
-
-
-function bindLine (parent) {
-    // Re-create Geometry and Material, bind them to line and add to Object3D
-
-    if (parent.children.length > 0) {
-        // memory leak?
-        disposeHierarchy(parent, disposeNode);
-    }
-
-    for (let i=0; i<data.objects.length; i+=1) {
-
-        if (data.objects[i].objectSize === 0) continue;
-
-        let lineGeometry = new THREE.BufferGeometry();
-
-        // Retrieve position data from curve
-        let temp = data.objects[i].geometry.getSpacedPoints(data.objects[i].objectSize * 
-            (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : gui.renderConfig.tubularSegment)
-        );
-        let tempCoordData = [];  // FIXME temp?
-        for (let j=0; j<temp.length; j+=1) {
-
-            tempCoordData.push(temp[j].x, temp[j].y, temp[j].z);
-        }
-
-        lineGeometry.addAttribute( 
-            "position", 
-            new THREE.Float32BufferAttribute(tempCoordData, 3) 
-        );
-
-        let line = new THREE.Line(lineGeometry);
-        line.name = "Line" + String(i);  // Name used for shadow mouse pick FIXME
-        parent.add(line);
-    }
-}
-
-
 function disposeNode (node) {
     // REF: https://stackoverflow.com/a/33199591/9338178
 
@@ -179,6 +92,7 @@ function disposeHierarchy (node, callback) {
     node.children = [];
 }
 
+// Event callback functions
 
 function onDocumentMouseMove(event) {
 

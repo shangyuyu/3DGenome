@@ -51,7 +51,7 @@ Object.assign(MousePick.prototype, {
         if (advancedConfig.mousePickTimeDisp === true) {
             console.log( "Mouse pick time cost: " + String(Date.now() - this.lastMousePickCallTime) + "ms");
         } else if (Date.now() - this.lastMousePickCallTime > 100) {
-            console.log( "Mouse pick cost too much time: " + String(Date.now() - this.lastMousePickCallTime) + "ms. Consider disable mouse pick, refresh page or suppress render quality.");
+            console.warn( "Mouse pick cost too much time: " + String(Date.now() - this.lastMousePickCallTime) + "ms. Consider disable mouse pick, refresh page or suppress render quality.");
         }
     }, 
 
@@ -126,7 +126,7 @@ Object.assign(MousePick.prototype, {
 
             // TEXT Left Info Panel
             text.removeFromLeftInfoPanel(INTERSECTED.name);
-            
+
             INTERSECTED.protected = false;
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
         }
