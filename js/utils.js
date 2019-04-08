@@ -17,7 +17,7 @@ Object.defineProperty(Array.prototype, 'flat', {
 });
 
 
-function mix(u, v, r) {
+function mix (u, v, r) {
 // mix vector u and v with a ratio r
     let result = [];
     for (let i=0; i<u.length; i++) {
@@ -28,17 +28,17 @@ function mix(u, v, r) {
 }
 
 
-function getRandomInt(max) {
+function getRandomInt (max) {
     return Math.floor(Math.random() * Math.floor(max));
 }
 
 
-function getRandomArbitrary(min, max) {
+function getRandomArbitrary (min, max) {
     return Math.random() * (max - min) + min;
 }
 
 
-function bindTube(parent) {
+function bindTube (parent) {
     // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
     // Save mousePick.focusArray info
@@ -86,7 +86,7 @@ function bindTube(parent) {
 }
 
 
-function bindLine(parent) {
+function bindLine (parent) {
     // Re-create Geometry and Material, bind them to line and add to Object3D
 
     if (parent.children.length > 0) {

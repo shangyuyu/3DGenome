@@ -8,18 +8,22 @@
 - [x] Multi-select trigger
 - [x] Disp mouse pick info
 - [ ] Global
+- [ ] Invalidate picked object
 
 Critical
 - [x] Disp selected object info (info panal)
+- [ ] Search Panel
+- [ ] List of search
 - [ ] Loader
-- [ ] Backstage data structure + (name system -> mousePick)
-- [ ] All 23 CHRs
+- [ ] Backstage data structure
+- [ ] Integrate all 23 CHRs
 
 Long Term
 - [ ] User input desired range
 - [ ] TypeScript? TBD
 
 Minor Improvement
+- [ ] GUI cache
 - [ ] Light Position
 - [ ] Reset trackball location
 - [ ] Auto-rotation
