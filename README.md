@@ -10,7 +10,7 @@
 - [ ] Global
 
 Critical
-- [ ] Disp selected object info (info panal)
+- [x] Disp selected object info (info panal)
 - [ ] Loader
 - [ ] Backstage data structure + (name system -> mousePick)
 - [ ] All 23 CHRs
@@ -20,6 +20,7 @@ Long Term
 - [ ] TypeScript? TBD
 
 Minor Improvement
+- [ ] Light Position
 - [ ] Reset trackball location
 - [ ] Auto-rotation
 - [ ] Auto-adjust camera

@@ -19,18 +19,6 @@ class TEXT {
 
 Object.assign(TEXT.prototype, {
 
-    pixelRatio: function (ctx) {
-
-        let dpr = window.devicePixelRatio || 1;
-        let bsr = ctx.webkitBackingStorePixelRatio ||
-                  ctx.mozBackingStorePixelRatio ||
-                  ctx.msBackingStorePixelRatio ||
-                  ctx.oBackingStorePixelRatio ||
-                  ctx.backingStorePixelRatio || 1;
-
-        return dpr / bsr;
-    },
-
     newTopInfoPanel: function () {
 
         let canvas = document.getElementById("topInfoPanel");
@@ -109,6 +97,8 @@ Object.assign(TEXT.prototype, {
         return sprite;
     },
 
+    //////////////////////////////////////////////////////////////
+    // topInfoPanel
     setText: function (object, message) {
     // object: {canvas:..., context:..., ratio:...}
 
@@ -123,10 +113,13 @@ Object.assign(TEXT.prototype, {
         object.context.fillText(message, 78*object.ratio, 24*object.ratio);  // FIXME
     },
 
+    //////////////////////////////////////////////////////////////
+    // leftInfoPanel
     addToLeftInfoPanel: function (name) {
 
         let para = document.createElement("p");
         para.textContent = name;
+        para.style.font = "18px Helvetica";
         para.setAttribute("id", name);
 
         this.leftInfoPanel.appendChild(para);
@@ -146,6 +139,8 @@ Object.assign(TEXT.prototype, {
             this.leftInfoPanel.removeChild(this.leftInfoPanel.lastChild);
     },
 
+    //////////////////////////////////////////////////////////////
+    // Visibility
     showTopInfoPanel: function () {
 
         $("#topInfoContainer").css("display", "block");
@@ -164,6 +159,20 @@ Object.assign(TEXT.prototype, {
     hideLeftInfoPanel: function () {
 
         $("#leftInfoPanel").css("display", "none");
+    },
+
+    //////////////////////////////////////////////////////////////
+    // auxiliary
+    pixelRatio: function (ctx) {
+
+        let dpr = window.devicePixelRatio || 1;
+        let bsr = ctx.webkitBackingStorePixelRatio ||
+                  ctx.mozBackingStorePixelRatio ||
+                  ctx.msBackingStorePixelRatio ||
+                  ctx.oBackingStorePixelRatio ||
+                  ctx.backingStorePixelRatio || 1;
+
+        return dpr / bsr;
     },
 } );
 
