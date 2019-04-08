@@ -129,7 +129,7 @@ Object.assign(DataManager.prototype, {
 
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Mesh" + String(i);  // Name used for shadow mouse pick FIXME
+            mesh.name = "Segment" + String(i);  // Name used for shadow mouse pick
             mesh.protectedRecoverHex = "";
             mesh.recoverHex = "";
             
@@ -173,7 +173,7 @@ Object.assign(DataManager.prototype, {
             );
 
             line = new THREE.Line(lineGeometry);
-            line.name = "Line" + String(i);  // Name used for shadow mouse pick FIXME
+            line.name = "Lineseg" + String(i);  // Name used for shadow mouse pick
             parent.add(line);
         }
     },

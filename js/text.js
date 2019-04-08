@@ -117,11 +117,16 @@ Object.assign(TEXT.prototype, {
     // leftInfoPanel
     addToLeftInfoPanel: function (name) {
 
-        let para = document.createElement("p");
+        let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
         para.style.font = "18px Helvetica";
         para.setAttribute("id", name);
 
+        let temp = document.createElement("p");
+        temp.textContent = data.objects[ nameParse(name) ].objectSize;
+        temp.style.font = "10px Helvetica";
+
+        para.appendChild(temp);
         this.leftInfoPanel.appendChild(para);
     },
 

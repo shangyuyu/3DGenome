@@ -38,7 +38,7 @@ Object.assign(MousePick.prototype, {
 
                 if (shadowArray)
                     // The index in 'objectArray' and 'shadowArray' must match
-                    this.INTERSECTED = shadowArray[ Number(intersects[0].object.name.slice(4)) ];
+                    this.INTERSECTED = shadowArray[ nameParse(intersects[0].object.name) ];
                 else
                     this.INTERSECTED = intersects[0].object;
 
@@ -85,9 +85,9 @@ Object.assign(MousePick.prototype, {
 
     onFocus: function () {
 
-        let index = Number( this.INTERSECTED.name.slice(4) );
+        let index = nameParse( this.INTERSECTED.name );
         
-        if (!this.focusArray.find( e => e.name.slice(4) == index )) {  // FIXME
+        if (!this.focusArray.find( e => nameParseStr(e.name) == index )) {  // FIXME
 
             // TEXT Left Info Panel
             text.addToLeftInfoPanel(this.INTERSECTED.name);
@@ -140,7 +140,7 @@ Object.assign(MousePick.prototype, {
 
             for (let i=0; i<this.focusArray.length; i+=1) {
 
-                targetArray.push( Number(mousePick.focusArray[i].name.slice(4)) );  // FIXME
+                targetArray.push( nameParse(mousePick.focusArray[i].name) );
             }
         }
     },

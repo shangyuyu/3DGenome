@@ -19,6 +19,7 @@ Object.defineProperty(Array.prototype, 'flat', {
 
 function mix (u, v, r) {
 // mix vector u and v with a ratio r
+
     let result = [];
     for (let i=0; i<u.length; i++) {
         result.push( r*u[i] + (1-r)*v[i] );
@@ -29,12 +30,26 @@ function mix (u, v, r) {
 
 
 function getRandomInt (max) {
+    
     return Math.floor(Math.random() * Math.floor(max));
 }
 
 
 function getRandomArbitrary (min, max) {
+    
     return Math.random() * (max - min) + min;
+}
+
+
+function nameParse (name) {
+
+    return Number(name.slice(7));  // Segment/Lineseg
+}
+
+
+function nameParseStr (name) {
+
+    return name.slice(7);  // Segment/Lineseg
 }
 
 
