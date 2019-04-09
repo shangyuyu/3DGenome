@@ -10,6 +10,8 @@
 - [ ] Global
 - [ ] Invalidate picked object
 - [ ] Favicon
+- [ ] Select from leftInfoPanel
+- [ ] Button in leftInfoPanel
 
 Critical
 - [x] Disp selected object info (info panal)

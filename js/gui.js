@@ -30,6 +30,7 @@ class GUIManager {
             focus: true,  // FIXME
             onPickColor: "#ac0000",
             onFocusColor: "#007d1d",
+            onDesertOpacity: 0.3,
             "Reset Focus": function(){mousePick.resetFocusArray();},
         };
         this.infoDispConfig = {
@@ -118,6 +119,9 @@ Object.assign(GUIManager.prototype, {
         this.folders[1].addColor(this.mousePickConfig, "onPickColor");
         this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
             mousePick.reRenderFocusArray();
+        } );
+        this.folders[1].add(this.mousePickConfig, "onDesertOpacity", 0, 1, 0.01).onChange( function () {
+            mousePick.reRenderDesertArray();
         } );
         this.folders[1].add(this.mousePickConfig, "Reset Focus");
 

@@ -17,6 +17,7 @@ class DataManager {
         this.objects = [];
         this.rawData = [];
         this.infoData = null;
+        this.objectSize  = 200;  // 200 points as an object - 1Mb for 5kb resolution
     }
 }
 
@@ -36,7 +37,6 @@ Object.assign(DataManager.prototype, {
             const resolution = Number(data[1]);
             const startPos = Number(data[2]);
             const dataScale = 50.0;
-            const objectSize  = 200;  // 200 points as an object - 1Mb for 5kb resolution
     
             data.splice(0, 3);  // delete chr, resolution, startPos
     
@@ -51,7 +51,7 @@ Object.assign(DataManager.prototype, {
                 if (data[i+1] !== "nan")
                     tempVec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
 
-                if (count === objectSize) {
+                if (count === this.objectSize) {
     
                     count = 0;
 
@@ -62,7 +62,7 @@ Object.assign(DataManager.prototype, {
                         };
                     // locus? FIXME
                     if (tempVec3Array.length <= 1)
-                        console.warn(`Consecutive data missing detected: Object #${index} from ${index*objectSize*resolution+startPos} to ${(index+1)*objectSize*resolution+startPos} in chromosome ${chr}.`);
+                        console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
                     tempVec3Array = [];
@@ -76,7 +76,7 @@ Object.assign(DataManager.prototype, {
                     };
                 // locus? FIXME
                 if (tempVec3Array.length <= 1) 
-                    console.warn(`Consecutive data missing detected: Object #${index} from ${index*objectSize*resolution+startPos} to ${(index+1)*objectSize*resolution+startPos} in chromosome ${chr}.`);
+                    console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                 tempVec3Array = [];
             }
     

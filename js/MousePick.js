@@ -183,7 +183,16 @@ Object.assign(MousePick.prototype, {
 
             this.desertArray.push( this.INTERSECTED );
             this.INTERSECTED.material.transparent = true;
-            this.INTERSECTED.material.opacity = 0.5;
+            this.INTERSECTED.material.opacity = 0.3;
+        }
+    },
+
+    reRenderDesertArray: function () {
+    // Not completely re-render
+
+        for (let i=0; i<this.desertArray.length; i+=1) {
+
+            this.desertArray[i].material.opacity = gui.mousePickConfig.onDesertOpacity;
         }
     },
 
