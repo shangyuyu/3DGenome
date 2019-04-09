@@ -134,9 +134,9 @@ function onDocumentMouseMove(event) {
 
     event.preventDefault();
 
-    mouse.position.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    mouse.position.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    mouse.lastMoveTime = Date.now();
+    mousePick.mouse.position.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mousePick.mouse.position.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    mousePick.mouse.lastMoveTime = Date.now();
 }
 
 
@@ -151,7 +151,7 @@ function onDocumentDoubleClick(event) {
 
     event.preventDefault();
 
-    // make the picked object stay focused
+    // Picked object stay focused or put into desert
     if (mousePick.INTERSECTED) {
         
         if (mousePick.focus) 

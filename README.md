@@ -7,7 +7,7 @@
 - [x] MousePick multi-select
 - [x] Multi-select trigger
 - [x] Disp mouse pick info
-- [ ] Global
+- [x] Global
 - [x] Invalidate picked object
 - [ ] Favicon
 - [ ] Select from leftInfoPanel

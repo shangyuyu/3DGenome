@@ -6,14 +6,12 @@
 "use strict";
 
 // Global core elements
-let container, camera, scene, auxiScene, renderer, 
-    stats, controls, mousePick, gui, text;
-let mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
+let camera, scene, auxiScene, renderer, mousePick, gui, text;
 
 
 function init() {
 
-    container = document.getElementById("webGLContainer");
+    let container = document.getElementById("webGLContainer");
 
     // Override CSS setting to center "topInfoPanel"
     $("#topInfoPanel").css("margin-left" , Math.floor((window.innerWidth - 200)/2.0));
@@ -50,12 +48,12 @@ function init() {
     container.appendChild( renderer.domElement );
 
     // Stats
-    stats = new Stats();
+    let stats = new Stats();
     stats.domElement.style.position = "absolute";
     document.getElementById("statsContainer").append(stats.domElement);
 
     // Controls
-    controls = new THREE.TrackballControls( camera, renderer.domElement );
+    let controls = new THREE.TrackballControls( camera, renderer.domElement );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
     controls.minDistance = 1;
     controls.maxDistance = 400;
@@ -119,7 +117,7 @@ function render() {
 
     if (preRenderTime - mousePick.lastMousePickCallTime > advancedConfig.mousePickInterval) {
     // Two calls of rayCaster should wait at least 'advancedConfig.mousePickInterval' ms
-        if (preRenderTime - mouse.lastMoveTime > advancedConfig.mouseStayTime) {
+        if (preRenderTime - mousePick.mouse.lastMoveTime > advancedConfig.mouseStayTime) {
         // Mouse should keep stayed for at least 'advancedConfig.mouseStayTime' ms
 
             mousePick.call(auxiChromosome.children, chromosome.children);

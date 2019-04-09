@@ -192,7 +192,9 @@ Object.assign(DataManager.prototype, {
 } );
 
 
-data = new DataManager();  // FIXME How to trigger?
-data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+$(window).on('load', function() {
+    data = new DataManager();  // FIXME How to trigger?
+    data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+});
 
 // End of data.js

@@ -18,6 +18,7 @@ class MousePick {
         this.INTERSECTED = null;
         this.focusArray = [];
         this.desertArray = [];
+        this.mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
     }
 }
 
@@ -28,7 +29,7 @@ Object.assign(MousePick.prototype, {
         if (this.enable === false) return;
         this.lastMousePickCallTime = Date.now();
 
-        this.rayCaster.setFromCamera( mouse.position, camera );
+        this.rayCaster.setFromCamera( this.mouse.position, camera );
         this.rayCaster.linePrecision = gui.renderConfig.radius;
 
         let intersects = this.rayCaster.intersectObjects( objectArray, false );
