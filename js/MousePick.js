@@ -33,16 +33,28 @@ Object.assign(MousePick.prototype, {
 
         let intersects = this.rayCaster.intersectObjects( objectArray, false );
 
-        if (intersects.length > 0) {
-            if (this.INTERSECTED != intersects[0].object) {
+        // desertArray objects cannot be selected
+        let first = -1;
+        for (let i=0; i<intersects.length; i+=1) {
+
+            if (shadowArray[ nameParse(intersects[i].object.name) ].deserted === false) {
+            // Note: intersects are objectArray data, deserted property defined in shadowArray
+
+                first = i;
+                break;
+            }
+        }
+
+        if (first > -1) {
+            if (this.INTERSECTED != intersects[first].object) {
             // new intersected detected
                 this.onLeft();
 
                 if (shadowArray)
                     // The index in 'objectArray' and 'shadowArray' must match
-                    this.INTERSECTED = shadowArray[ nameParse(intersects[0].object.name) ];
+                    this.INTERSECTED = shadowArray[ nameParse(intersects[first].object.name) ];
                 else
-                    this.INTERSECTED = intersects[0].object;
+                    this.INTERSECTED = intersects[first].object;
 
                 this.onPick();
             }
@@ -94,6 +106,7 @@ Object.assign(MousePick.prototype, {
         let index = nameParse( this.INTERSECTED.name );
         
         if (!this.focusArray.find( e => nameParseStr(e.name) == index )) {
+        // Cannot focus those who have been put in desert
 
             // TEXT Left Info Panel
             text.addToLeftInfoPanel(this.INTERSECTED.name);
