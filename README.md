@@ -12,8 +12,10 @@
 - [ ] Favicon
 - [ ] Select from leftInfoPanel
 - [ ] Button in leftInfoPanel
+- [ ] Gradient render (color)
 
 Critical
+- [ ] BUG: INDEX should not be used as unique identifier
 - [x] Disp selected object info (info panal)
 - [ ] Search Panel
 - [ ] List of search

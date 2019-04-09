@@ -32,6 +32,7 @@ class GUIManager {
             onFocusColor: "#007d1d",
             onDesertOpacity: 0.3,
             "Reset Focus": function(){mousePick.resetFocusArray();},
+            "Reset Desert": function(){mousePick.resetDesertArray();},
         };
         this.infoDispConfig = {
             topInfoPanelEnable: true,
@@ -124,6 +125,7 @@ Object.assign(GUIManager.prototype, {
             mousePick.reRenderDesertArray();
         } );
         this.folders[1].add(this.mousePickConfig, "Reset Focus");
+        this.folders[1].add(this.mousePickConfig, "Reset Desert");
 
         this.folders[1].open();
         

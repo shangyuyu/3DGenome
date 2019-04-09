@@ -153,7 +153,7 @@ Object.assign(MousePick.prototype, {
 
     clearFocused: function() {
     // Clear focusArray and INTERSECTED
-    // Use 'reset' instead if the model is not destructed
+    // Use 'resetFocusArray' instead if the model is not destructed
         
         this.INTERSECTED = null;
         this.focusArray = [];
@@ -179,12 +179,65 @@ Object.assign(MousePick.prototype, {
         if (!this.desertArray.find( e => nameParseStr(e.name) == index )) {  // in focusArray and desertArray?? FIXME
 
             // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED.name);
+            // text.addToLeftInfoPanel(this.INTERSECTED.name);
 
             this.desertArray.push( this.INTERSECTED );
+            this.INTERSECTED.deserted = true;
             this.INTERSECTED.material.transparent = true;
-            this.INTERSECTED.material.opacity = 0.3;
+            this.INTERSECTED.material.opacity = gui.mousePickConfig.onDesertOpacity;
         }
+    },
+
+    setAsDesert: function(parent, indexArray) {
+        // Put objects of 'parent' whose index in 'indexArray' into desertArray
+        // FIXME : did not check whether existed
+    
+        let temp = this.INTERSECTED;
+        for (let i=0; i<indexArray.length; i+=1) {
+
+            this.INTERSECTED = parent.children[indexArray[i]];  // FIXME BUG! index is not unique identifier!
+            this.onPick();
+            this.onDesert();
+            this.onLeft();
+        }
+        this.INTERSECTED = temp;
+    },
+
+    resetDesertArray: function () {
+    // Use 'clearDeserted' if the model will be destructed
+
+        console.log("MousePick.js::Reset " + this.desertArray.length + " deserted selections.");
+        for (let i=0; i<this.desertArray.length; i+=1) {
+
+            let INTERSECTED = this.desertArray[i];
+
+            // TEXT Left Info Panel
+            // text.removeFromLeftInfoPanel(INTERSECTED.name);
+
+            INTERSECTED.deserted = false;
+            INTERSECTED.material.transparent = false;
+        }
+        this.desertArray = [];
+    },
+
+    getDesertIndexArray: function ( targetArray ) {
+    // return focusArray index
+
+        if (this.desertArray.length > 0) {
+
+            for (let i=0; i<this.desertArray.length; i+=1) {
+
+                targetArray.push( nameParse(mousePick.desertArray[i].name) );
+            }
+        }
+    },
+
+    clearDeserted: function() {
+    // Clear desertArray and INTERSECTED
+    // Use 'resetDesertArray' instead if the model is not destructed
+        
+        this.INTERSECTED = null;
+        this.desertArray = [];
     },
 
     reRenderDesertArray: function () {

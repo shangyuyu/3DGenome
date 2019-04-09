@@ -92,8 +92,11 @@ Object.assign(DataManager.prototype, {
         // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
         // Save mousePick.focusArray info
-        let indexArray = [];
-        mousePick.getFocusIndexArray( indexArray );
+        let indexFocusArray = [];
+        mousePick.getFocusIndexArray( indexFocusArray );
+        // Save mousePick.desertArray info
+        let indexDesertArray = [];
+        mousePick.getDesertIndexArray( indexDesertArray );
 
         // Deep destruction
         if (parent.children.length > 0) {
@@ -101,6 +104,7 @@ Object.assign(DataManager.prototype, {
             disposeHierarchy(parent, disposeNode);
         }
         mousePick.clearFocused();
+        mousePick.clearDeserted();
         text.removeAllLeftInfoPanel();
 
         // Re-construct
@@ -130,14 +134,19 @@ Object.assign(DataManager.prototype, {
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
             mesh.name = "Segment" + String(i);  // Name used for shadow mouse pick
-            mesh.protectedRecoverHex = "";
+            // bind auxi properties
+            mesh.protected = false;
             mesh.recoverHex = "";
-            
+            mesh.protectedRecoverHex = "";
+            mesh.deserted = false;
+
             parent.add(mesh);
         }
 
-        // resume focusArray
-        mousePick.setAsFocus(parent, indexArray);  // will also resume leftInfoPanel
+        // recover focusArray
+        mousePick.setAsFocus(parent, indexFocusArray);  // will also resume leftInfoPanel
+        // recover desertArray
+        mousePick.setAsDesert(parent, indexDesertArray);
     },
 
     bindLine: function (parent) {
@@ -151,6 +160,7 @@ Object.assign(DataManager.prototype, {
         let lineGeometry, temp = [], tempCoordData, line;
         for (let i=0; i<data.objects.length; i+=1) {
 
+            // Empty object not allowed
             // if (data.objects[i].objectSize === 0) continue;
 
             lineGeometry = new THREE.BufferGeometry();
@@ -181,7 +191,7 @@ Object.assign(DataManager.prototype, {
 } );
 
 
-data = new DataManager();  // FIXME
+data = new DataManager();  // FIXME How to trigger?
 data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
 
 // End of data.js
