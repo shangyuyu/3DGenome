@@ -40,6 +40,7 @@ Object.assign(TEXT.prototype, {
         // let content = document.createElement("div");
         let leftInfoPanelDocument = document.getElementById('iframe').contentWindow.document;
         let content = leftInfoPanelDocument.getElementById("leftInfoPanel_proto");
+        let focusDiv, desertDiv;
 
         // Initialize JS Panel
         jsPanel.create( {
@@ -58,8 +59,11 @@ Object.assign(TEXT.prototype, {
         $("#leftInfoPanel").css("opacity", 0.8);
         // Default tab
         document.getElementById("FocusButton").click();
+        // Fetch text divs
+        focusDiv = document.getElementById("Focus");
+        desertDiv = document.getElementById("Desert");
 
-        return content;
+        return {focus: focusDiv, desert: desertDiv};
     },
 
     newInfoPanel: function () {
@@ -120,34 +124,43 @@ Object.assign(TEXT.prototype, {
 
     //////////////////////////////////////////////////////////////
     // leftInfoPanel
-    addToLeftInfoPanel: function (name) {
+    addToLeftInfoPanel: function (name, tab) {
+    // tab: "focus"/"desert"
 
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
         para.style.font = "18px Helvetica";
-        para.setAttribute("id", name);  // ?
+        para.setAttribute("id", name);  // id used to remove FIXME
 
         let temp = document.createElement("p");
         temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].objectSize) + "/" + String(data.objectSize);
         temp.style.font = "10px Helvetica";
 
         para.appendChild(temp);
-        this.leftInfoPanel.appendChild(para);
+        this.leftInfoPanel[tab].appendChild(para);
     },
 
-    removeFromLeftInfoPanel: function (name) {
+    removeFromLeftInfoPanel: function (name, tab) {
         // FIXME on re-generate
+        // deprecated
 
         let node = document.getElementById(name);
         if (node.parentNode)
             node.parentNode.removeChild(node);
     },
 
-    removeAllLeftInfoPanel: function () {
+    removeAllFocusLeftInfoPanel: function () {
     // Remove all data but keep prototype
 
-        //while (this.leftInfoPanel.lastChild)
-        //    this.leftInfoPanel.removeChild(this.leftInfoPanel.lastChild);
+        while (this.leftInfoPanel.focus.lastChild)
+            this.leftInfoPanel.focus.removeChild(this.leftInfoPanel.focus.lastChild);
+    },
+
+    removeAllDesertLeftInfoPanel: function () {
+    // Remove all data but keep prototype
+
+        while (this.leftInfoPanel.desert.lastChild)
+            this.leftInfoPanel.desert.removeChild(this.leftInfoPanel.desert.lastChild);
     },
 
     //////////////////////////////////////////////////////////////

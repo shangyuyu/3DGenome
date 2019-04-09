@@ -11,7 +11,7 @@
 - [x] Invalidate picked object
 - [ ] Favicon
 - [ ] Select from leftInfoPanel
-- [ ] Button in leftInfoPanel
+- [x] Button in leftInfoPanel
 - [ ] Gradient render (color)
 
 Critical

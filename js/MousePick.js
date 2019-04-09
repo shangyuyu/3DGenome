@@ -109,7 +109,7 @@ Object.assign(MousePick.prototype, {
         // Cannot focus those who have been put in desert
 
             // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED.name);
+            text.addToLeftInfoPanel(this.INTERSECTED.name, "focus");
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
             this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
@@ -139,12 +139,10 @@ Object.assign(MousePick.prototype, {
     // Use 'clearFocused' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.focusArray.length + " protected selections.");
+        text.removeAllFocusLeftInfoPanel();
         for (let i=0; i<this.focusArray.length; i+=1) {
 
             let INTERSECTED = this.focusArray[i];
-
-            // TEXT Left Info Panel
-            text.removeFromLeftInfoPanel(INTERSECTED.name);
 
             INTERSECTED.protected = false;
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
@@ -192,7 +190,7 @@ Object.assign(MousePick.prototype, {
         if (!this.desertArray.find( e => nameParseStr(e.name) == index )) {  // in focusArray and desertArray?? FIXME
 
             // TEXT Left Info Panel
-            // text.addToLeftInfoPanel(this.INTERSECTED.name);
+            text.addToLeftInfoPanel(this.INTERSECTED.name, "desert");
 
             this.desertArray.push( this.INTERSECTED );
             this.INTERSECTED.deserted = true;
@@ -220,12 +218,10 @@ Object.assign(MousePick.prototype, {
     // Use 'clearDeserted' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.desertArray.length + " deserted selections.");
+        text.removeAllDesertLeftInfoPanel();
         for (let i=0; i<this.desertArray.length; i+=1) {
 
             let INTERSECTED = this.desertArray[i];
-
-            // TEXT Left Info Panel
-            // text.removeFromLeftInfoPanel(INTERSECTED.name);
 
             INTERSECTED.deserted = false;
             INTERSECTED.material.transparent = false;
