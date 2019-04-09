@@ -12,10 +12,12 @@ class MousePick {
     constructor () {
         
         this.enable = true;
+        this.focus = true;  // true for focus, false for desert
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
         this.focusArray = [];
+        this.desertArray = [];
     }
 }
 
@@ -83,11 +85,15 @@ Object.assign(MousePick.prototype, {
         }
     },
 
+    //////////////////////////////////////////////////////////////////////////////
+    // Focus
+
     onFocus: function () {
+    // Assume this.INTERSECTED not null
 
         let index = nameParse( this.INTERSECTED.name );
         
-        if (!this.focusArray.find( e => nameParseStr(e.name) == index )) {  // FIXME
+        if (!this.focusArray.find( e => nameParseStr(e.name) == index )) {
 
             // TEXT Left Info Panel
             text.addToLeftInfoPanel(this.INTERSECTED.name);
@@ -116,7 +122,7 @@ Object.assign(MousePick.prototype, {
         this.INTERSECTED = temp;
     },
 
-    reset: function () {
+    resetFocusArray: function () {
     // Use 'clearFocused' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.focusArray.length + " protected selections.");
@@ -159,6 +165,25 @@ Object.assign(MousePick.prototype, {
         for (let i=0; i<this.focusArray.length; i+=1) {
 
             this.focusArray[i].material.emissive.setHex( gui.mousePickConfig.onFocusColor.replace("#", "0x") );
+        }
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // Desert
+
+    onDesert: function () {
+    // Assume this.INTERSECTED not null
+
+        let index = nameParse( this.INTERSECTED.name );
+
+        if (!this.desertArray.find( e => nameParseStr(e.name) == index )) {  // in focusArray and desertArray?? FIXME
+
+            // TEXT Left Info Panel
+            text.addToLeftInfoPanel(this.INTERSECTED.name);
+
+            this.desertArray.push( this.INTERSECTED );
+            this.INTERSECTED.material.transparent = true;
+            this.INTERSECTED.material.opacity = 0.5;
         }
     },
 

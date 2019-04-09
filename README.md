@@ -15,8 +15,8 @@ Critical
 - [x] Disp selected object info (info panal)
 - [ ] Search Panel
 - [ ] List of search
-- [ ] Loader
-- [ ] Backstage data structure
+- [x] Loader
+- [x] Backstage data structure
 - [ ] Integrate all 23 CHRs
 
 Long Term

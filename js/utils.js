@@ -131,8 +131,13 @@ function onDocumentDoubleClick(event) {
     event.preventDefault();
 
     // make the picked object stay focused
-    if (mousePick.INTERSECTED)
-    mousePick.onFocus();
+    if (mousePick.INTERSECTED) {
+        
+        if (mousePick.focus) 
+            mousePick.onFocus();
+        else
+            mousePick.onDesert();
+    }
 }
 
 

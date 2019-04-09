@@ -27,9 +27,10 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
+            focus: true,  // FIXME
             onPickColor: "#ac0000",
             onFocusColor: "#007d1d",
-            reset: function(){mousePick.reset();},
+            "Reset Focus": function(){mousePick.resetFocusArray();},
         };
         this.infoDispConfig = {
             topInfoPanelEnable: true,
@@ -111,11 +112,14 @@ Object.assign(GUIManager.prototype, {
         this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
             mousePick.enable = value;
         } );
+        this.folders[1].add(this.mousePickConfig, "focus").onChange( function (value) {
+            mousePick.focus = value;
+        } );
         this.folders[1].addColor(this.mousePickConfig, "onPickColor");
         this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
             mousePick.reRenderFocusArray();
         } );
-        this.folders[1].add(this.mousePickConfig, "reset");
+        this.folders[1].add(this.mousePickConfig, "Reset Focus");
 
         this.folders[1].open();
         

@@ -123,7 +123,7 @@ Object.assign(TEXT.prototype, {
         para.setAttribute("id", name);
 
         let temp = document.createElement("p");
-        temp.textContent = data.objects[ nameParse(name) ].objectSize;
+        temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].objectSize);
         temp.style.font = "10px Helvetica";
 
         para.appendChild(temp);
