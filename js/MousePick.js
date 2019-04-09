@@ -12,13 +12,16 @@ class MousePick {
     constructor () {
         
         this.enable = true;
-        this.focus = true;  // true for focus, false for desert
+        this.function = true;  // true for Focus, false for Desert
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
         this.INTERSECTED = null;
         this.focusArray = [];
         this.desertArray = [];
-        this.mouse = {position: new THREE.Vector2(-1, 1), lastMoveTime: 0};
+        this.mouse = {
+            position: new THREE.Vector2(-1, 1), 
+            lastMoveTime: 0
+        };
     }
 }
 
@@ -257,6 +260,18 @@ Object.assign(MousePick.prototype, {
 
             this.desertArray[i].material.opacity = gui.mousePickConfig.onDesertOpacity;
         }
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // Auxiliary
+
+    changeMousepickFunction: function () {
+
+        let result = (gui.mousePickConfig.function ? false : true);
+        
+        gui.mousePickConfig.function  = result;
+        mousePick.function = result;
+        console.log("shift");
     },
 
 } );

@@ -130,7 +130,7 @@ function disposeHierarchy (node, callback) {
 
 // Event callback functions
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove (event) {
 
     event.preventDefault();
 
@@ -140,21 +140,21 @@ function onDocumentMouseMove(event) {
 }
 
 
-function onDocumentMouseDown(event) {
+function onDocumentMouseDown (event) {
 
     event.preventDefault();
     
 }
 
 
-function onDocumentDoubleClick(event) {
+function onDocumentDoubleClick (event) {
 
     event.preventDefault();
 
     // Picked object stay focused or put into desert
     if (mousePick.INTERSECTED) {
         
-        if (mousePick.focus) 
+        if (mousePick.function) 
             mousePick.onFocus();
         else
             mousePick.onDesert();
@@ -162,7 +162,14 @@ function onDocumentDoubleClick(event) {
 }
 
 
-function onWindowResize(event) {
+function onDocumentKeyDown (event) {
+
+    if (event.keyCode === 16)  // shift
+        mousePick.changeMousepickFunction();
+}
+
+
+function onWindowResize (event) {
 
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();

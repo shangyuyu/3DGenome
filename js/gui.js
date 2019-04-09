@@ -27,7 +27,7 @@ class GUIManager {
         };
         this.mousePickConfig = {
             enable: true, 
-            focus: true,  // FIXME
+            function: true,  // true for Focus, false for Desert
             onPickColor: "#ac0000",
             onFocusColor: "#007d1d",
             onDesertOpacity: 0.3,
@@ -114,9 +114,9 @@ Object.assign(GUIManager.prototype, {
         this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
             mousePick.enable = value;
         } );
-        this.folders[1].add(this.mousePickConfig, "focus").onChange( function (value) {
-            mousePick.focus = value;
-        } );
+        this.folders[1].add(this.mousePickConfig, "function", {Focus: true, Desert: false}).onChange( function (value) {
+            mousePick.function = value === "true" ? true : false;
+        } ).listen();
         this.folders[1].addColor(this.mousePickConfig, "onPickColor");
         this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
             mousePick.reRenderFocusArray();

@@ -455,7 +455,7 @@ THREE.TrackballControls = function ( object, domElement, light ) {
 
 			_state = STATE.ROLLRIGHT;
 
-		}
+		} else onDocumentKeyDown(event);
 
 	}
 
