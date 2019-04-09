@@ -57,7 +57,7 @@ Object.assign(TEXT.prototype, {
         // leftInfoPanel opacity
         $("#leftInfoPanel").css("opacity", 0.8);
         // Default tab
-        document.getElementById("Focus").click();
+        document.getElementById("FocusButton").click();
 
         return content;
     },
