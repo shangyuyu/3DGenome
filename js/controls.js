@@ -9,7 +9,7 @@
 
 "use strict";
 
-THREE.TrackballControls = function ( object, domElement ) {
+THREE.TrackballControls = function ( object, domElement, light ) {
 
 	var _this = this;
 	var STATE = { NONE: - 1, ROTATE: 0, ZOOM: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_ZOOM_PAN: 4, 
@@ -18,6 +18,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	this.object = object;
 	this.domElement = ( domElement !== undefined ) ? domElement : document;
+	this.light = light;
 
 	// API
 
@@ -75,7 +76,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		_keyDown = false,  // Detect keyDown state
 
-		backwardVector = new THREE.Vector3();
+		backwardVector = new THREE.Vector3(),
+		lightVector = new THREE.Vector3();
 
 	// for reset
 
@@ -319,6 +321,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		// auxi vector
 		backwardVector.copy(_eye).normalize();
+		lightVector.copy(backwardVector).multiplyScalar(50);
 
 		if ( _state === STATE.FORWARD ) {
 
@@ -356,7 +359,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		}
 
 		_this.object.position.addVectors( _this.target, _eye );
-		
+		// Update light position
+		_this.light.position.addVectors( _this.object.position, lightVector );
 
 		_this.checkDistances();
 

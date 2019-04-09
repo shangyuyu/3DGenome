@@ -30,7 +30,7 @@ Long Term
 
 Minor Improvement
 - [ ] GUI cache
-- [ ] Light Position
+- [x] Light Position
 - [ ] Reset trackball location
 - [ ] Auto-rotation
 - [ ] Auto-adjust camera

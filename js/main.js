@@ -28,7 +28,7 @@ function init() {
     camera.lookAt(0, 0, 0);
 
     // Scene
-    let chromosome, auxiChromosome;
+    let chromosome, auxiChromosome, lights;  // Only one light source is allowed
     createScene();
     
     // GUI
@@ -53,7 +53,7 @@ function init() {
     document.getElementById("statsContainer").append(stats.domElement);
 
     // Controls
-    let controls = new THREE.TrackballControls( camera, renderer.domElement );
+    let controls = new THREE.TrackballControls( camera, renderer.domElement, lights[0] );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
     controls.minDistance = 1;
     controls.maxDistance = 400;
@@ -83,7 +83,7 @@ function createScene() {
     let ambientLight = new THREE.AmbientLight(0x444444, 0.10);
     scene.add( ambientLight );
 
-    let lights = [];
+    lights = [];
     lights[0] = new THREE.PointLight(0xffffff, 1, 0);
     lights[0].position.set(0, 0, 200);
     scene.add( lights[0] );
