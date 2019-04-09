@@ -37,7 +37,9 @@ Object.assign(TEXT.prototype, {
 
     newLeftInfoPanel: function () {
 
-        let content = document.createElement("div");
+        // let content = document.createElement("div");
+        let leftInfoPanelDocument = document.getElementById('iframe').contentWindow.document;
+        let content = leftInfoPanelDocument.getElementById("leftInfoPanel_proto");
 
         // Initialize JS Panel
         jsPanel.create( {
@@ -52,7 +54,10 @@ Object.assign(TEXT.prototype, {
             dragit: false,
         } );
 
+        // leftInfoPanel opacity
         $("#leftInfoPanel").css("opacity", 0.8);
+        // Default tab
+        document.getElementById("Focus").click();
 
         return content;
     },
@@ -120,7 +125,7 @@ Object.assign(TEXT.prototype, {
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
         para.style.font = "18px Helvetica";
-        para.setAttribute("id", name);
+        para.setAttribute("id", name);  // ?
 
         let temp = document.createElement("p");
         temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].objectSize) + "/" + String(data.objectSize);
@@ -139,9 +144,10 @@ Object.assign(TEXT.prototype, {
     },
 
     removeAllLeftInfoPanel: function () {
+    // Remove all data but keep prototype
 
-        while (this.leftInfoPanel.lastChild)
-            this.leftInfoPanel.removeChild(this.leftInfoPanel.lastChild);
+        //while (this.leftInfoPanel.lastChild)
+        //    this.leftInfoPanel.removeChild(this.leftInfoPanel.lastChild);
     },
 
     //////////////////////////////////////////////////////////////

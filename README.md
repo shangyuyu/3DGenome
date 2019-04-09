@@ -8,7 +8,7 @@
 - [x] Multi-select trigger
 - [x] Disp mouse pick info
 - [ ] Global
-- [ ] Invalidate picked object
+- [x] Invalidate picked object
 - [ ] Favicon
 - [ ] Select from leftInfoPanel
 - [ ] Button in leftInfoPanel
@@ -16,6 +16,7 @@
 
 Critical
 - [ ] BUG: INDEX should not be used as unique identifier
+- [ ] BUG: Loading file sequence
 - [x] Disp selected object info (info panal)
 - [ ] Search Panel
 - [ ] List of search
