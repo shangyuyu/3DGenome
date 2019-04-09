@@ -271,7 +271,6 @@ Object.assign(MousePick.prototype, {
         
         gui.mousePickConfig.function  = result;
         mousePick.function = result;
-        console.log("shift");
     },
 
 } );

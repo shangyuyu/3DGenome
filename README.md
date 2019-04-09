@@ -13,6 +13,7 @@
 - [ ] Select from leftInfoPanel
 - [x] Button in leftInfoPanel
 - [ ] Gradient render (color)
+- [ ] sprite
 
 Critical
 - [ ] BUG: INDEX should not be used as unique identifier
