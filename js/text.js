@@ -40,7 +40,7 @@ Object.assign(TEXT.prototype, {
         // let content = document.createElement("div");
         let leftInfoPanelDocument = document.getElementById('iframe').contentWindow.document;
         let content = leftInfoPanelDocument.getElementById("leftInfoPanel_proto");
-        let focusDiv, desertDiv;
+        let focusDiv, desertDiv, templateDiv;
 
         // Initialize JS Panel
         jsPanel.create( {
@@ -62,8 +62,11 @@ Object.assign(TEXT.prototype, {
         // Fetch text divs
         focusDiv = document.getElementById("Focus");
         desertDiv = document.getElementById("Desert");
+        templateDiv = document.getElementById("template");
 
-        return {focus: focusDiv, desert: desertDiv};
+        templateDiv.parentNode.removeChild(templateDiv);
+
+        return {focus: focusDiv, desert: desertDiv, template: templateDiv};
     },
 
     newInfoPanel: function () {
@@ -128,6 +131,7 @@ Object.assign(TEXT.prototype, {
     addToLeftInfoPanel: function (object, tab) {
     // tab: {"focus", "desert"}
 
+    /*
         let name = object.name;
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
@@ -140,6 +144,14 @@ Object.assign(TEXT.prototype, {
 
         para.appendChild(temp);
         this.leftInfoPanel[tab].appendChild(para);
+        */
+       let node = this.leftInfoPanel.template.cloneNode(true);
+
+       node.children[0].innerText = object.name;
+       node.children[1].textContent = "Effective points " + String(data.objects[ nameParse(object.name) ].pointNum) + "/" + String(data.objects[ nameParse(object.name) ].objectSize);
+       node.children[2].textContent = uniqueID2string(object.uniqueID);
+
+       this.leftInfoPanel[tab].appendChild( node );
     },
 
     removeFromLeftInfoPanel: function (name, tab) {

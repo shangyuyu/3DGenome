@@ -74,6 +74,12 @@ function openTab (event, Name) {
 }
 
 
+function uniqueID2string (uniqueID) {
+
+    return `CHR-${uniqueID.CHR}\u00A0\u00A0\u00A0${uniqueID.start}-${uniqueID.end}`;
+}
+
+
 function disposeNode (node) {
     // REF: https://stackoverflow.com/a/33199591/9338178
 

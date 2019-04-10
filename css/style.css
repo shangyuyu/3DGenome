@@ -40,7 +40,7 @@ body {
     border: none;
     background-color: #1a1a1a;
 }
-.tab button {
+.tablinks {
     background-color: #2d2d2d;
     float: left;
     border: 1px solid #000000;
@@ -51,19 +51,44 @@ body {
     font-size: 14px;
     color: #8a8a8a;
 }
-.tab button:not(:last-child) {
+.tablinks:not(:last-child) {
     border-right: none;
 }
-.tab button:hover {
+.tablinks:hover {
     background-color: #1a1a1a;
     color: white;
     border: none;
 }
-.tab button.active {
+.tablinks.active {
     background-color: #1a1a1a;
     color: white;
     border: none;
 }
 .tabcontent {
     background-color: #1a1a1a;
+}
+
+.objectInfo {
+    background-color: #1a1a1a;
+}
+.objectInfo:hover {
+    color: #8a8a8a;
+}
+.objectName {
+    background-color: #2d2d2d;
+    border: 1px solid #000000;
+    cursor: e-resize;
+    outline: none;
+    font-size: 16px;
+    color: inherit;
+}
+.objectName:hover {
+    background-color: #1a1a1a;
+    color: white;
+}
+.objectInfo1 {
+    font: 12px Helvetica;
+}
+.objectInfo2 {
+    font: 12px Helvetica;
 }
