@@ -119,13 +119,14 @@ Object.assign(TEXT.prototype, {
         object.context.lineWidth = 6;
         object.context.stroke();
         // Fill text
-        object.context.fillText(message, 78*object.ratio, 24*object.ratio);  // FIXME
+        object.context.textAlign = "center";
+        object.context.fillText(message, object.canvas.width/2.0, object.canvas.height/2.0 + 10);  // "10" is decided by font-size
     },
 
     //////////////////////////////////////////////////////////////
     // leftInfoPanel
     addToLeftInfoPanel: function (name, tab) {
-    // tab: "focus"/"desert"
+    // tab: {"focus", "desert"}
 
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;

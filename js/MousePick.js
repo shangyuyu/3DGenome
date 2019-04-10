@@ -109,7 +109,7 @@ Object.assign(MousePick.prototype, {
 
         let index = nameParse( this.INTERSECTED.name );
         
-        if (!this.focusArray.find( e => nameParseStr(e.name) == index )) {
+        if (!this.focusArray.find( e => nameParse(e.name) === index )) {
         // Cannot focus those who have been put in desert
 
             // TEXT Left Info Panel
@@ -124,19 +124,38 @@ Object.assign(MousePick.prototype, {
         }
     }, 
 
-    setAsFocus: function(parent, indexArray) {
-        // Put objects of 'parent' whose index in 'indexArray' into focusArray
-        // FIXME : did not check whether existed
-    
-        let temp = this.INTERSECTED;
-        for (let i=0; i<indexArray.length; i+=1) {
+    setAsFocus: function (parent, uniqueID) {
+    // Use uniqueID as input and push it into focusArray if found in "parent"
+    // return true if successfully pushed into focusArray or has been in focusArray
 
-            this.INTERSECTED = parent.children[indexArray[i]];
-            this.onPick();
-            this.onFocus();
-            // this.onLeft(); Logically should onLeft, but does not change anything
+        // Did not call THREE.getObjectByProperty to avoid recursively search
+        let object = this.getObjectByUniqueID(parent, uniqueID);
+
+        if (object) {
+
+            if ( !this.focusArray.find( e => e.name === object.name ) ) {
+                
+                let temp = this.INTERSECTED;
+
+                this.INTERSECTED = object;
+                this.onPick();
+                this.onFocus();
+                // this.onLeft(); Logically should onLeft, but does not change anything
+                
+                this.INTERSECTED = temp;
+            }
+
+            return true;
+        } else 
+            return false;
+    },
+
+    setAsFocusFromArray: function (parent, uniqueIDArray) {
+
+        for (let i=0; i<uniqueIDArray.length; i+=1) {
+
+            this.setAsFocus(parent, uniqueIDArray[i]);
         }
-        this.INTERSECTED = temp;
     },
 
     resetFocusArray: function () {
@@ -154,14 +173,14 @@ Object.assign(MousePick.prototype, {
         this.focusArray = [];
     },
 
-    getFocusIndexArray: function ( targetArray ) {
-    // return focusArray index
+    getFocusArrayUniqueID: function ( targetArray ) {
+    // return focusArray uniqueIDs
 
         if (this.focusArray.length > 0) {
 
             for (let i=0; i<this.focusArray.length; i+=1) {
 
-                targetArray.push( nameParse(mousePick.focusArray[i].name) );
+                targetArray.push( mousePick.focusArray[i].uniqueID );
             }
         }
     },
@@ -191,7 +210,7 @@ Object.assign(MousePick.prototype, {
 
         let index = nameParse( this.INTERSECTED.name );
 
-        if (!this.desertArray.find( e => nameParseStr(e.name) == index )) {  // in focusArray and desertArray?? FIXME
+        if (!this.desertArray.find( e => nameParse(e.name) === index )) {
 
             // TEXT Left Info Panel
             text.addToLeftInfoPanel(this.INTERSECTED.name, "desert");
@@ -203,19 +222,38 @@ Object.assign(MousePick.prototype, {
         }
     },
 
-    setAsDesert: function(parent, indexArray) {
-        // Put objects of 'parent' whose index in 'indexArray' into desertArray
-        // FIXME : did not check whether existed
-    
-        let temp = this.INTERSECTED;
-        for (let i=0; i<indexArray.length; i+=1) {
+    setAsDesert: function (parent, uniqueID) {
+    // Use uniqueID as input and push it into desertArray if found in "parent"
+    // return true if successfully pushed into desertArray or has been in desertArray
 
-            this.INTERSECTED = parent.children[indexArray[i]];  // FIXME BUG! index is not unique identifier!
-            this.onPick();
-            this.onDesert();
-            this.onLeft();
+        // Did not call THREE.getObjectByProperty to avoid recursively search
+        let object = this.getObjectByUniqueID(parent, uniqueID);
+
+        if (object) {
+
+            if ( !this.desertArray.find( e => e.name === object.name ) ) {
+                
+                let temp = this.INTERSECTED;
+
+                this.INTERSECTED = object;
+                this.onPick();
+                this.onDesert();
+                this.onLeft();
+                
+                this.INTERSECTED = temp;
+            }
+
+            return true;
+        } else 
+            return false;
+    },
+
+    setAsDesertFromArray: function (parent, uniqueIDArray) {
+
+        for (let i=0; i<uniqueIDArray.length; i+=1) {
+
+            this.setAsDesert(parent, uniqueIDArray[i]);
         }
-        this.INTERSECTED = temp;
     },
 
     resetDesertArray: function () {
@@ -233,14 +271,14 @@ Object.assign(MousePick.prototype, {
         this.desertArray = [];
     },
 
-    getDesertIndexArray: function ( targetArray ) {
-    // return focusArray index
+    getDesertArrayUniqueID: function ( targetArray ) {
+    // return desertArray uniqueIDs
 
         if (this.desertArray.length > 0) {
 
             for (let i=0; i<this.desertArray.length; i+=1) {
 
-                targetArray.push( nameParse(mousePick.desertArray[i].name) );
+                targetArray.push( mousePick.desertArray[i].uniqueID );
             }
         }
     },
@@ -272,6 +310,24 @@ Object.assign(MousePick.prototype, {
         gui.mousePickConfig.function  = result;
         mousePick.function = result;
     },
+
+    getObjectByUniqueID: function (parent, uniqueID) {
+
+        let childArray = parent.children;
+        let targetUniqueID;
+
+        for (let i=0, l=childArray.length; i<l; i+=1) {
+        
+            targetUniqueID = childArray[i].uniqueID;
+
+            if (targetUniqueID.CHR === uniqueID.CHR &&
+                targetUniqueID.start === uniqueID.start &&
+                targetUniqueID.end === uniqueID.end)
+                return childArray[i];
+        }
+
+        return null;
+    }
 
 } );
 

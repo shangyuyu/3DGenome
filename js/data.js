@@ -97,12 +97,13 @@ Object.assign(DataManager.prototype, {
     bindTube: function (parent) {
         // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
+        // NOTE: Index may change. Do not save object index.
         // Save mousePick.focusArray info
-        let indexFocusArray = [];
-        mousePick.getFocusIndexArray( indexFocusArray );  // BUG index is not reliable
+        let focusArrayUniqueID = [];
+        mousePick.getFocusArrayUniqueID( focusArrayUniqueID );
         // Save mousePick.desertArray info
-        let indexDesertArray = [];
-        mousePick.getDesertIndexArray( indexDesertArray );  // BUG
+        let desertArrayUniqueID = [];
+        mousePick.getDesertArrayUniqueID( desertArrayUniqueID );
 
         // Deep destruction and clear
         if (parent.children.length > 0) {
@@ -117,14 +118,14 @@ Object.assign(DataManager.prototype, {
         // Re-construct
         // TIME-CONSUMING!  FIXME
         let geometry, material, mesh;
-        for (let i=0; i<data.objects.length; i+=1) {
+        for (let i=0; i<this.objects.length; i+=1) {
 
             // Empty object not allowed
             // if (data.objects[i].objectSize === 0) continue;
 
             geometry = new THREE.TubeBufferGeometry(
-                data.objects[i].geometry, 
-                data.objects[i].pointNum * gui.renderConfig.tubularSegment, 
+                this.objects[i].geometry, 
+                this.objects[i].pointNum * gui.renderConfig.tubularSegment, 
                 gui.renderConfig.radius, 
                 gui.renderConfig.radialSegment, 
                 false  // 'closed' should be kept false
@@ -141,6 +142,11 @@ Object.assign(DataManager.prototype, {
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
             mesh.name = "Segment" + String(i);  // Name used for shadow mouse pick
+            mesh.uniqueID = {
+                CHR: this.objects[i].CHR,
+                start: this.objects[i].startLocus,
+                end: this.objects[i].startLocus + this.resolution * this.objects[i].objectSize
+            };
             // bind auxi properties
             mesh.protected = false;
             mesh.recoverHex = "";
@@ -150,10 +156,11 @@ Object.assign(DataManager.prototype, {
             parent.add(mesh);
         }
 
+        // FIXME: require exactly the same uniqueID to set
         // recover focusArray
-        mousePick.setAsFocus(parent, indexFocusArray);  // will also resume leftInfoPanel
+        mousePick.setAsFocusFromArray(parent, focusArrayUniqueID);  // will also resume leftInfoPanel
         // recover desertArray
-        mousePick.setAsDesert(parent, indexDesertArray);
+        mousePick.setAsDesertFromArray(parent, desertArrayUniqueID);  // will also resume leftInfoPanel
     },
 
     bindLine: function (parent) {
@@ -191,7 +198,7 @@ Object.assign(DataManager.prototype, {
 
             line = new THREE.Line(lineGeometry);
             line.name = "Lineseg" + String(i);  // Name used for shadow mouse pick
-            
+
             parent.add(line);
         }
     },
