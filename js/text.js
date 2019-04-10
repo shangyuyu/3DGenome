@@ -125,9 +125,10 @@ Object.assign(TEXT.prototype, {
 
     //////////////////////////////////////////////////////////////
     // leftInfoPanel
-    addToLeftInfoPanel: function (name, tab) {
+    addToLeftInfoPanel: function (object, tab) {
     // tab: {"focus", "desert"}
 
+        let name = object.name;
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
         para.style.font = "18px Helvetica";

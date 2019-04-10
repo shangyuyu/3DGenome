@@ -117,7 +117,7 @@ Object.assign(GUIManager.prototype, {
         } );
         this.folders[1].add(this.mousePickConfig, "function", {Focus: true, Desert: false}).onChange( function (value) {
             mousePick.function = value === "true" ? true : false;
-        } ).listen();
+        } );
         this.folders[1].addColor(this.mousePickConfig, "onPickColor");
         this.folders[1].addColor(this.mousePickConfig, "onFocusColor").onChange( function () {
             mousePick.reRenderFocusArray();
@@ -145,6 +145,8 @@ Object.assign(GUIManager.prototype, {
         } );
 
         this.folders[2].open();
+
+        ////////////////////////////////////////////////////////////////////////////////////
     },
 
     bindParent: function (parent) {

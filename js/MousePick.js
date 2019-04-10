@@ -113,7 +113,7 @@ Object.assign(MousePick.prototype, {
         // Cannot focus those who have been put in desert
 
             // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED.name, "focus");
+            text.addToLeftInfoPanel(this.INTERSECTED, "focus");
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
             this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
@@ -213,7 +213,7 @@ Object.assign(MousePick.prototype, {
         if (!this.desertArray.find( e => nameParse(e.name) === index )) {
 
             // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED.name, "desert");
+            text.addToLeftInfoPanel(this.INTERSECTED, "desert");
 
             this.desertArray.push( this.INTERSECTED );
             this.INTERSECTED.deserted = true;
@@ -309,6 +309,9 @@ Object.assign(MousePick.prototype, {
         
         gui.mousePickConfig.function  = result;
         mousePick.function = result;
+
+        for (let i in gui.folders[1].__controllers)
+            gui.folders[1].__controllers[i].updateDisplay();
     },
 
     getObjectByUniqueID: function (parent, uniqueID) {
