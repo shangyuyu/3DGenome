@@ -54,6 +54,7 @@ function nameParseStr (name) {
 
 
 function openTab (event, Name) {
+// Triggered by leftInfoPanel.html event
 
     let i, tabcontent, tablinks;
 
@@ -71,6 +72,15 @@ function openTab (event, Name) {
     }
     document.getElementById(Name).style.display = "block";
     event.currentTarget.className += " active";
+}
+
+
+function removeObject (id) {
+// Triggered by leftInfoPanel.html event
+
+    text.removeFromLeftInfoPanel(id);
+    if (id[0] == "F")
+        mousePick.removeFromFocusArray( id.slice(1) );
 }
 
 

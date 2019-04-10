@@ -85,7 +85,8 @@ Object.assign(MousePick.prototype, {
         // leftInfoPanel should work regardless of its 'enable'
         // but visual effect can be omitted
 
-            let node = document.getElementById(this.INTERSECTED.name);
+            // Don't need to search for desert array nodes
+            let node = document.getElementById("F" + this.INTERSECTED.name);
             if (node) node.className = "objectInfoHover";  // simulate :hover effect
         }
 
@@ -103,7 +104,8 @@ Object.assign(MousePick.prototype, {
             text.hideTopInfoPanel();
             if (text.leftInfoPanelEnable === true) {
         
-                let node = document.getElementById(this.INTERSECTED.name);
+                // Don't need to search for desert array nodes
+                let node = document.getElementById("F" + this.INTERSECTED.name);
                 if (node) node.className = "objectInfo";  // undo simulation hover effects
             }
 
@@ -168,6 +170,26 @@ Object.assign(MousePick.prototype, {
 
             this.setAsFocus(parent, uniqueIDArray[i]);
         }
+    },
+
+    removeFromFocusArray: function (name) {
+    // WARNING: name might not be unique
+
+        for (let i=0; i<this.focusArray.length; i+=1) {
+
+            if (this.focusArray[i].name === name) {
+
+                let INTERSECTED = this.focusArray[i];
+
+                INTERSECTED.protected = false;
+                INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
+
+                this.focusArray.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
     },
 
     resetFocusArray: function () {

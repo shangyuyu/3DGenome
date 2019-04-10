@@ -136,18 +136,21 @@ Object.assign(TEXT.prototype, {
        node.children[0].innerText = object.name;
        node.children[1].textContent = "Effective points " + String(data.objects[ nameParse(object.name) ].pointNum) + "/" + String(data.objects[ nameParse(object.name) ].objectSize);
        node.children[2].textContent = uniqueID2string(object.uniqueID);
-       node.setAttribute("id", object.name);
+       node.setAttribute("id", (tab === "focus" ? "F" : "D") + object.name);
 
        this.leftInfoPanel[tab].appendChild( node );
     },
 
-    removeFromLeftInfoPanel: function (name, tab) {
-        // FIXME on re-generate
-        // deprecated
+    removeFromLeftInfoPanel: function (name) {
+    // return true if successfully removed
 
         let node = document.getElementById(name);
-        if (node.parentNode)
+        if (node.parentNode) {
             node.parentNode.removeChild(node);
+            return true;
+        }
+
+        return false;
     },
 
     removeAllFocusLeftInfoPanel: function () {
