@@ -17,7 +17,7 @@ class DataManager {
         this.objects = [];
         this.rawData = [];
         this.infoData = null;
-        this.objectSize  = 200;  // 200 points as an object - 1Mb for 5kb resolution
+        this.resolution = null;
     }
 }
 
@@ -37,6 +37,7 @@ Object.assign(DataManager.prototype, {
             const resolution = Number(data[1]);
             const startPos = Number(data[2]);
             const dataScale = 50.0;
+            const targetObjectSize = 200;  // 5Kb * 200 -> 1Mb
     
             data.splice(0, 3);  // delete chr, resolution, startPos
     
@@ -51,19 +52,20 @@ Object.assign(DataManager.prototype, {
                 if (data[i+1] !== "nan")
                     tempVec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
 
-                if (count === this.objectSize) {
+                if (count === targetObjectSize) {
     
                     count = 0;
 
                     if (tempVec3Array.length > 1)
                         this.objects[index] = {
-                            geometry: new THREE.CatmullRomCurve3(tempVec3Array),  // NOTE: Consecutive data missing!
-                            objectSize: tempVec3Array.length,
+                            geometry: new THREE.CatmullRomCurve3(tempVec3Array),  // NOTE: Look out for consecutive data missing!
+                            pointNum: tempVec3Array.length,
+                            objectSize: targetObjectSize,
                             CHR: chr,
-                            startLocus: index*this.objectSize*resolution+startPos,
+                            startLocus: index*targetObjectSize*resolution + startPos,
                         };
                     if (tempVec3Array.length <= 1)
-                        console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
+                        console.warn(`Consecutive data missing detected: from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
                     tempVec3Array = [];
@@ -73,17 +75,19 @@ Object.assign(DataManager.prototype, {
                 if (tempVec3Array.length > 1)
                     this.objects[index] = {
                         geometry: new THREE.CatmullRomCurve3(tempVec3Array),
-                        objectSize: tempVec3Array.length,
+                        pointNum: tempVec3Array.length,
+                        objectSize: targetObjectSize,
                         CHR: chr,
-                        startLocus: index*this.objectSize*resolution+startPos,
+                        startLocus: index*targetObjectSize*resolution + startPos,
                     };
                 if (tempVec3Array.length <= 1) 
-                    console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
+                    console.warn(`Consecutive data missing detected: from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                 tempVec3Array = [];
             }
     
             // this.rawData
             this.rawData[chr] = data;
+            this.resolution = resolution;
             data = [];
     
             init();
@@ -100,9 +104,9 @@ Object.assign(DataManager.prototype, {
         let indexDesertArray = [];
         mousePick.getDesertIndexArray( indexDesertArray );  // BUG
 
-        // Deep destruction
+        // Deep destruction and clear
         if (parent.children.length > 0) {
-            // memory leak?
+            // WARNING: avoid memory leak
             disposeHierarchy(parent, disposeNode);
         }
         mousePick.clearFocused();
@@ -120,7 +124,7 @@ Object.assign(DataManager.prototype, {
 
             geometry = new THREE.TubeBufferGeometry(
                 data.objects[i].geometry, 
-                data.objects[i].objectSize * gui.renderConfig.tubularSegment, 
+                data.objects[i].pointNum * gui.renderConfig.tubularSegment, 
                 gui.renderConfig.radius, 
                 gui.renderConfig.radialSegment, 
                 false  // 'closed' should be kept false
@@ -156,7 +160,7 @@ Object.assign(DataManager.prototype, {
         // Re-create Geometry and Material, bind them to line and add to Object3D
 
         if (parent.children.length > 0) {
-            // memory leak?
+            // WARNING: avoid memory leak
             disposeHierarchy(parent, disposeNode);
         }
 
@@ -169,7 +173,7 @@ Object.assign(DataManager.prototype, {
             lineGeometry = new THREE.BufferGeometry();
 
             // Retrieve position data from curve
-            temp = data.objects[i].geometry.getSpacedPoints(data.objects[i].objectSize * 
+            temp = data.objects[i].geometry.getSpacedPoints(data.objects[i].pointNum * 
                 (advancedConfig.auxiScenePoints ? advancedConfig.auxiScenePoints : gui.renderConfig.tubularSegment)
             );
             tempCoordData = new Float32Array(temp.length*3);
@@ -187,6 +191,7 @@ Object.assign(DataManager.prototype, {
 
             line = new THREE.Line(lineGeometry);
             line.name = "Lineseg" + String(i);  // Name used for shadow mouse pick
+            
             parent.add(line);
         }
     },

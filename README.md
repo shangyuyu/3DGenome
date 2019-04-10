@@ -9,7 +9,7 @@
 - [x] Disp mouse pick info
 - [x] Global
 - [x] Invalidate picked object
-- [ ] Favicon
+- [x] Favicon
 - [ ] Select from leftInfoPanel
 - [x] Button in leftInfoPanel
 - [ ] Gradient render (color)

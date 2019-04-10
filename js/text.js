@@ -130,10 +130,10 @@ Object.assign(TEXT.prototype, {
         let para = document.createElement("p");  // FIXME better html structure
         para.textContent = name;
         para.style.font = "18px Helvetica";
-        para.setAttribute("id", name);  // id used to remove FIXME
+        // para.setAttribute("id", name);  // id used to remove FIXME
 
         let temp = document.createElement("p");
-        temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].objectSize) + "/" + String(data.objectSize);
+        temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].pointNum) + "/" + String(data.objects[ nameParse(name) ].objectSize);
         temp.style.font = "10px Helvetica";
 
         para.appendChild(temp);

@@ -8,6 +8,7 @@
 class GUIManager {
 
     constructor (parent = null, shadowParent = null) {
+    // FIXME GUI should not be binded
 
         this.parent = parent;
         this.shadowParent = shadowParent;
