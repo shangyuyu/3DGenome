@@ -59,8 +59,9 @@ Object.assign(DataManager.prototype, {
                         this.objects[index] = {
                             geometry: new THREE.CatmullRomCurve3(tempVec3Array),  // NOTE: Consecutive data missing!
                             objectSize: tempVec3Array.length,
+                            CHR: chr,
+                            startLocus: index*this.objectSize*resolution+startPos,
                         };
-                    // locus? FIXME
                     if (tempVec3Array.length <= 1)
                         console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                     else
@@ -73,8 +74,9 @@ Object.assign(DataManager.prototype, {
                     this.objects[index] = {
                         geometry: new THREE.CatmullRomCurve3(tempVec3Array),
                         objectSize: tempVec3Array.length,
+                        CHR: chr,
+                        startLocus: index*this.objectSize*resolution+startPos,
                     };
-                // locus? FIXME
                 if (tempVec3Array.length <= 1) 
                     console.warn(`Consecutive data missing detected: Object #${index} from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
                 tempVec3Array = [];
@@ -93,10 +95,10 @@ Object.assign(DataManager.prototype, {
 
         // Save mousePick.focusArray info
         let indexFocusArray = [];
-        mousePick.getFocusIndexArray( indexFocusArray );
+        mousePick.getFocusIndexArray( indexFocusArray );  // BUG index is not reliable
         // Save mousePick.desertArray info
         let indexDesertArray = [];
-        mousePick.getDesertIndexArray( indexDesertArray );
+        mousePick.getDesertIndexArray( indexDesertArray );  // BUG
 
         // Deep destruction
         if (parent.children.length > 0) {
