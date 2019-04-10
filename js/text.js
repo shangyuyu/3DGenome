@@ -131,25 +131,12 @@ Object.assign(TEXT.prototype, {
     addToLeftInfoPanel: function (object, tab) {
     // tab: {"focus", "desert"}
 
-    /*
-        let name = object.name;
-        let para = document.createElement("p");  // FIXME better html structure
-        para.textContent = name;
-        para.style.font = "18px Helvetica";
-        // para.setAttribute("id", name);  // id used to remove FIXME
-
-        let temp = document.createElement("p");
-        temp.textContent = "Effective points " + String(data.objects[ nameParse(name) ].pointNum) + "/" + String(data.objects[ nameParse(name) ].objectSize);
-        temp.style.font = "10px Helvetica";
-
-        para.appendChild(temp);
-        this.leftInfoPanel[tab].appendChild(para);
-        */
        let node = this.leftInfoPanel.template.cloneNode(true);
 
        node.children[0].innerText = object.name;
        node.children[1].textContent = "Effective points " + String(data.objects[ nameParse(object.name) ].pointNum) + "/" + String(data.objects[ nameParse(object.name) ].objectSize);
        node.children[2].textContent = uniqueID2string(object.uniqueID);
+       node.setAttribute("id", object.name);
 
        this.leftInfoPanel[tab].appendChild( node );
     },

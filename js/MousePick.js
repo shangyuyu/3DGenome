@@ -81,6 +81,13 @@ Object.assign(MousePick.prototype, {
             text.setText(text.topInfoPanel, this.INTERSECTED.name);
             text.showTopInfoPanel();
         }
+        if (text.leftInfoPanelEnable === true) {
+        // leftInfoPanel should work regardless of its 'enable'
+        // but visual effect can be omitted
+
+            let node = document.getElementById(this.INTERSECTED.name);
+            if (node) node.className = "objectInfoHover";  // simulate :hover effect
+        }
 
         // MousePick logic
         this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
@@ -94,6 +101,11 @@ Object.assign(MousePick.prototype, {
 
             // TEXT disp logic
             text.hideTopInfoPanel();
+            if (text.leftInfoPanelEnable === true) {
+        
+                let node = document.getElementById(this.INTERSECTED.name);
+                if (node) node.className = "objectInfo";  // undo simulation hover effects
+            }
 
             // MousePick logic
             this.INTERSECTED.material.emissive.setHex(this.INTERSECTED.recoverHex);

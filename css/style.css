@@ -68,10 +68,13 @@ body {
     background-color: #1a1a1a;
 }
 
-.objectInfo {
+.objectInfo{
     background-color: #1a1a1a;
 }
 .objectInfo:hover {
+    color: #8a8a8a;
+}
+.objectInfoHover {
     color: #8a8a8a;
 }
 .objectName {
