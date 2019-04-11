@@ -173,7 +173,7 @@ Object.assign(MousePick.prototype, {
     },
 
     removeFromFocusArray: function (name) {
-    // WARNING: name might not be unique
+    // NOTE: Using name as id is unreliable during "bindTube" step
 
         for (let i=0; i<this.focusArray.length; i+=1) {
 
@@ -288,6 +288,26 @@ Object.assign(MousePick.prototype, {
 
             this.setAsDesert(parent, uniqueIDArray[i]);
         }
+    },
+
+    removeFromDesertArray: function (name) {
+    // NOTE: Using name as id is unreliable during "bindTube" step
+
+        for (let i=0; i<this.desertArray.length; i+=1) {
+            
+            if (this.desertArray[i].name === name) {
+
+                let INTERSECTED = this.desertArray[i];
+
+                INTERSECTED.deserted = false;
+                INTERSECTED.material.transparent = false;
+
+                this.desertArray.splice(i, 1);
+                return true;
+            }
+        }
+
+        return false;
     },
 
     resetDesertArray: function () {

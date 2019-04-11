@@ -77,10 +77,15 @@ function openTab (event, Name) {
 
 function removeObject (id) {
 // Triggered by leftInfoPanel.html event
+// Assume object exist in corresponding panel/array
 
+    // TEXT
     text.removeFromLeftInfoPanel(id);
+    // MousePick
     if (id[0] == "F")
         mousePick.removeFromFocusArray( id.slice(1) );
+    else
+        mousePick.removeFromDesertArray( id.slice(1) );
 }
 
 
