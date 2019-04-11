@@ -120,10 +120,10 @@ function render() {
         if (preRenderTime - mousePick.mouse.lastMoveTime > advancedConfig.mouseStayTime) {
         // Mouse should keep stayed for at least 'advancedConfig.mouseStayTime' ms
 
-            mousePick.call(auxiChromosome.children, chromosome.children);
+            if (mousePick.enable === true) mousePick.call(auxiChromosome.children, chromosome.children);
         } else {
 
-            mousePick.onLeft();
+            if (mousePick.enable === true) mousePick.onLeft();
         }
     }
 

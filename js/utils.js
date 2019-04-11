@@ -77,8 +77,13 @@ function openTab (event, Name) {
 
 function removeObject (id) {
 // Triggered by leftInfoPanel.html event
+// NOTE: Not supposed to be called by any other function
+//       Use functions in MousePick to remove objects
 // Assume object exist in corresponding panel/array
 
+    // jQuery mouseleave
+    // Assume "mouseover" has been triggered
+    $("#"+id).trigger("mouseleave");
     // TEXT
     text.removeFromLeftInfoPanel(id);
     // MousePick

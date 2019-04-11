@@ -11,7 +11,7 @@ class MousePick {
 
     constructor () {
         
-        this.enable = true;
+        this.enable = true;  // Do NOT disable the execution of member functions
         this.function = true;  // true for Focus, false for Desert
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();
@@ -29,7 +29,6 @@ Object.assign(MousePick.prototype, {
 
     call: function (objectArray, shadowArray) {
 
-        if (this.enable === false) return;
         this.lastMousePickCallTime = Date.now();
 
         this.rayCaster.setFromCamera( this.mouse.position, camera );
@@ -75,6 +74,10 @@ Object.assign(MousePick.prototype, {
 
     onPick: function () {
     // Assume INTERSECTED not null
+
+        // NOTE: this function cannot be disabled on "this.enable === false"
+        //       leftInfoPanel will trigger this function when 
+        //       "this.enable" is purposely set to false on hover
 
         // TEXT disp logic
         if (text.topInfoPanelEnable === true) {

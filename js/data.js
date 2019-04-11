@@ -65,7 +65,7 @@ Object.assign(DataManager.prototype, {
                             startLocus: index*targetObjectSize*resolution + startPos,
                         };
                     if (tempVec3Array.length <= 1)
-                        console.warn(`Consecutive data missing detected: from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
+                        console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
                     tempVec3Array = [];
@@ -81,7 +81,7 @@ Object.assign(DataManager.prototype, {
                         startLocus: index*targetObjectSize*resolution + startPos,
                     };
                 if (tempVec3Array.length <= 1) 
-                    console.warn(`Consecutive data missing detected: from ${index*this.objectSize*resolution+startPos} to ${(index+1)*this.objectSize*resolution+startPos} in chromosome ${chr}.`);
+                    console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
                 tempVec3Array = [];
             }
     

@@ -113,6 +113,7 @@ Object.assign(GUIManager.prototype, {
         this.folders[1] = this.gui.addFolder( "Mouse Pick" );
 
         this.folders[1].add(this.mousePickConfig, "enable").onChange( function (value) {
+            if (value === false) mousePick.onLeft();
             mousePick.enable = value;
         } );
         this.folders[1].add(this.mousePickConfig, "function", {Focus: true, Desert: false}).onChange( function (value) {

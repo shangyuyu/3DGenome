@@ -63,8 +63,11 @@ Object.assign(TEXT.prototype, {
         focusDiv = document.getElementById("Focus");
         desertDiv = document.getElementById("Desert");
         templateDiv = document.getElementById("template");
-
+        // Remove template from DOM
         templateDiv.parentNode.removeChild(templateDiv);
+        // .hover trigger js
+            // this function has been moved to "addToLeftInfoPanel"
+            // because nodes are dynamically created
 
         return {focus: focusDiv, desert: desertDiv, template: templateDiv};
     },
@@ -132,13 +135,30 @@ Object.assign(TEXT.prototype, {
     // tab: {"focus", "desert"}
 
        let node = this.leftInfoPanel.template.cloneNode(true);
+       let id = (tab === "focus" ? "F" : "D") + object.name;
 
        node.children[0].innerText = object.name;
        node.children[1].textContent = "Effective points " + String(data.objects[ nameParse(object.name) ].pointNum) + "/" + String(data.objects[ nameParse(object.name) ].objectSize);
        node.children[2].textContent = uniqueID2string(object.uniqueID);
-       node.setAttribute("id", (tab === "focus" ? "F" : "D") + object.name);
+       node.setAttribute("id", id);
 
        this.leftInfoPanel[tab].appendChild( node );
+
+       // new node of class "objectInfo" created
+       // jQuery hover event re-bind
+       $("#"+id).hover( function () {
+        // mouseover
+            mousePick.onLeft();  // In case currently intersected with an object
+            mousePick.enable = false;
+            mousePick.INTERSECTED = object;
+            mousePick.onPick();
+        }, function () {
+        // mouseleave
+            // NOTE: If button is clicked, this function will need to be manually triggered
+            mousePick.enable = true;
+            mousePick.onLeft();  // will clear mousePick.INTERSECTED
+            mousePick.enable = gui.mousePickConfig.enable;
+        } );
     },
 
     removeFromLeftInfoPanel: function (name) {
