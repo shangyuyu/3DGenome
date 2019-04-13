@@ -11,6 +11,8 @@ let camera, scene, auxiScene, renderer, mousePick, gui, text;
 
 function init() {
 
+    
+
     let container = document.getElementById("webGLContainer");
 
     // Override CSS setting to center "topInfoPanel"

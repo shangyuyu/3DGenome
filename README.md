@@ -10,13 +10,13 @@
 - [x] Global
 - [x] Invalidate picked object
 - [x] Favicon
-- [ ] Select from leftInfoPanel
+- [x] Select from leftInfoPanel
 - [x] Button in leftInfoPanel
 - [ ] Gradient render (color)
 - [ ] sprite
 
 Critical
-- [ ] BUG: INDEX should not be used as unique identifier
+- [x] BUG: INDEX should not be used as unique identifier
 - [ ] BUG: Loading file sequence
 - [x] Disp selected object info (info panal)
 - [ ] Search Panel
