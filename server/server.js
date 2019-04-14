@@ -5,8 +5,8 @@
 
 "use strict";
 
-let connect = require("connect");
-let serveStatic = require("serve-static");
+let express = require("express");
+let app = express();
 
 connect().use( serveStatic("../") ).listen(8000, function () {
     console.log("Server running on 8000.");
