@@ -5,14 +5,13 @@
 
 "use strict";
 
-var express = require('express');
-var router = express.Router();
+let express = require('express');
+let router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
+let MainController = require("./controllers/MainController");
 
-  res.render('index');
-});
+// Get the main page with webGL canvas
+router.get('/', MainController.main);
 
 module.exports = router;
 
