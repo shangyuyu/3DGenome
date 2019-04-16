@@ -2,6 +2,10 @@
 // This file extracts data from gff3 annotation file and insert it
 // into MongoDB using Mongoose
 //
+/* jshint -W117 */
+/* jshint -W069 */
+
+"use strict";
 
 const gff = require('@gmod/gff').default;
 const mongoose = require("mongoose");
@@ -12,7 +16,8 @@ const url = 'mongodb://localhost:27017/ref_GRCh38_p12_top_level';
 
 let count = 0;
 let subCount = 0;
-let attri, attriStr, name, Dbxref;
+let attri, tempAttri, attriStr, name, Dbxref;
+let data;
 
 const geneSchema = new Schema( {
 
@@ -74,17 +79,19 @@ db.once("open", function () {
 
             // Convert attribute to String
             attri = data[0]["attributes"];
+            tempAttri = {};
             name = attri["Name"][0];
             Dbxref = attri["Dbxref"];
             for (let key of Object.keys(attri)) {
         
                 if (key == "Name" || key == "Dbxref") 
-                    delete attri[key];
-                else
-                    if (attri[key].length == 1)
-                        attri[key] = attri[key][0];
+                    continue;
+                else if (attri[key].length == 1)
+                    tempAttri[key] = attri[key][0];
+                else 
+                    tempAttri[key] = attri[key];
             }
-            attriStr = JSON.stringify(attri);
+            attriStr = JSON.stringify(tempAttri);
 
             // Instantiate gene
             let gene = new geneModel( {
@@ -112,6 +119,48 @@ db.once("open", function () {
 
             count++;
         }
+
+
+        function createGeneSubModel(data, parentModel, parentID) {
+
+            // Convert attribute to String
+            attri = data[0]["attributes"];
+            tempAttri = {};
+            for (let key of Object.keys(attri)) {
+        
+                if (attri[key].length == 1)
+                    tempAttri[key] = attri[key][0];
+                else 
+                    tempAttri[key] = attri[key];
+            }
+            attriStr = JSON.stringify(tempAttri);
+        
+            let subGene = new geneSubModel( {
+        
+                type: data[0]["type"],
+                chr: retrieveCHR(data[0]["seq_id"]),
+                start: data[0]["start"],
+                end: data[0]["end"],
+                strand: data[0]["strand"],
+                phase: data[0]["phase"],
+                attributes: attriStr, 
+                parent: parentID, 
+                parentModel: parentModel
+            } );
+        
+            // Store subGene's children
+            for (let i=0; i<data[0]["child_features"].length; i++) {
+        
+                let subGene_ = createGeneSubModel(data[0]["child_features"][i], "geneSubModel", subGene._id);
+                subGene.children.push(subGene_);
+            }
+        
+            subGene.save(saveCB);
+        
+            subCount++;
+            return subGene;
+        }
+
     } )
     .on("end", () => {
 
@@ -139,45 +188,8 @@ function saveCB (err) {
 }
 
 
-function createGeneSubModel(data, parentModel, parentID) {
-
-    // Convert attribute to String
-    attri = data[0]["attributes"];
-    for (let key of Object.keys(attri)) {
-
-        if (attri[key].length == 1)
-            attri[key] = attri[key][0];
-    }
-    attriStr = JSON.stringify(attri);
-
-    let subGene = new geneSubModel( {
-
-        type: data[0]["type"],
-        chr: retrieveCHR(data[0]["seq_id"]),
-        start: data[0]["start"],
-        end: data[0]["end"],
-        strand: data[0]["strand"],
-        phase: data[0]["phase"],
-        attributes: attriStr, 
-        parent: parentID, 
-        parentModel: parentModel
-    } );
-
-    // Store subGene's children
-    for (let i=0; i<data[0]["child_features"].length; i++) {
-
-        let subGene_ = createGeneSubModel(data[0]["child_features"][i], "geneSubModel", subGene._id);
-        subGene.children.push(subGene_);
-    }
-
-    subGene.save(saveCB);
-
-    subCount++;
-    return subGene;
-}
-
 process.on('SIGINT', function() {
-
+        
     mongoose.connection.close(function () {
       console.log(' >> Mongoose disconnected on program termination');
       process.exit(0);
