@@ -37,9 +37,7 @@ Object.assign(TEXT.prototype, {
 
     newLeftInfoPanel: function () {
 
-        // let content = document.createElement("div");
-        let leftInfoPanelDocument = document.getElementById('iframe').contentWindow.document;
-        let content = leftInfoPanelDocument.getElementById("leftInfoPanel_proto");
+        let content = document.getElementById("leftInfoPanel_proto");
         let focusDiv, desertDiv, templateDiv;
 
         // Initialize JS Panel
