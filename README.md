@@ -14,6 +14,7 @@
 - [x] Button in leftInfoPanel
 - [ ] Gradient render (color)
 - [ ] sprite
+- [ ] leftInfoPanel template
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier

@@ -1,0 +1,155 @@
+>>>>>>>>>> seqidArray
+[ 'NC_000001.11',
+  'NT_187361.1',
+  'NT_187363.1',
+  'NT_187366.1',
+  'NT_187367.1',
+  'NT_187368.1',
+  'NT_187369.1',
+  'NC_000002.12',
+  'NC_000003.12',
+  'NT_167215.1',
+  'NC_000004.12',
+  'NT_113793.3',
+  'NC_000005.10',
+  'NC_000006.12',
+  'NC_000007.14',
+  'NC_000008.11',
+  'NC_000009.12',
+  'NT_187373.1',
+  'NT_187374.1',
+  'NT_187375.1',
+  'NC_000010.11',
+  'NC_000011.10',
+  'NT_187376.1',
+  'NC_000012.12',
+  'NC_000013.11',
+  'NC_000014.9',
+  'NT_113796.3',
+  'NT_187377.1',
+  'NT_113888.1',
+  'NT_187378.1',
+  'NT_187379.1',
+  'NT_187380.1',
+  'NT_187381.1',
+  'NC_000015.10',
+  'NT_187382.1',
+  'NC_000016.10',
+  'NT_187383.1',
+  'NC_000017.11',
+  'NT_113930.2',
+  'NC_000018.10',
+  'NC_000019.10',
+  'NC_000020.11',
+  'NC_000021.9',
+  'NC_000022.11',
+  'NT_187386.1',
+  'NT_187388.1',
+  'NT_187389.1',
+  'NC_000023.11',
+  'NC_000024.10',
+  'NT_187420.1',
+  'NT_113901.1',
+  'NT_167213.1',
+  'NT_167214.1',
+  'NT_167218.1',
+  'NT_187497.1',
+  'NT_167208.1',
+  'NT_187498.1',
+  'NT_187499.1',
+  'NT_187500.1',
+  'NT_187501.1',
+  'NT_187503.1',
+  'NT_187504.1',
+  'NT_187505.1',
+  'NT_187506.1',
+  'NT_187508.1',
+  'NT_187509.1',
+  'NT_187510.1',
+  'NT_167209.1',
+  'NT_187513.1',
+  'NT_113889.1',
+  'NW_012132914.1',
+  'NW_015495298.1',
+  'NW_011332688.1',
+  'NW_014040926.1',
+  'NW_009646195.1',
+  'NW_018654706.1',
+  'NW_009646194.1',
+  'NW_018654707.1',
+  'NW_014040925.1',
+  'NW_017852928.1',
+  'NW_009646196.1',
+  'NW_011332687.1',
+  'NW_018654708.1',
+  'NW_014040927.1',
+  'NW_012132915.1',
+  'NW_018654709.1',
+  'NW_015495299.1',
+  'NW_018654710.1',
+  'NW_011332690.1',
+  'NW_011332689.1',
+  'NW_017363813.1',
+  'NW_009646197.1',
+  'NW_012132916.1',
+  'NW_011332691.1',
+  'NW_018654711.1',
+  'NW_009646198.1',
+  'NW_019805491.1',
+  'NW_019805492.1',
+  'NW_019805490.1',
+  'NW_019805489.1',
+  ... 340 more items ]
+>>>>>>>>>> attriArray
+[ 'ID',
+  'Dbxref',
+  'Name',
+  'description',
+  'gbkey',
+  'gene',
+  'gene_biotype',
+  'pseudo',
+  'gene_synonym',
+  'partial',
+  'end_range',
+  'start_range',
+  'exception',
+  'Note' ]
+This is the end.
+
+
+let seqidArray = [];
+let attriArray = [];
+
+gff.parseFile('/Users/ziyizhang/Desktop/Joint Institude/BioStatistics/3D_Genome/data/ref_GRCh38.p12_top_level.gff3', { parseAll: true })
+.on('data', data => {
+  if (data.directive) {
+    //console.log('got a directive',data)
+  }
+  else if (data.comment) {
+    //console.log('got a comment',data)
+  }
+  else if (data.sequence) {
+    //console.log('got a sequence from a FASTA section')
+  }
+  else {
+      if (data[0]["type"] == "gene" || data[0]["type"] == "pseudogene") {
+
+          if (data.length > 1)
+              console.log("Stilllargerthan1");
+          if ( !seqidArray.find( e => e==data[0]["seq_id"] ) )
+              seqidArray.push(data[0]["seq_id"]);
+          let key;
+          for (key of Object.keys(data[0]["attributes"]))
+            if ( !attriArray.find( e => e==key ) )
+                attriArray.push(key);
+      }
+  }
+})
+.on("end", function () {
+    console.log(">>>>>>>>>> seqidArray");
+    console.log(seqidArray);
+    console.log(">>>>>>>>>> attriArray");
+    console.log(attriArray);
+    console.log("This is the end.");
+});

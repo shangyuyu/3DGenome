@@ -1,0 +1,85 @@
+>>>>>>>>>> childArray
+transcript: 17409
+primary_transcript: 2051
+lnc_RNA: 27991
+mRNA: 119299
+exon: 12071
+snoRNA: 588
+antisense_RNA: 22
+snRNA: 64
+guide_RNA: 31
+tRNA: 597
+V_gene_segment: 659
+rRNA: 56
+C_gene_segment: 43
+J_gene_segment: 128
+telomerase_RNA: 1
+vault_RNA: 4
+D_gene_segment: 61
+Y_RNA: 4
+RNase_MRP_RNA: 1
+scRNA: 4
+RNase_P_RNA: 1
+CDS: 13
+total count 181098
+This is the end.
+
+
+
+
+let childArray = [];
+let count = [];
+let totalCount = 0;
+let flag = false;
+let child;
+
+gff.parseFile('/Users/ziyizhang/Desktop/Joint Institude/BioStatistics/3D_Genome/data/ref_GRCh38.p12_top_level.gff3', { parseAll: true })
+.on('data', data => {
+  if (data.directive) {
+    //console.log('got a directive',data)
+  }
+  else if (data.comment) {
+    //console.log('got a comment',data)
+  }
+  else if (data.sequence) {
+    //console.log('got a sequence from a FASTA section')
+  }
+  else {
+      if (data[0]["type"] == "gene" || data[0]["type"] == "pseudogene") {
+
+      flag = false;
+      child = data[0]["child_features"];
+      if (child.length > 0) {
+            for (let j=0; j<child.length; j++) {
+              for (let i=0; i<childArray.length; i++) {
+
+                  if (childArray[i] == child[j][0]["type"]) {
+
+                      flag = true;
+                      count[i]++;
+                      totalCount++;
+                      break;
+                  }
+              }
+              if (flag == false) {
+
+                  childArray.push(child[j][0]["type"]);
+                  count[count.length] = 1;
+                  totalCount++;
+              }
+          }
+
+          }
+      }
+  }
+})
+.on("end", function () {
+    console.log(">>>>>>>>>> childArray");
+    for (let i=0; i<childArray.length; i++) {
+
+        console.log(childArray[i] + ": " + String(count[i]) );
+    }
+
+    console.log("total count " + String(totalCount));
+    console.log("This is the end.");
+});

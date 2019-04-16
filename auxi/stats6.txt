@@ -1,0 +1,71 @@
+>>>>>>>>>> keyArray
+ID: 60959
+Dbxref: 60959
+Name: 60959
+description: 48289
+gbkey: 60959
+gene: 60959
+gene_biotype: 60959
+pseudo: 18004
+gene_synonym: 28993
+partial: 896
+end_range: 608
+start_range: 496
+exception: 16
+Note: 30
+total count 463086
+This is the end.
+
+
+gff.parseFile('/Users/ziyizhang/Desktop/Joint Institude/BioStatistics/3D_Genome/data/ref_GRCh38.p12_top_level.gff3', { parseAll: true })
+.on('data', data => {
+  if (data.directive) {
+    //console.log('got a directive',data)
+  }
+  else if (data.comment) {
+    //console.log('got a comment',data)
+  }
+  else if (data.sequence) {
+    //console.log('got a sequence from a FASTA section')
+  }
+  else {
+      if (data[0]["type"] == "gene" || data[0]["type"] == "pseudogene") {
+
+      
+      attri = data[0]["attributes"];
+      if (attri) {
+          for (let key of Object.keys(attri)) {
+
+              flag = false;
+              for (let i=0; i<keyArray.length; i++) {
+
+                  if (keyArray[i] == key) {
+
+                      flag = true;
+                      count[i]++;
+                      totalCount++;
+                      break;
+                  }
+              }
+              if (flag == false) {
+
+                  keyArray.push(key);
+                  count[count.length] = 1;
+                  totalCount++;
+              }
+          }
+
+          }
+      }
+  }
+})
+.on("end", function () {
+    console.log(">>>>>>>>>> keyArray");
+    for (let i=0; i<keyArray.length; i++) {
+
+        console.log(keyArray[i] + ": " + String(count[i]) );
+    }
+
+    console.log("total count " + String(totalCount));
+    console.log("This is the end.");
+});

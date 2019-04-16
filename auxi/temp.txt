@@ -1,0 +1,4 @@
+>> Connected successfully to database
+GeneSubModel subCount: 30
+GeneModel Count: 5
+This is the end.
