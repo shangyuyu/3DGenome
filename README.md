@@ -27,7 +27,7 @@ Critical
 - [ ] Integrate all 23 CHRs
 
 Long Term
-- [ ] User input desired range
+- [ ] User input desired range 
 - [ ] TypeScript? TBD
 
 Minor Improvement
