@@ -1,5 +1,6 @@
 //
 // index.js
+// The controller of index (main entrance)
 //
 /* jshint -W117 */
 

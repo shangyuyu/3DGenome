@@ -1,5 +1,6 @@
 //
 // server.js
+// True main entrance, called by "www"
 //
 /* jshint -W117 */
 
