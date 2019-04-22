@@ -13,8 +13,8 @@ class TEXT {
         this.leftInfoPanelEnable = true;
         this.topInfoPanel = this.newTopInfoPanel();
         this.leftInfoPanel = this.newLeftInfoPanel();
-        
-        this.array = [];
+        this.searchPanel = this.newSearchPanel();
+        this.array = [];  // for sprite, temporarily useless
     }
 }
 
@@ -38,7 +38,7 @@ Object.assign(TEXT.prototype, {
 
     newLeftInfoPanel: function () {
 
-        let content = document.getElementById("leftInfoPanel_proto");
+        let content = document.getElementById("leftInfoPanel_ejs");
         let focusDiv, desertDiv, templateDiv;
 
         // Initialize JS Panel
@@ -69,6 +69,38 @@ Object.assign(TEXT.prototype, {
             // because nodes are dynamically created
 
         return {focus: focusDiv, desert: desertDiv, template: templateDiv};
+    },
+
+    newSearchPanel: function () {
+
+        let content = document.getElementById("searchPanel_ejs");
+        let searchBarDiv, searchListDiv;
+
+        // Initialize JS Panel
+        jsPanel.create( {
+            id: "searchPanel",
+            position: {
+                my: "left-top",
+                at: "right-top", 
+                of: "#leftInfoPanel",
+            },
+            panelSize: String(window.innerWidth - 300) + " " + String(window.innerHeight),
+            // FIXME: leftInfoPanel and searchPanel size depend on each other
+            theme: "#1a1a1a filled",
+            border: "2px #333333",
+            header: false,
+            content: content,
+            contentOverflow: "scroll", 
+            dragit: false,
+        } );
+
+        // searchPanel opacity FIXME DEBUG PURPOSE
+        $("#searchPanel").css("opacity", 0.8);
+        // Fetch divs
+        searchBarDiv = document.getElementById("searchBar");
+        searchListDiv = document.getElementById("searchList");
+
+        return {visible: false, searchBar: searchBarDiv, searchList: searchListDiv};
     },
 
     newInfoPanel: function () {
