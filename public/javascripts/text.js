@@ -13,6 +13,7 @@ class TEXT {
         this.leftInfoPanelEnable = true;
         this.topInfoPanel = this.newTopInfoPanel();
         this.leftInfoPanel = this.newLeftInfoPanel();
+        
         this.array = [];
     }
 }

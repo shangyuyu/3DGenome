@@ -2,5 +2,15 @@
 
 <div id="searchPanel">
    
+    <div id="searchBar">
+        Bar
+    </div>
     
+    <div id="searchList">
+        <% if (genes.length) { %>
+            <% genes.forEach( function (gene) { %>
+                <%- include("gene_show", {gene: gene}) %>
+            <% }); %>
+        <% } %>
+    </div>
 </div>
