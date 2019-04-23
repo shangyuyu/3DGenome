@@ -192,6 +192,11 @@ function onDocumentKeyDown (event) {
 
     if (event.keyCode === 16)  // shift
         mousePick.changeMousepickFunction();
+    if (event.keyCode === 80){  // P
+        
+        text.searchPanelEnable = (text.searchPanelEnable == false) ? true : false;
+        $("#searchPanel").css("display", (text.searchPanelEnable == true) ? "block" : "none");
+    }
 }
 
 

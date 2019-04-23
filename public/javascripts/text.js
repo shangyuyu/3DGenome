@@ -11,6 +11,7 @@ class TEXT {
 
         this.topInfoPanelEnable = true;
         this.leftInfoPanelEnable = true;
+        this.searchPanelEnable = false;
         this.topInfoPanel = this.newTopInfoPanel();
         this.leftInfoPanel = this.newLeftInfoPanel();
         this.searchPanel = this.newSearchPanel();
@@ -95,12 +96,15 @@ Object.assign(TEXT.prototype, {
         } );
 
         // searchPanel opacity FIXME DEBUG PURPOSE
-        $("#searchPanel").css("opacity", 0.8);
+        $("#searchPanel").css( {
+            "opacity": 0.8,
+            "display": "none"
+        } );
         // Fetch divs
         searchBarDiv = document.getElementById("searchBar");
         searchListDiv = document.getElementById("searchList");
 
-        return {visible: false, searchBar: searchBarDiv, searchList: searchListDiv};
+        return {searchBar: searchBarDiv, searchList: searchListDiv};
     },
 
     newInfoPanel: function () {
