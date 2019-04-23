@@ -75,10 +75,10 @@ Object.assign(TEXT.prototype, {
     newSearchPanel: function () {
 
         let content = document.getElementById("searchPanel_ejs");
-        let searchBarDiv, searchListDiv;
+        let searchBarDiv, searchListDiv, self;
 
         // Initialize JS Panel
-        jsPanel.create( {
+        self = jsPanel.create( {
             id: "searchPanel",
             position: {
                 my: "left-top",
@@ -104,7 +104,20 @@ Object.assign(TEXT.prototype, {
         searchBarDiv = document.getElementById("searchBar");
         searchListDiv = document.getElementById("searchList");
 
-        return {searchBar: searchBarDiv, searchList: searchListDiv};
+        // Temp FIXME 
+        let data = {
+            genes: [
+                {
+                    name: "test1"
+                },
+                {
+                    name: "test2"
+                }
+            ]
+        };
+ 
+
+        return {self: self, searchBar: searchBarDiv, searchList: searchListDiv};
     },
 
     newInfoPanel: function () {
