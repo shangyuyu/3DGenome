@@ -12,4 +12,10 @@ function (req, res, next) {
     res.render('main');
 };
 
+exports.geneSearch = 
+function (req, res, next) {
+
+    res.send(req.query.key);
+};
+
 // End of main.js

@@ -1,6 +1,11 @@
 <!-- gene-list -->
 
-<div>
+<div id="searchBar">
+    Search: <input ng-model="queryKey" />
+    <button ng-click="submit()">Submit</button>
+</div>
+
+<div id="searchList">
     <ul>
         <li ng-repeat="gene in $ctrl.genes">
             name: {{gene.name}} attri: {{gene.attri}}

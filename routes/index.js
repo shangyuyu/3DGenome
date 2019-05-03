@@ -1,6 +1,6 @@
 //
 // index.js
-// The controller of index (main entrance)
+// Router of index (main entrance)
 //
 /* jshint -W117 */
 
@@ -12,7 +12,8 @@ let router = express.Router();
 let MainController = require("./controllers/MainController");
 
 // Get the main page with webGL canvas
-router.get('/', MainController.main);
+router.get("/", MainController.main);
+router.get("/geneSearch", MainController.geneSearch);
 
 module.exports = router;
 
