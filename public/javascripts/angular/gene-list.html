@@ -6,9 +6,12 @@
 </div>
 
 <div id="searchList">
+    <div ng-if="$ctrl.genes.length == 0">
+        No item found.
+    </div>
     <ul>
         <li ng-repeat="gene in $ctrl.genes">
-            name: {{gene.name}} attri: {{gene.attri}}
+            name: {{gene.name}} attri: {{gene.attributes | json}}
         </li>
     </ul>
 </div>

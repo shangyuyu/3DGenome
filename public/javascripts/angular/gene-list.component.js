@@ -12,7 +12,6 @@ function GeneListController($scope, $http) {
 
     $scope.submit = function () {
 
-        console.log("Confirm click submit.");
 
         let params = {
             "key": $scope.queryKey
@@ -23,12 +22,16 @@ function GeneListController($scope, $http) {
             function (res) {
 
                 self.genes = res.data;
-                console.log(res.data);
+                // Required if stringified "attributes" is used
+                for (let gene of self.genes) {
+
+                    gene.attributes = JSON.parse(gene.attributes);
+                }
             }, 
             // On failure
             function (res) {
 
-                console.log("get failure: " + String(params));
+                console.log("http:Get failure: " + res);
             }
         );
     };
