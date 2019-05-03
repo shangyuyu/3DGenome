@@ -7,10 +7,6 @@
     </div>
     
     <div id="searchList">
-        <% if (genes.length) { %>
-            <% genes.forEach( function (gene) { %>
-                <%- include("gene_show", {gene: gene}) %>
-            <% }); %>
-        <% } %>
+        <gene-list></gene-list>
     </div>
 </div>
