@@ -112,7 +112,7 @@
   content: "[]";
 }
 .json-formatter-dark.json-formatter-row .string {
-  color: #31F031;
+  color: #C5937C;
   white-space: pre;
   word-wrap: break-word;
 }
@@ -171,4 +171,8 @@
 }
 .json-formatter-dark.json-formatter-row:hover > a > .thumbnail-text {
   opacity: 0.6;
+}
+.listWrapper {
+  max-height: 100vh;
+  overflow-y: scroll;
 }

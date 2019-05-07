@@ -9,9 +9,11 @@
     <div ng-if="$ctrl.genes.length == 0">
         No item found.
     </div>
+    <div class="listWrapper">
     <ul>
         <li ng-repeat="gene in $ctrl.genes track by $index">
             <json-formatter json=gene open="1" class="json-formatter-dark"></json-formatter>
         </li>
     </ul>
+    </div>
 </div>

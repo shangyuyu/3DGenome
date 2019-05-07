@@ -18,6 +18,7 @@
 - [ ] Pretty search panel
 - [ ] Better search choice
 - [ ] Auto-fill
+- [ ] Minimize css and js
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier
