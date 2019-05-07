@@ -91,10 +91,12 @@ body {
     color: white;
 }
 .objectInfo1 {
-    font: 12px Arial;
+    font: 14px Arial;
+    line-height: 16px;
 }
 .objectInfo2 {
-    font: 12px Arial;
+    font: 14px Arial;
+    line-height: 16px;
 }
 /* Search Panel:: Button*/
 .searchFocus {
@@ -111,11 +113,12 @@ body {
     background-color: #1a1a1a;
     color: white;
     border: none;
+    cursor: w-resize;
 }
 /* Search Panel:: Intro (one line) */
 .intro {
     margin: 0%;
     display: inline-block;
     font-family: Arial;
-    font-size: 0.9em;
+    font-size: 16px;
 }

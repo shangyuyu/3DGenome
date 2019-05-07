@@ -12,7 +12,6 @@ function GeneListController($scope, $http) {
 
     $scope.submit = function () {
 
-
         let params = {
             "key": $scope.queryKey
         };

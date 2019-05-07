@@ -7,7 +7,9 @@
 
 
 .json-formatter-row {
-  font-family: monospace;
+  font-family: Arial;
+  font-size: 14px;
+  line-height: 16px;
 }
 .json-formatter-row,
 .json-formatter-row a,
@@ -67,8 +69,8 @@
   cursor: pointer;
 }
 .json-formatter-row .toggler {
-  font-size: 0.8em;
-  line-height: 1.2em;
+  font-size: 14px;
+  line-height: 16px;
   vertical-align: middle;
   opacity: 0.6;
   cursor: pointer;
@@ -90,7 +92,7 @@
   opacity: 0.6;
 }
 .json-formatter-dark.json-formatter-row {
-  font-family: monospace;
+  font-family: Arial;
 }
 .json-formatter-dark.json-formatter-row,
 .json-formatter-dark.json-formatter-row a,
@@ -150,8 +152,8 @@
   cursor: pointer;
 }
 .json-formatter-dark.json-formatter-row .toggler {
-  font-size: 0.8em;
-  line-height: 1.2em;
+  font-size: 14px;
+  line-height: 16px;
   vertical-align: middle;
   opacity: 0.6;
   cursor: pointer;
