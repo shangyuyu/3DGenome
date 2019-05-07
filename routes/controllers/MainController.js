@@ -21,7 +21,7 @@ function (req, res, next) {
     Gene.
         find({"name": req.query.key}).
         limit(10).
-        select("name attributes").
+        //select("name attributes").
         exec(function (err, data) {
 
             if (err) return console.error(err);

@@ -6,4 +6,9 @@
 "use strict";
 
 // Define the 'angularApp' module
-angular.module("angularApp", ['mohsen1.json-schema-view']);
+angular.module("angularApp", ['jsonFormatter']).
+config(function (JSONFormatterConfigProvider) {
+
+    // Enable the hover preview feature
+    JSONFormatterConfigProvider.hoverPreviewEnabled = true;
+});

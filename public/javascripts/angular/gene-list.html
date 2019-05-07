@@ -10,8 +10,8 @@
         No item found.
     </div>
     <ul>
-        <li ng-repeat="gene in $ctrl.genes">
-            name: {{gene.name}} 
+        <li ng-repeat="gene in $ctrl.genes track by $index">
+            <json-formatter json=gene open="1" class="json-formatter-dark"></json-formatter>
         </li>
     </ul>
 </div>
