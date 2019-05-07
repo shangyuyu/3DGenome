@@ -1,0 +1,20 @@
+{
+  "name": "3dgenome",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Ziyi <shangyuyu@sjtu.edu.cn>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/shangyuyu/3DGenome",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "json-formatter": "^0.7.0"
+  }
+}

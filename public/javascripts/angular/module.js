@@ -6,4 +6,4 @@
 "use strict";
 
 // Define the 'angularApp' module
-angular.module("angularApp", []);
+angular.module("angularApp", ['mohsen1.json-schema-view']);
