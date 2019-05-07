@@ -1,5 +1,6 @@
+/* General */
 body {
-    font-family: monospace;
+    font-family: Arial;
     margin: 0px;
     padding: 0px;
     background-color: #050505;
@@ -27,14 +28,14 @@ body {
     left: 300px;
     z-index: 12;
 }
-
+/* Top Info Panel */
 #topInfoPanel {
     display: block;
     background: #1a1a1a;
     width: 200px;
     height: 40px;
 }
-
+/* Left Info Panel:: Tabs */
 .tab {
     overflow: hidden;
     border: none;
@@ -43,7 +44,7 @@ body {
 .tablinks {
     background-color: #2d2d2d;
     float: left;
-    border: 1px solid #000000;
+    border: none;
     outline: none;
     cursor: pointer;
     padding: 8px 15px;
@@ -67,7 +68,7 @@ body {
 .tabcontent {
     background-color: #1a1a1a;
 }
-
+/* Left Info Panel:: Objects */
 .objectInfo{
     background-color: #1a1a1a;
 }
@@ -82,7 +83,7 @@ body {
     border: 1px solid #000000;
     cursor: e-resize;
     outline: none;
-    font-size: 16px;
+    font-size: 1.0em;
     color: inherit;
 }
 .objectName:hover {
@@ -90,8 +91,31 @@ body {
     color: white;
 }
 .objectInfo1 {
-    font: 12px Helvetica;
+    font: 12px Arial;
 }
 .objectInfo2 {
-    font: 12px Helvetica;
+    font: 12px Arial;
+}
+/* Search Panel:: Button*/
+.searchFocus {
+    background-color: #2d2d2d;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 3px 10px;
+    transition: 0.2s;
+    font-size: 0.8em;
+    color: #8a8a8a;
+}
+.searchFocus:hover {
+    background-color: #1a1a1a;
+    color: white;
+    border: none;
+}
+/* Search Panel:: Intro (one line) */
+.intro {
+    margin: 0%;
+    display: inline-block;
+    font-family: Arial;
+    font-size: 0.9em;
 }
