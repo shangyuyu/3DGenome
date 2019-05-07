@@ -11,19 +11,16 @@ function GeneListController($scope, $http) {
     let self = this;
 
     $scope.logics = ["AND", "OR"];
-    $scope.cats = ["any", "name", "Dbxref"];
+    $scope.cats = ["name", "Dbxref"];
 
     $scope.submit = function () {
 
         let params = {
             "key1": $scope.queryKey1, 
             "key2": $scope.queryKey2, 
-            "key3": $scope.queryKey3, 
             "cat1": $scope.cat1, 
             "cat2": $scope.cat2, 
-            "cat3": $scope.cat3,
-            "logic1": $scope.logic1,
-            "logic2": $scope.logic2
+            "logic1": $scope.logic1
         };
 
         $http.get("/geneSearch", {params:params}).then(
