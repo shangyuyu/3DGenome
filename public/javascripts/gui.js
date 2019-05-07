@@ -107,7 +107,7 @@ Object.assign(GUIManager.prototype, {
             data.bindTube(gui.parent);
         } );
 
-        this.folders[0].open();
+        // this.folders[0].open();
 
         ////////////////////////////////////////////////////////////////////////////////////
         this.folders[1] = this.gui.addFolder( "Mouse Pick" );
@@ -129,7 +129,7 @@ Object.assign(GUIManager.prototype, {
         this.folders[1].add(this.mousePickConfig, "Reset Focus");
         this.folders[1].add(this.mousePickConfig, "Reset Desert");
 
-        this.folders[1].open();
+        // this.folders[1].open();
         
         ////////////////////////////////////////////////////////////////////////////////////
         this.folders[2] = this.gui.addFolder( "Info Display" );
@@ -145,7 +145,7 @@ Object.assign(GUIManager.prototype, {
                 text.hideLeftInfoPanel();
         } );
 
-        this.folders[2].open();
+        // this.folders[2].open();
 
         ////////////////////////////////////////////////////////////////////////////////////
     },

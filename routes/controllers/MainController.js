@@ -20,8 +20,10 @@ exports.geneSearch =
 function (req, res, next) {
 // Query gene
 
-    const key = req.query.key;
-    const _filter = {
+    const key1 = req.query.key1, key2 = req.query.key2, key3 = req.query.key3;
+    const cat1 = req.query.cat1, cat2 = req.query.cat2, cat3 = req.query.cat3;
+    const logic1 = req.query.logic1, logic2 = req.query.logic3;
+    const filter_ = {
 
         $or: [
             {name: {$regex: key, $options: "$i"}},
@@ -30,7 +32,7 @@ function (req, res, next) {
     };
 
     Gene.
-        find(_filter).
+        find(filter_).
         limit(10).
         //select("name attributes").
         exec(function (err, data) {

@@ -1,8 +1,15 @@
 <!-- gene-list -->
 
 <div id="searchBar">
-    Search: <input ng-model="queryKey" />
-    <button ng-click="submit()">Submit</button>
+    <select ng-init="cat1 = cats[0]" ng-model="cat1" ng-options="x for x in cats"></select>
+    <input ng-model="queryKey1" /> <br>
+    <select ng-init="logic1 = logics[0]" ng-model="logic1" ng-options="x for x in logics"></select>
+    <select ng-init="cat2 = cats[0]" ng-model="cat2" ng-options="x for x in cats"></select>
+    <input ng-model="queryKey2" /> <br>
+    <select ng-init="logic2 = logics[0]" ng-model="logic2" ng-options="x for x in logics"></select>
+    <select ng-init="cat3 = cats[0]" ng-model="cat3" ng-options="x for x in cats"></select>
+    <input ng-model="queryKey3" />
+    <button ng-click="submit()">Search</button>
 </div>
 
 <div id="searchList">

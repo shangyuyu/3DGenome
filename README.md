@@ -34,6 +34,7 @@ Critical
 Long Term
 - [ ] User input desired range 
 - [x] TypeScript? No
+- [ ] dat.GUI
 
 Minor Improvement
 - [ ] GUI cache
