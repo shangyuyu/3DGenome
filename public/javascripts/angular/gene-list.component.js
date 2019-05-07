@@ -22,10 +22,13 @@ function GeneListController($scope, $http) {
             function (res) {
 
                 self.genes = res.data;
-                // Required if stringified "attributes" is used
+
                 for (let gene of self.genes) {
 
                     gene.attributes = JSON.parse(gene.attributes);
+                    // Required if stringified "attributes" is used
+                    delete gene.__v;
+                    delete gene._id;
                 }
             }, 
             // On failure

@@ -17,6 +17,7 @@
 - [x] leftInfoPanel template
 - [ ] Pretty search panel
 - [ ] Better search choice
+- [ ] Auto-fill
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier
