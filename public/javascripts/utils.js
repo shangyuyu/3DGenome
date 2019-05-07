@@ -192,10 +192,17 @@ function onDocumentKeyDown (event) {
 
     if (event.keyCode === 16)  // shift
         mousePick.changeMousepickFunction();
-    if (event.keyCode === 80){  // P
-        
+    if (event.keyCode === 32){  // space
+
         text.searchPanelEnable = (text.searchPanelEnable == false) ? true : false;
         $("#searchPanel").css("display", (text.searchPanelEnable == true) ? "block" : "none");
+        // leftInfoPanel opacity
+        $("#leftInfoPanel").css("opacity", (text.searchPanelEnable == true) ? 1.0 : 0.8);
+        // mousePick
+        // FIXME known bug: enable == false before calling search?
+        mousePick.enable = (text.searchPanelEnable == false) ? true : false;
+        // controls
+        controls.enabled = (text.searchPanelEnable == false) ? true : false;
     }
 }
 

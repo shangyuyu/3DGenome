@@ -97,25 +97,12 @@ Object.assign(TEXT.prototype, {
 
         // searchPanel opacity FIXME DEBUG PURPOSE
         $("#searchPanel").css( {
-            "opacity": 0.8,
+            "opacity": 0.9,  // Debug purpose
             "display": "none"
         } );
         // Fetch divs
         searchBarDiv = document.getElementById("searchBar");
         searchListDiv = document.getElementById("searchList");
-
-        // Temp FIXME 
-        let data = {
-            genes: [
-                {
-                    name: "test1"
-                },
-                {
-                    name: "test2"
-                }
-            ]
-        };
- 
 
         return {self: self, searchBar: searchBarDiv, searchList: searchListDiv};
     },

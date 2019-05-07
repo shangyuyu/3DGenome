@@ -6,12 +6,10 @@
 "use strict";
 
 // Global core elements
-let camera, scene, auxiScene, renderer, mousePick, gui, text;
+let camera, scene, auxiScene, renderer, mousePick, gui, text, controls;
 
 
 function init() {
-
-    
 
     let container = document.getElementById("webGLContainer");
 
@@ -55,7 +53,7 @@ function init() {
     document.getElementById("statsContainer").append(stats.domElement);
 
     // Controls
-    let controls = new THREE.TrackballControls( camera, renderer.domElement, lights[0] );
+    controls = new THREE.TrackballControls( camera, renderer.domElement, lights[0] );
         // Warning: Controler must be assigned a domElement explictly to avoid conflict with GUI.
     controls.minDistance = 1;
     controls.maxDistance = 400;

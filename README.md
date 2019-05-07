@@ -14,21 +14,24 @@
 - [x] Button in leftInfoPanel
 - [ ] Gradient render (color)
 - [ ] sprite
-- [ ] leftInfoPanel template
+- [x] leftInfoPanel template
+- [ ] Pretty search panel
+- [ ] Better search choice
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier
-- [ ] BUG: Loading file sequence
+- [x] BUG: Loading file sequence
 - [x] Disp selected object info (info panal)
-- [ ] Search Panel
-- [ ] List of search
+- [x] Search Panel
+- [x] List of search
 - [x] Loader
 - [x] Backstage data structure
 - [ ] Integrate all 23 CHRs
+- [ ] Bind search and focus
 
 Long Term
 - [ ] User input desired range 
-- [ ] TypeScript? TBD
+- [x] TypeScript? No
 
 Minor Improvement
 - [ ] GUI cache
@@ -37,6 +40,7 @@ Minor Improvement
 - [ ] Auto-rotation
 - [ ] Auto-adjust camera
 - [ ] Mouse position detection potential bug
+- [ ] Deprecate ejs
 
 WARNING
 - All objects may be destructed by re-render

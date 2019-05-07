@@ -11,7 +11,7 @@ class MousePick {
 
     constructor () {
         
-        this.enable = true;  // Do NOT disable the execution of member functions
+        this.enable = true;  // Does NOT disable the execution of member functions
         this.function = true;  // true for Focus, false for Desert
         this.rayCaster = new THREE.Raycaster();
         this.lastMousePickCallTime = Date.now();

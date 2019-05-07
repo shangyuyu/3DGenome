@@ -400,6 +400,10 @@ THREE.TrackballControls = function ( object, domElement, light ) {
 
 	function keydown( event ) {
 
+		// Custom onDocumentKeyDown must have higher priority than controls
+		// b/c calling search panel will invalid control.enabled
+		onDocumentKeyDown(event);
+
 		if ( _this.enabled === false ) return;
 
 		window.removeEventListener( 'keydown', keydown );
@@ -455,7 +459,7 @@ THREE.TrackballControls = function ( object, domElement, light ) {
 
 			_state = STATE.ROLLRIGHT;
 
-		} else onDocumentKeyDown(event);
+		}
 
 	}
 
