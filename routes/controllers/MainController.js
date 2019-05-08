@@ -90,6 +90,7 @@ function (req, res, next) {
 
             if (err) return console.error(err);
 
+            // FIXME: Seems only populate one time
             GeneSub.populate(data, {path: "children"}, function (err, data) {
 
                 if (err) return console.error(err);

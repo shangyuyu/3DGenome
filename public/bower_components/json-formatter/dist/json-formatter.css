@@ -18,11 +18,11 @@
   text-decoration: none;
 }
 .json-formatter-row .json-formatter-row {
-  margin-left: 1em;
+  margin-left: 3em;
 }
 .json-formatter-row .children.empty {
   opacity: 0.5;
-  margin-left: 1em;
+  margin-left: 3em;
 }
 .json-formatter-row .children.empty.object:after {
   content: "No properties";
@@ -101,11 +101,11 @@
   text-decoration: none;
 }
 .json-formatter-dark.json-formatter-row .json-formatter-row {
-  margin-left: 1em;
+  margin-left: 3em;
 }
 .json-formatter-dark.json-formatter-row .children.empty {
   opacity: 0.5;
-  margin-left: 1em;
+  margin-left: 3em;
 }
 .json-formatter-dark.json-formatter-row .children.empty.object:after {
   content: "No properties";
@@ -175,6 +175,6 @@
   opacity: 0.6;
 }
 .listWrapper {
-  max-height: 100vh;
+  max-height: 95vh;  /*FIXME*/
   overflow-y: scroll;
 }

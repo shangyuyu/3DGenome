@@ -88,6 +88,7 @@ function GeneListController($scope, $http) {
     };
 
     $scope.isString = function (object) {
+    // Auxiliary function for ng-if
 
         return (typeof object == "string");
     };
