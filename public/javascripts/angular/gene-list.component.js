@@ -52,9 +52,7 @@ function GeneListController($scope, $http) {
                 self.genes = res.data;
 
                 // Clean data for output
-                for (let gene of self.genes)
-
-                    cleanData(gene);
+                self.genes.forEach(cleanData);
             }, 
             // On failure
             function (res) {
@@ -74,9 +72,9 @@ function GeneListController($scope, $http) {
             function (res) {
 
                 gene.children = res.data;
-                for (let child of gene.children)
-
-                    cleanData(child);
+                
+                // Clean data for output
+                gene.children.forEach(cleanData);
             }, 
             // On failure
             function (res) {

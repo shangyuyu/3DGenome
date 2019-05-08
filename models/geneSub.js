@@ -7,6 +7,7 @@
 "use strict";
 
 const mongoose = require("mongoose");
+const deepPopulate = require("mongoose-deep-populate")(mongoose);
 const Schema = mongoose.Schema;
 
 const geneSubSchema = new Schema( {
@@ -30,6 +31,8 @@ const geneSubSchema = new Schema( {
         enum: ["geneModel", "geneSubModel"]
     }
 } );
+
+geneSubSchema.plugin(deepPopulate);
 
 module.exports = mongoose.model("geneSubModel", geneSubSchema);
 

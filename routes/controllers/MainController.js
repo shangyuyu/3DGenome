@@ -90,6 +90,24 @@ function (req, res, next) {
 
             if (err) return console.error(err);
 
+            // Only populates two times, seems enough
+            GeneSub.deepPopulate(data, 'children.children', function (err, data) {
+
+                if (err) return console.error(err);
+
+                res.send(data);
+            });
+        });
+
+    /*
+    // Only populate one time
+    GeneSub.
+        find({
+        '_id': { $in: objectIdArray}
+        }, function(err, data){
+
+            if (err) return console.error(err);
+
             // FIXME: Seems only populate one time
             GeneSub.populate(data, {path: "children"}, function (err, data) {
 
@@ -98,6 +116,8 @@ function (req, res, next) {
                 res.send(data);
             });
     });
+    */
+
     /*
     // Only work for finding one _id
     GeneSub.
