@@ -86,6 +86,11 @@ function GeneListController($scope, $http) {
             }
         );
     };
+
+    $scope.isString = function (object) {
+
+        return (typeof object == "string");
+    };
 }
 
 
