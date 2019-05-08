@@ -1,12 +1,14 @@
 <!-- gene-list -->
 
 <div id="searchBar">
-    <select ng-init="cat1 = cats[0]" ng-model="cat1" ng-options="x for x in cats"></select>
-    <input ng-model="queryKey1" /> 
     <br>
-    <select ng-init="logic1 = logics[0]" ng-model="logic1" ng-options="x for x in logics"></select>
-    <select ng-init="cat2 = cats[0]" ng-model="cat2" ng-options="x for x in cats"></select>
-    <input ng-model="queryKey2" />
+    <select disabled ng-init="logic0 = logics[0]" ng-model="logic0" ng-options="x for x in logics" class="searchSelectFake"></select>
+    <select ng-init="cat1 = cats[0]" ng-model="cat1" ng-options="x for x in cats" class="searchSelect"></select>
+    <input type="text" ng-model="queryKey1" class="searchInput"/> 
+    <br>
+    <select ng-init="logic1 = logics[0]" ng-model="logic1" ng-options="x for x in logics" class="searchSelect"></select>
+    <select ng-init="cat2 = cats[0]" ng-model="cat2" ng-options="x for x in cats" class="searchSelect"></select>
+    <input type="text" ng-model="queryKey2" class="searchInput"/>
     <button ng-click="submit()" class="searchSubmit">Search</button>
     <toggle-switch
         ng-model="fuzzy"

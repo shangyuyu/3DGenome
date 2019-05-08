@@ -175,6 +175,6 @@
   opacity: 0.6;
 }
 .listWrapper {
-  max-height: 95vh;  /*FIXME*/
+  max-height: 92vh;  /*FIXME*/
   overflow-y: scroll;
 }

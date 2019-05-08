@@ -134,6 +134,21 @@ body {
 .searchSubmit:hover {
     background-color: #1a1a1a;
 }
+/* Search Panel:: Input (for search area) */
+.searchInput {
+    display: inline-block;
+    border: 1px solid #666666;
+    padding: 4px;
+}
+/* Search Panel:: Select (for search area) */
+.searchSelect, .searchSelectFake {
+    display: inline-block;
+    border: 1px solid #666666;
+    font: 12px Arial;
+}
+.searchSelectFake {
+    opacity: 0;
+}
 /* Search Panel:: Intro (one line) */
 .intro {
     margin: 0%;
