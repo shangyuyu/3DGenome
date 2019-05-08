@@ -90,7 +90,12 @@ function (req, res, next) {
 
             if (err) return console.error(err);
 
-            res.send(data);
+            GeneSub.populate(data, {path: "children"}, function (err, data) {
+
+                if (err) return console.error(err);
+
+                res.send(data);
+            });
     });
     /*
     // Only work for finding one _id

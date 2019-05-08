@@ -15,13 +15,15 @@
 </div>
 
 <div id="searchList">
-    <div ng-if="$ctrl.genes.length == 0">
+    <div ng-if="$ctrl.genes.length == 0" class="intro">
         No item found.
     </div>
     <div class="listWrapper">
     <ul>
         <li ng-repeat="gene in $ctrl.genes track by $index">
-            <div class="intro">{{gene.name}}</div> <button class="searchFocus">Focus</button> <button class="searchPopulate" ng-click="populate(gene)">Populate</button>
+            <div class="intro">{{gene.name}}</div> 
+            <button class="searchFocus">Focus</button> 
+            <button class="searchPopulate" ng-if="gene.children.length>0" ng-click="populate(gene)">Populate</button>
             <json-formatter json=gene open="1" class="json-formatter-dark"></json-formatter>
         </li>
     </ul>

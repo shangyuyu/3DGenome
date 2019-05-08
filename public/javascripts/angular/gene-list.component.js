@@ -28,6 +28,10 @@ function GeneListController($scope, $http) {
         // Required if stringified "attributes" is used
         delete object.__v;
         delete object._id;
+        if (object.hasOwnProperty("parent"))
+            delete object.parent;
+        if (object.hasOwnProperty("parentModel"))
+            delete object.parentModel;
     }
 
     $scope.submit = function () {
@@ -63,12 +67,16 @@ function GeneListController($scope, $http) {
 
     $scope.populate = function (gene) {
 
+        if (gene.children.length == 0) return;
+
         $http.get("/populate", {params:{"idArray[]": gene.children}}).then(
             // On success
             function (res) {
 
                 gene.children = res.data;
-                cleanData(gene);
+                for (let child of gene.children)
+
+                    cleanData(child);
             }, 
             // On failure
             function (res) {
