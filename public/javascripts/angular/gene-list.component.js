@@ -100,3 +100,5 @@ angular.
         templateUrl: "javascripts/angular/gene-list.html",
         controller: GeneListController
     });
+
+//  End of gene-list.component.js

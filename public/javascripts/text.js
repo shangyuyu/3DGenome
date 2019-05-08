@@ -40,7 +40,7 @@ Object.assign(TEXT.prototype, {
     newLeftInfoPanel: function () {
 
         let content = document.getElementById("leftInfoPanel_ejs");
-        let focusDiv, desertDiv, templateDiv;
+        // let focusDiv, desertDiv, templateDiv;
 
         // Initialize JS Panel
         jsPanel.create( {
@@ -58,18 +58,18 @@ Object.assign(TEXT.prototype, {
         // leftInfoPanel opacity
         $("#leftInfoPanel").css("opacity", 0.8);
         // Default tab
-        document.getElementById("FocusButton").click();
+        // document.getElementById("FocusButton").click();
         // Fetch text divs
-        focusDiv = document.getElementById("Focus");
-        desertDiv = document.getElementById("Desert");
-        templateDiv = document.getElementById("template");
+        // focusDiv = document.getElementById("Focus");
+        // desertDiv = document.getElementById("Desert");
+        // templateDiv = document.getElementById("template");
         // Remove template from DOM
-        templateDiv.parentNode.removeChild(templateDiv);
+        // templateDiv.parentNode.removeChild(templateDiv);
         // .hover trigger js
             // this function has been moved to "addToLeftInfoPanel"
             // because nodes are dynamically created
 
-        return {focus: focusDiv, desert: desertDiv, template: templateDiv};
+        // return {focus: focusDiv, desert: desertDiv, template: templateDiv};
     },
 
     newSearchPanel: function () {

@@ -112,8 +112,8 @@ Object.assign(DataManager.prototype, {
         }
         mousePick.clearFocused();
         mousePick.clearDeserted();
-        text.removeAllFocusLeftInfoPanel();
-        text.removeAllDesertLeftInfoPanel();
+        // text.removeAllFocusLeftInfoPanel();
+        // text.removeAllDesertLeftInfoPanel();
 
         // Re-construct
         // TIME-CONSUMING!  FIXME

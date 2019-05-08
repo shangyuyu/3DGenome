@@ -1,0 +1,17 @@
+<!-- left-list -->
+
+<button id="FocusButton" class="tablinks active" ng-click="openTab('Focus', $event)">Focus</button>
+<button id="DesertButton" class="tablinks" ng-click="openTab('Desert', $event)">Desert</button>
+
+<div ng-if="$ctrl.open == 'Focus'">
+    <div ng-repeat="object in $ctrl.focusArray track by $index">
+        <button class="objectName" ng-click="removeFocus(object)">object.name</button> 
+        <json-formatter json=object.uniqueID open="1" class="json-formatter-dark"></json-formatter>
+    </div>
+</div>
+<div ng-if="$ctrl.open == 'Desert'">
+    <div ng-repeat="object in $ctrl.desertArray track by $index">
+        <button class="objectName" ng-click="removeDesert(object)">object.name</button> 
+        <json-formatter json=object.uniqueID open="1" class="json-formatter-dark"></json-formatter>
+    </div>
+</div>

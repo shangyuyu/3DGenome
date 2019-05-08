@@ -130,7 +130,7 @@ Object.assign(MousePick.prototype, {
         // Cannot focus those who have been put in desert
 
             // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED, "focus");
+            // text.addToLeftInfoPanel(this.INTERSECTED, "focus");
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
             this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
