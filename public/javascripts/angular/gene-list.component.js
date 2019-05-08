@@ -11,7 +11,7 @@ function GeneListController($scope, $http) {
     let self = this;
 
     $scope.logics = ["AND", "OR"];
-    $scope.cats = ["name", "Dbxref"];
+    $scope.cats = ["name", "attributes", "Dbxref"];
 
     $scope.submit = function () {
 

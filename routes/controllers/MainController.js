@@ -25,7 +25,7 @@ function (req, res, next) {
     const logic1 = req.query.logic1;
 
     let filter_;
-    
+
     if (logic1 === "AND")
     
         filter_ = {

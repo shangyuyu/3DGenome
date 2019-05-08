@@ -20,6 +20,10 @@
 - [ ] Auto-fill
 - [ ] Minimize several css and js
 - [ ] Auto viewpoint
+- [ ] Full-text index
+- [ ] search result page
+- [ ] blank search key
+- [ ] population
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier
