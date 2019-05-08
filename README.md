@@ -23,7 +23,7 @@
 - [ ] Full-text index
 - [ ] search result page
 - [x] blank search key
-- [ ] population
+- [x] population
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier

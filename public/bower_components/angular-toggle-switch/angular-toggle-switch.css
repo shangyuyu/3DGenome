@@ -1,5 +1,5 @@
 .toggle-switch {
-    border: 1px solid;
+    border: 1px solid #666666;
     cursor: pointer;
     display: inline-block;
     overflow: hidden;
@@ -34,8 +34,8 @@
 }
 
 .toggle-switch .knob {
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
+    border-left: 1px solid #666666;
+    border-right: 1px solid #666666;
     background-color: #1a1a1a;
     font: 14px Arial;
     width: 34%;

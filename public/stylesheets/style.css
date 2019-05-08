@@ -98,7 +98,7 @@ body {
     font: 14px Arial;
     line-height: 16px;
 }
-/* Search Panel:: Button*/
+/* Search Panel:: Button (for objects) */
 .searchFocus, .searchPopulate {
     display: inline-block;
     background-color: #2d2d2d;
@@ -107,8 +107,8 @@ body {
     cursor: pointer;
     padding: 3px 10px;
     transition: 0.2s;
-    font-size: 0.8em;
-    color: #8a8a8a;
+    font: 14px Arial;
+    color: #aaaaaa;
 }
 .searchFocus:hover, .searchPopulate:hover {
     background-color: #1a1a1a;
@@ -118,6 +118,21 @@ body {
 }
 .searchFocus:hover {
     cursor: w-resize;
+}
+/* Search Panel:: Button (for search area) */
+.searchSubmit {
+    display: inline-block;
+    background-color: #2d2d2d;
+    border: 1px solid #666666;
+    outline: none;
+    cursor: pointer;
+    padding: 4px;
+    transition: 0.3s;
+    font: 14px Arial;
+    color: white;
+}
+.searchSubmit:hover {
+    background-color: #1a1a1a;
 }
 /* Search Panel:: Intro (one line) */
 .intro {

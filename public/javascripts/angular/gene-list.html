@@ -7,7 +7,7 @@
     <select ng-init="logic1 = logics[0]" ng-model="logic1" ng-options="x for x in logics"></select>
     <select ng-init="cat2 = cats[0]" ng-model="cat2" ng-options="x for x in cats"></select>
     <input ng-model="queryKey2" />
-    <button ng-click="submit()">Search</button>
+    <button ng-click="submit()" class="searchSubmit">Search</button>
     <toggle-switch
         ng-model="fuzzy"
         knob-label="fuzzy">
