@@ -24,6 +24,7 @@
 - [ ] search result page
 - [x] blank search key
 - [x] population
+- [ ] CSS select + input
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier
