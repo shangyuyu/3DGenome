@@ -14,6 +14,22 @@ function GeneListController($scope, $http) {
     $scope.cats = ["name", "attributes", "Dbxref"];
     $scope.fuzzy = true;
 
+    function cleanData (object) {
+
+        if (typeof(object) !== "object") return;
+        if (object.children) {
+
+            for (let child of object.children)
+
+                cleanData(child);
+        }
+
+        object.attributes = JSON.parse(object.attributes);
+        // Required if stringified "attributes" is used
+        delete object.__v;
+        delete object._id;
+    }
+
     $scope.submit = function () {
 
         let params = {
@@ -32,34 +48,33 @@ function GeneListController($scope, $http) {
                 self.genes = res.data;
 
                 // Clean data for output
-                for (let gene of self.genes) {
+                for (let gene of self.genes)
 
-                    gene.attributes = JSON.parse(gene.attributes);
-                    // Required if stringified "attributes" is used
-                    delete gene.__v;
-                    delete gene._id;
-                }
+                    cleanData(gene);
             }, 
             // On failure
             function (res) {
 
-                console.error("http::get submit failure: " + res);
+                console.error("http::get submit failure");
+                console.error(res);
             }
         );
     };
 
     $scope.populate = function (gene) {
 
-        $http.get("/populate", {params:gene.children}).then(
+        $http.get("/populate", {params:{"idArray[]": gene.children}}).then(
             // On success
             function (res) {
 
                 gene.children = res.data;
+                cleanData(gene);
             }, 
             // On failure
             function (res) {
 
-                console.error("http::get populate failure: " + res);
+                console.error("http::get populate failure");
+                console.error(res);
             }
         );
     };

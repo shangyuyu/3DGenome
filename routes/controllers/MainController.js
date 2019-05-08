@@ -6,6 +6,7 @@
 
 "use strict";
 
+const mongoose = require("mongoose");
 const Gene = require("../../models/gene");
 const GeneSub = require("../../models/geneSub");
 
@@ -31,6 +32,7 @@ function (req, res, next) {
 
     // FIXME: Use better fuzzy search
     // FIXME: Implement full-text index
+    // FIXME: Populate in seach step
     if (!key1) 
 
         key1 = new RegExp(/./);
@@ -72,14 +74,36 @@ function (req, res, next) {
             // res.json({key1: key1, key2: key2, fuzzy: fuzzy});  // Debug purpose
             res.send(data);
         });
-
 };
 
 
 exports.populate = 
 function (req, res, next) {
 
-    res.send({1:1, 2:2});
+    const idArray = req.query.idArray;
+    const objectIdArray = idArray.map(s => mongoose.Types.ObjectId(s));
+
+    GeneSub.
+        find({
+        '_id': { $in: objectIdArray}
+        }, function(err, data){
+
+            if (err) return console.error(err);
+
+            res.send(data);
+    });
+    /*
+    // Only work for finding one _id
+    GeneSub.
+        findById(idArray[0]).
+        exec(function (err, data) {
+
+            if (err) return console.error(err);
+
+            console.log("succeed");
+            res.send(data);
+        });
+    */
 };
 
 // End of MainController.js
