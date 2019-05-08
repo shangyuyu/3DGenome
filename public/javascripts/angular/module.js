@@ -6,7 +6,7 @@
 "use strict";
 
 // Define the 'angularApp' module
-angular.module("angularApp", ['jsonFormatter']).
+angular.module("angularApp", ["jsonFormatter", "toggle-switch"]).
 config(function (JSONFormatterConfigProvider) {
 
     // Enable the hover preview feature

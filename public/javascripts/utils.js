@@ -192,7 +192,7 @@ function onDocumentKeyDown (event) {
 
     if (event.keyCode === 16)  // shift
         mousePick.changeMousepickFunction();
-    if (event.keyCode === 32){  // space
+    if (event.keyCode === 9){  // tab
 
         text.searchPanelEnable = (text.searchPanelEnable == false) ? true : false;
         $("#searchPanel").css("display", (text.searchPanelEnable == true) ? "block" : "none");

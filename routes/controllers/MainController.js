@@ -20,25 +20,28 @@ exports.geneSearch =
 function (req, res, next) {
 // Query gene
 
-    const key1 = req.query.key1, key2 = req.query.key2;
+    let key1 = req.query.key1, key2 = req.query.key2;
     const cat1 = req.query.cat1, cat2 = req.query.cat2;
     const logic1 = req.query.logic1;
 
     let filter_;
 
+    if (!key1) key1 = ".";
+    if (!key2) key2 = ".";
+
     if (logic1 === "AND")
     
         filter_ = {
             $and: [
-                {[cat1]: {$regex: key1, $options: "$i"}},
-                {[cat2]: {$regex: key2, $options: "$i"}},
+                {[cat1]: {$regex: key1, $options: "gis"}},
+                {[cat2]: {$regex: key2, $options: "gis"}},
             ]
     }; else
 
         filter_ = {
             $or: [
-                {[cat1]: {$regex: key1, $options: "$i"}},
-                {[cat2]: {$regex: key2, $options: "$i"}}
+                {[cat1]: {$regex: key1, $options: "gis"}},
+                {[cat2]: {$regex: key2, $options: "gis"}}
             ]
     };
 
