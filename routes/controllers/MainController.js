@@ -23,25 +23,39 @@ function (req, res, next) {
     let key1 = req.query.key1, key2 = req.query.key2;
     const cat1 = req.query.cat1, cat2 = req.query.cat2;
     const logic1 = req.query.logic1;
+    const fuzzy = req.query.fuzzy;
 
     let filter_;
 
-    if (!key1) key1 = ".";
-    if (!key2) key2 = ".";
+    // FIXME: Use better fuzzy search
+    // FIXME: Implement full-text index
+    if (!key1) 
+
+        key1 = new RegExp(/./);
+    else if (fuzzy === "true")
+
+        key1 = new RegExp(key1.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "gi");
+
+    if (!key2) 
+
+        key2 = new RegExp(/./);
+    else if (fuzzy === "true")
+
+        key2 = new RegExp(key2.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"), "gi");
 
     if (logic1 === "AND")
     
         filter_ = {
             $and: [
-                {[cat1]: {$regex: key1, $options: "gis"}},
-                {[cat2]: {$regex: key2, $options: "gis"}},
+                {[cat1]: key1},
+                {[cat2]: key2}
             ]
     }; else
 
         filter_ = {
             $or: [
-                {[cat1]: {$regex: key1, $options: "gis"}},
-                {[cat2]: {$regex: key2, $options: "gis"}}
+                {[cat1]: key1},
+                {[cat2]: key2}
             ]
     };
 
@@ -53,6 +67,7 @@ function (req, res, next) {
 
             if (err) return console.error(err);
 
+            // res.json({key1: key1, key2: key2, fuzzy: fuzzy});  // Debug purpose
             res.send(data);
         });
 
