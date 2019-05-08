@@ -43,7 +43,23 @@ function GeneListController($scope, $http) {
             // On failure
             function (res) {
 
-                console.log("http:Get failure: " + res);
+                console.error("http::get submit failure: " + res);
+            }
+        );
+    };
+
+    $scope.populate = function (gene) {
+
+        $http.get("/populate", {params:gene.children}).then(
+            // On success
+            function (res) {
+
+                gene.children = res.data;
+            }, 
+            // On failure
+            function (res) {
+
+                console.error("http::get populate failure: " + res);
             }
         );
     };

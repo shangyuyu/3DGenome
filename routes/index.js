@@ -14,6 +14,7 @@ let MainController = require("./controllers/MainController");
 // Get the main page with webGL canvas
 router.get("/", MainController.main);
 router.get("/geneSearch", MainController.geneSearch);
+router.get("/populate", MainController.populate);
 
 module.exports = router;
 

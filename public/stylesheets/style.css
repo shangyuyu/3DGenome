@@ -99,7 +99,7 @@ body {
     line-height: 16px;
 }
 /* Search Panel:: Button*/
-.searchFocus {
+.searchFocus, .searchPopulate {
     display: inline-block;
     background-color: #2d2d2d;
     border: none;
@@ -110,10 +110,13 @@ body {
     font-size: 0.8em;
     color: #8a8a8a;
 }
-.searchFocus:hover {
+.searchFocus:hover, .searchPopulate:hover {
     background-color: #1a1a1a;
     color: white;
     border: none;
+    cursor: pointer;
+}
+.searchFocus:hover {
     cursor: w-resize;
 }
 /* Search Panel:: Intro (one line) */

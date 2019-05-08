@@ -9,12 +9,14 @@
 const Gene = require("../../models/gene");
 const GeneSub = require("../../models/geneSub");
 
+
 exports.main = 
 function (req, res, next) {
 // Render main page
 
     res.render('main');
 };
+
 
 exports.geneSearch = 
 function (req, res, next) {
@@ -71,6 +73,13 @@ function (req, res, next) {
             res.send(data);
         });
 
+};
+
+
+exports.populate = 
+function (req, res, next) {
+
+    res.send({1:1, 2:2});
 };
 
 // End of MainController.js

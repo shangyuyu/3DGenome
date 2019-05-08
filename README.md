@@ -22,7 +22,7 @@
 - [ ] Auto viewpoint
 - [ ] Full-text index
 - [ ] search result page
-- [ ] blank search key
+- [x] blank search key
 - [ ] population
 
 Critical
