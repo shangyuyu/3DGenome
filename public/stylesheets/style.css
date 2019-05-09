@@ -68,6 +68,13 @@ body {
 .tabcontent {
     background-color: #1a1a1a;
 }
+.refresh {
+    opacity: 0;
+}
+.clearDiv {
+    clear: both;
+    /* For the sole purpose of clear "float: left" effect */
+}
 /* Left Info Panel:: Objects */
 .objectInfo{
     background-color: #1a1a1a;

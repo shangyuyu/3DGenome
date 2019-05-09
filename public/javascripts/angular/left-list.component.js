@@ -6,7 +6,7 @@
 "use strict";
 
 // Register "left-list" component, along with its associated controller and template
-function LeftListController($scope, $window) {
+function LeftListController($scope) {
 
     let self = this;
 
@@ -16,9 +16,7 @@ function LeftListController($scope, $window) {
     // name === "Focus" / "Desert"
 
         self.open = name;
-        self.focusArray = mousePick.focusArray;
-        self.desertArray = mousePick.desertArray;
-        
+
         let tablinks = document.getElementsByClassName("tablinks");
         for (let i=0; i<tablinks.length; i++) {
 
@@ -26,6 +24,22 @@ function LeftListController($scope, $window) {
         }
 
         event.currentTarget.className += " active";
+    };
+
+    $scope.getFocusArray = function () {
+
+        return mousePick ? mousePick.focusArray : [];
+    };
+
+    $scope.getDesertArray = function () {
+
+        return mousePick ? mousePick.desertArray : [];
+    };
+
+    $scope.refresh = function () {
+    // Auxiliary function, cannot be empty for unknown reason
+
+        return null;
     };
 }
 

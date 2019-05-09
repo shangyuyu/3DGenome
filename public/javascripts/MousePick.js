@@ -138,6 +138,10 @@ Object.assign(MousePick.prototype, {
             this.INTERSECTED.protectedRecoverHex = this.INTERSECTED.recoverHex;
             this.INTERSECTED.material.emissive.setHex( gui.mousePickConfig.onFocusColor.replace("#", "0x") );
             this.INTERSECTED.recoverHex = this.INTERSECTED.material.emissive.getHex();
+
+            // Force angular "left-list.component" to refresh
+            // FIXME Against angular.js design
+            $("#refresh").trigger('click');
         }
     }, 
 
