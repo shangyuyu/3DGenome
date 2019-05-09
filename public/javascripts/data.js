@@ -16,7 +16,6 @@ class DataManager {
 
         this.objects = [];
         this.rawData = [];
-        this.infoData = null;
         this.resolution = null;
     }
 }
@@ -32,15 +31,16 @@ Object.assign(DataManager.prototype, {
         function onLoad (data_) {
 
             let data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
+            data_ = [];
 
             const chr = Number(data[0].slice(3));
             const resolution = Number(data[1]);
             const startPos = Number(data[2]);
             const dataScale = 50.0;
-            const targetObjectSize = 200;  // 5Kb * 200 -> 1Mb
+            const targetObjectSize = 201;  // 5Kb * 200 -> 1Mb
 
             data.splice(0, 3);  // delete chr, resolution, startPos
-    
+
             // this.objects
             let index = 0;
             let count = 0;
@@ -54,8 +54,6 @@ Object.assign(DataManager.prototype, {
 
                 if (count === targetObjectSize) {
 
-                    count = 0;
-
                     if (tempVec3Array.length > 1)
                         this.objects[index] = {
                             geometry: new THREE.CatmullRomCurve3(tempVec3Array),  // NOTE: Look out for consecutive data missing!
@@ -64,11 +62,20 @@ Object.assign(DataManager.prototype, {
                             CHR: chr,
                             startLocus: index*targetObjectSize*resolution + startPos,
                         };
+
                     if (tempVec3Array.length <= 1)
                         console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
-                    tempVec3Array = [];
+
+                    // Update tempVec3Array (whether keep the last vector)
+                    if (tempVec3Array.length > 1) {
+                        tempVec3Array = tempVec3Array.slice(-1);
+                        count = 1;
+                    } else {
+                        tempVec3Array = [];
+                        count = 0;
+                    }
                 }
             }
             if (count > 0) {

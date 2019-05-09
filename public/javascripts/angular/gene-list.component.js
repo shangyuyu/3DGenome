@@ -85,6 +85,13 @@ function GeneListController($scope, $http) {
         );
     };
 
+    $scope.focus = function (gene) {
+    // Split data.objects and re-render scene to focus this specific gene
+    // FIXME CHR check
+
+        
+    };
+
     $scope.isString = function (object) {
     // Auxiliary function for ng-if
 
