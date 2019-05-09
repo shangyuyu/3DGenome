@@ -17,6 +17,7 @@ class DataManager {
         this.objects = [];
         this.rawData = [];
         this.resolution = null;
+        this.targetPointNum = null;
     }
 }
 
@@ -37,64 +38,74 @@ Object.assign(DataManager.prototype, {
             const resolution = Number(data[1]);
             const startPos = Number(data[2]);
             const dataScale = 50.0;
-            const targetObjectSize = 201;  // 5Kb * 200 -> 1Mb
+            // Warning: 200 5kb segments require 201 points
+            const targetPointNum = 201;  // 5Kb * 200 -> 1Mb
 
             data.splice(0, 3);  // delete chr, resolution, startPos
 
             // this.objects
-            let index = 0;
-            let count = 0;
-            let tempVec3Array = [];
+            let index = 0;  // No. of object currently working on
+            let count = 0;  // How many points have read for current object, regardless of whether effective
+            let lineCount = 0;
+            let Vec3Array = [];
             for (let i = 0; i < data.length; i+=4) {
 
                 count += 1;
 
                 if (data[i+1] !== "nan")
-                    tempVec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
+                    Vec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
 
-                if (count === targetObjectSize) {
+                if (count === targetPointNum) {
 
-                    if (tempVec3Array.length > 1)
+                    if (Vec3Array.length > 1) {
+                    // New object should be created
+                        // Bind to this.objects
                         this.objects[index] = {
-                            geometry: new THREE.CatmullRomCurve3(tempVec3Array),  // NOTE: Look out for consecutive data missing!
-                            pointNum: tempVec3Array.length,
-                            objectSize: targetObjectSize,
+                            geometry: new THREE.CatmullRomCurve3(Vec3Array),  // NOTE: Look out for consecutive data missing!
+                            pointNum: Vec3Array.length,
                             CHR: chr,
-                            startLocus: index*targetObjectSize*resolution + startPos,
+                            start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
+                            end: lineCount * resolution + startPos
                         };
+                        // Bind Vec3Array to this.rawData
+                        this.rawData[index] = Vec3Array.slice();
+                    }
 
-                    if (tempVec3Array.length <= 1)
-                        console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
+                    if (Vec3Array.length <= 1)
+                        console.warn(`Consecutive data missing detected: from ${lineCount * resolution + startPos - (targetPointNum-1) * resolution} to ${lineCount * resolution + startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
 
-                    // Update tempVec3Array (whether keep the last vector)
-                    if (tempVec3Array.length > 1) {
-                        tempVec3Array = tempVec3Array.slice(-1);
+                    // Update Vec3Array (whether keep the last vector)
+                    if (Vec3Array.length > 1) {
+                        Vec3Array = Vec3Array.slice(-1);
                         count = 1;
                     } else {
-                        tempVec3Array = [];
+                        Vec3Array = [];
                         count = 0;
                     }
                 }
+
+                lineCount += 1;
             }
+            // Tail not enough for a complete object
             if (count > 0) {
-                if (tempVec3Array.length > 1)
+                if (Vec3Array.length > 1)
                     this.objects[index] = {
-                        geometry: new THREE.CatmullRomCurve3(tempVec3Array),
-                        pointNum: tempVec3Array.length,
-                        objectSize: targetObjectSize,
+                        geometry: new THREE.CatmullRomCurve3(Vec3Array),
+                        pointNum: Vec3Array.length,
                         CHR: chr,
-                        startLocus: index*targetObjectSize*resolution + startPos,
+                        start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
+                        end: lineCount * resolution + startPos
                     };
-                if (tempVec3Array.length <= 1) 
-                    console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
-                tempVec3Array = [];
+                this.rawData[index] = Vec3Array.slice();
+                if (Vec3Array.length <= 1) 
+                    console.warn(`Consecutive data missing detected: from ${lineCount * resolution + startPos - (targetPointNum-1) * resolution} to ${lineCount * resolution + startPos} in chromosome ${chr}.`);
+                Vec3Array = [];
             }
 
-            // this.rawData
-            this.rawData[chr] = data;
             this.resolution = resolution;
+            this.targetPointNum = targetPointNum;
             data = [];
 
             init();
@@ -148,11 +159,11 @@ Object.assign(DataManager.prototype, {
 
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Segment" + String(i);  // FIXME
+            mesh.name = "Segment" + String(i);
             mesh.uniqueID = {
                 CHR: this.objects[i].CHR,
-                start: this.objects[i].startLocus,
-                end: this.objects[i].startLocus + this.resolution * this.objects[i].objectSize
+                start: this.objects[i].start,
+                end: this.objects[i].end
             };
             // bind auxi properties
             mesh.protected = false;
@@ -204,16 +215,27 @@ Object.assign(DataManager.prototype, {
             );
 
             line = new THREE.Line(lineGeometry);
-            line.name = "Lineseg" + String(i);  // FIXME
+            line.name = "Lineseg" + String(i);
             line.uniqueID = {
-                CHR: data.objects[i].CHR,
-                start: data.objects[i].startLocus,
-                end: data.objects[i].startLocus + data.resolution * data.objects[i].objectSize
+                CHR: this.objects[i].CHR,
+                start: this.objects[i].start,
+                end: this.objects[i].end
             };
 
             parent.add(line);
         }
     },
+
+    merge: function (object) {
+    // Merge new "object" into this.objects
+    // object: {
+    //     uniqueID: {...},
+    //     name: String,
+    //     info: {...}
+    // }
+        
+        
+    }
 
 } );
 

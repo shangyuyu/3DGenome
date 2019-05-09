@@ -12,19 +12,22 @@
 - [x] Favicon
 - [x] Select from leftInfoPanel
 - [x] Button in leftInfoPanel
-- [ ] Gradient render (color)
 - [ ] sprite
 - [x] leftInfoPanel template
 - [ ] Pretty search panel
 - [ ] Better search choice
 - [ ] Auto-fill
 - [ ] Minimize several css and js
-- [ ] Auto viewpoint
 - [ ] Full-text index
 - [ ] search result page
 - [x] blank search key
 - [x] population
 - [ ] CSS select + input
+
+Current
+- [ ] Focus search results
+- [ ] Auto viewpoint
+- [ ] Gradient render (color)
 
 Critical
 - [x] BUG: INDEX should not be used as unique identifier

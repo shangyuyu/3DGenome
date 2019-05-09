@@ -7,7 +7,7 @@
 
 // Global advanced configuration
 let advancedConfig = {
-    auxiScene: true,           // whether to render auxiScene
+    auxiScene: false,           // whether to render auxiScene
     auxiScenePoints: 0,         // points in auxiScene, 0 will sync it with the number in main scene
                                 // WARNING: value other than 0 will invalidate mouse pick
     mousePickTimeDisp: false,   // log the time cost for each calculation of mouse pick

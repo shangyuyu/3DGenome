@@ -89,7 +89,16 @@ function GeneListController($scope, $http) {
     // Split data.objects and re-render scene to focus this specific gene
     // FIXME CHR check
 
-        
+        const newObject = {
+            uniqueID: {
+                CHR: gene.chr, 
+                start: gene.start, 
+                end: gene.end
+            }, 
+            name: gene.name,
+            info: gene
+        };
+        data.merge(newObject);
     };
 
     $scope.isString = function (object) {
