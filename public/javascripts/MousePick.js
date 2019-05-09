@@ -124,9 +124,11 @@ Object.assign(MousePick.prototype, {
     onFocus: function () {
     // Assume this.INTERSECTED not null
 
-        let index = nameParse( this.INTERSECTED.name );
-        
-        if (!this.focusArray.find( e => nameParse(e.name) === index )) {
+        // Index is not universal, use UID instead
+        // let index = nameParse( this.INTERSECTED.name );
+        const uidStr = JSON.stringify(this.INTERSECTED.uniqueID);
+
+        if (!this.focusArray.find( e => JSON.stringify(e.uniqueID) === uidStr )) {
         // Cannot focus (or even pick) those who have been put in desert
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
@@ -151,15 +153,17 @@ Object.assign(MousePick.prototype, {
 
         if (object) {
 
-            if ( !this.focusArray.find( e => e.name === object.name ) ) {
-                
+            const uidStr = JSON.stringify(object.uniqueID);
+            if ( !this.focusArray.find( e => JSON.stringify(e.uniqueID) === uidStr ) ) {
+
                 let temp = this.INTERSECTED;
 
                 this.INTERSECTED = object;
                 this.onPick();
                 this.onFocus();
-                // this.onLeft(); Logically should onLeft, but does not change anything
-                
+                // this.onLeft(); 
+                // Logically should onLeft, but does not change anything and thus can be omitted
+
                 this.INTERSECTED = temp;
             }
 
@@ -176,12 +180,12 @@ Object.assign(MousePick.prototype, {
         }
     },
 
-    removeFromFocusArray: function (name) {
-    // NOTE: Using name as id is unreliable during "bindTube" step
+    removeFromFocusArray: function (uidStr) {
+    // Return true if successfully removed and false if not found
 
         for (let i=0; i<this.focusArray.length; i+=1) {
 
-            if (this.focusArray[i].name === name) {
+            if (JSON.stringify(this.focusArray[i].uniqueID) === uidStr) {
 
                 let INTERSECTED = this.focusArray[i];
 
@@ -189,6 +193,8 @@ Object.assign(MousePick.prototype, {
                 INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
 
                 this.focusArray.splice(i, 1);
+                // Force angular "left-list.component" to refresh
+                $("#refresh").trigger('click');
                 return true;
             }
         }
@@ -197,10 +203,10 @@ Object.assign(MousePick.prototype, {
     },
 
     resetFocusArray: function () {
+    // This function should only be called by GUI reset button
     // Use 'clearFocused' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.focusArray.length + " protected selections.");
-        text.removeAllFocusLeftInfoPanel();
         for (let i=0; i<this.focusArray.length; i+=1) {
 
             let INTERSECTED = this.focusArray[i];
@@ -209,6 +215,9 @@ Object.assign(MousePick.prototype, {
             INTERSECTED.material.emissive.setHex(INTERSECTED.protectedRecoverHex);
         }
         this.focusArray = [];
+
+        // Force angular "left-list.component" to refresh
+        $("#refresh").trigger('click');
     },
 
     getFocusArrayUniqueID: function ( targetArray ) {
@@ -225,13 +234,15 @@ Object.assign(MousePick.prototype, {
 
     clearFocused: function() {
     // Clear focusArray and INTERSECTED
-    // Use 'resetFocusArray' instead if the model is not destructed
         
         this.INTERSECTED = null;
         this.focusArray = [];
+        // Force angular "left-list.component" to refresh
+        $("#refresh").trigger('click');
     },
 
     reRenderFocusArray: function () {
+    // Called by GUI display color change
     // Not completely re-render
 
         for (let i=0; i<this.focusArray.length; i+=1) {
@@ -246,9 +257,11 @@ Object.assign(MousePick.prototype, {
     onDesert: function () {
     // Assume this.INTERSECTED not null
 
-        let index = nameParse( this.INTERSECTED.name );
+        // Index is not universal, use UID instead
+        // let index = nameParse( this.INTERSECTED.name );
+        const uidStr = JSON.stringify(this.INTERSECTED.uniqueID);
 
-        if (!this.desertArray.find( e => nameParse(e.name) === index )) {
+        if (!this.desertArray.find( e => JSON.stringify(e.uniqueID) === uidStr )) {
 
             this.desertArray.push( this.INTERSECTED );
             this.INTERSECTED.deserted = true;
@@ -270,15 +283,16 @@ Object.assign(MousePick.prototype, {
 
         if (object) {
 
-            if ( !this.desertArray.find( e => e.name === object.name ) ) {
-                
+            const uidStr = JSON.stringify(object.uniqueID);
+            if ( !this.desertArray.find( e => JSON.stringify(e.uniqueID) === uidStr ) ) {
+
                 let temp = this.INTERSECTED;
 
                 this.INTERSECTED = object;
                 this.onPick();
                 this.onDesert();
                 this.onLeft();
-                
+
                 this.INTERSECTED = temp;
             }
 
@@ -295,12 +309,12 @@ Object.assign(MousePick.prototype, {
         }
     },
 
-    removeFromDesertArray: function (name) {
-    // NOTE: Using name as id is unreliable during "bindTube" step
+    removeFromDesertArray: function (uidStr) {
+    // Return true if successfully removed and false if not found
 
         for (let i=0; i<this.desertArray.length; i+=1) {
-            
-            if (this.desertArray[i].name === name) {
+
+            if (JSON.stringify(this.desertArray[i].uniqueID) === uidStr) {
 
                 let INTERSECTED = this.desertArray[i];
 
@@ -308,6 +322,8 @@ Object.assign(MousePick.prototype, {
                 INTERSECTED.material.transparent = false;
 
                 this.desertArray.splice(i, 1);
+                // Force angular "left-list.component" to refresh
+                $("#refresh").trigger('click');
                 return true;
             }
         }
@@ -316,6 +332,7 @@ Object.assign(MousePick.prototype, {
     },
 
     resetDesertArray: function () {
+    // This function should only be called by GUI reset button
     // Use 'clearDeserted' if the model will be destructed
 
         console.log("MousePick.js::Reset " + this.desertArray.length + " deserted selections.");
@@ -328,6 +345,9 @@ Object.assign(MousePick.prototype, {
             INTERSECTED.material.transparent = false;
         }
         this.desertArray = [];
+
+        // Force angular "left-list.component" to refresh
+        $("#refresh").trigger('click');
     },
 
     getDesertArrayUniqueID: function ( targetArray ) {
@@ -344,13 +364,15 @@ Object.assign(MousePick.prototype, {
 
     clearDeserted: function() {
     // Clear desertArray and INTERSECTED
-    // Use 'resetDesertArray' instead if the model is not destructed
         
         this.INTERSECTED = null;
         this.desertArray = [];
+        // Force angular "left-list.component" to refresh
+        $("#refresh").trigger('click');
     },
 
     reRenderDesertArray: function () {
+    // Called by GUI display color change
     // Not completely re-render
 
         for (let i=0; i<this.desertArray.length; i+=1) {
@@ -365,7 +387,7 @@ Object.assign(MousePick.prototype, {
     changeMousepickFunction: function () {
 
         let result = (gui.mousePickConfig.function ? false : true);
-        
+
         gui.mousePickConfig.function  = result;
         mousePick.function = result;
 
@@ -375,16 +397,16 @@ Object.assign(MousePick.prototype, {
 
     getObjectByUniqueID: function (parent, uniqueID) {
 
-        let childArray = parent.children;
+        const childArray = parent.children;
+        const uidStr = JSON.stringify(uniqueID);
         let targetUniqueID;
 
         for (let i=0, l=childArray.length; i<l; i+=1) {
         
             targetUniqueID = childArray[i].uniqueID;
 
-            if (targetUniqueID.CHR === uniqueID.CHR &&
-                targetUniqueID.start === uniqueID.start &&
-                targetUniqueID.end === uniqueID.end)
+            if (JSON.stringify(targetUniqueID) === uidStr)
+
                 return childArray[i];
         }
 
