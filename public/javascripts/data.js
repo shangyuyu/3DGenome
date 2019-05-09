@@ -112,6 +112,9 @@ Object.assign(DataManager.prototype, {
         }
     },
 
+    //////////////////////////////////////////////////////////////////////////////
+    // BindTube & BindLine
+
     bindTube: function (parent) {
         // Re-create Geometry and Material, bind them to mesh and add to Object3D
 
@@ -226,6 +229,9 @@ Object.assign(DataManager.prototype, {
         }
     },
 
+    //////////////////////////////////////////////////////////////////////////////
+    // Merge
+
     merge: function (object) {
     // Merge new "object" into this.objects
     // object: {
@@ -233,8 +239,36 @@ Object.assign(DataManager.prototype, {
     //     name: String,
     //     info: {...}
     // }
+
+        const startIndex = this.getParentObjectIndex(object.uniqueID.start, object.uniqueID.CHR);
+        const endIndex = this.getParentObjectIndex(object.uniqueID.end, object.uniqueID.CHR);
+
+        if (startIndex === -1 || endIndex === -1)
+            return console.warn("Merge failure: new object locates in area(s) where raw 3D data is missing or not loaded.");
+
+        // FIXME
+        if (startIndex !== endIndex)
+            return console.warn("Merge failure: new object locates in more than one current split objects.");
+
         
-        
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // Auxiliary
+
+    getParentObjectIndex: function (locus, chr) {
+    // Find which object in "this.objects" contains "locus"
+    // return its index if found, -1 otherwise
+
+        const objects = this.objects;
+
+        for (let i=0; i<objects.length; i+=1) {
+
+            if (objects[i].CHR === chr && objects[i].start <= locus && objects[i].end >= locus)
+                return i;
+        }
+
+        return -1;
     }
 
 } );
