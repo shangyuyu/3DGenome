@@ -29,12 +29,12 @@ function LeftListController($scope) {
 
     $scope.getFocusArray = function () {
 
-        return mousePick ? mousePick.focusArray : [];
+        return (typeof mousePick !== "undefined") ? mousePick.focusArray : [];
     };
 
     $scope.getDesertArray = function () {
 
-        return mousePick ? mousePick.desertArray : [];
+        return (typeof mousePick !== "undefined") ? mousePick.desertArray : [];
     };
 
     $scope.mouseover = function (object) {

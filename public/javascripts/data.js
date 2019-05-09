@@ -15,7 +15,7 @@ class DataManager {
     constructor () {
 
         this.objects = [];
-        this.rawData = [];
+        this.rawData = [];  // rawData[i] => {vec3Array, countArray}
         this.resolution = null;
         this.targetPointNum = null;
     }
@@ -47,41 +47,50 @@ Object.assign(DataManager.prototype, {
             let index = 0;  // No. of object currently working on
             let count = 0;  // How many points have read for current object, regardless of whether effective
             let lineCount = 0;
-            let Vec3Array = [];
+            let vec3Array = [];
+            let countArray = [];
             for (let i = 0; i < data.length; i+=4) {
 
                 count += 1;
 
-                if (data[i+1] !== "nan")
-                    Vec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
+                if (data[i+1] !== "nan") {
+
+                    vec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
+                    countArray.push(count);
+                }
 
                 if (count === targetPointNum) {
 
-                    if (Vec3Array.length > 1) {
+                    if (vec3Array.length > 1) {
                     // New object should be created
                         // Bind to this.objects
                         this.objects[index] = {
-                            geometry: new THREE.CatmullRomCurve3(Vec3Array),  // NOTE: Look out for consecutive data missing!
-                            pointNum: Vec3Array.length,
+                            geometry: new THREE.CatmullRomCurve3(vec3Array),  // NOTE: Look out for consecutive data missing!
+                            pointNum: vec3Array.length,
                             CHR: chr,
                             start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
                             end: lineCount * resolution + startPos
                         };
-                        // Bind Vec3Array to this.rawData
-                        this.rawData[index] = Vec3Array.slice();
+                        // Bind vec3Array to this.rawData
+                        this.rawData[index] = {
+                            vec3Array: vec3Array.slice(),
+                            countArray: countArray.slice()
+                        };
                     }
 
-                    if (Vec3Array.length <= 1)
+                    if (vec3Array.length <= 1)
                         console.warn(`Consecutive data missing detected: from ${lineCount * resolution + startPos - (targetPointNum-1) * resolution} to ${lineCount * resolution + startPos} in chromosome ${chr}.`);
                     else
                         index += 1;
 
-                    // Update Vec3Array (whether keep the last vector)
-                    if (Vec3Array.length > 1) {
-                        Vec3Array = Vec3Array.slice(-1);
+                    // Update vec3Array (whether keep the last vector)
+                    if (vec3Array.length > 1) {
+                        vec3Array = vec3Array.slice(-1);
+                        countArray = [1];
                         count = 1;
                     } else {
-                        Vec3Array = [];
+                        vec3Array = [];
+                        countArray = [];
                         count = 0;
                     }
                 }
@@ -90,18 +99,22 @@ Object.assign(DataManager.prototype, {
             }
             // Tail not enough for a complete object
             if (count > 0) {
-                if (Vec3Array.length > 1)
+                if (vec3Array.length > 1)
                     this.objects[index] = {
-                        geometry: new THREE.CatmullRomCurve3(Vec3Array),
-                        pointNum: Vec3Array.length,
+                        geometry: new THREE.CatmullRomCurve3(vec3Array),
+                        pointNum: vec3Array.length,
                         CHR: chr,
                         start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
                         end: lineCount * resolution + startPos
                     };
-                this.rawData[index] = Vec3Array.slice();
-                if (Vec3Array.length <= 1) 
+                this.rawData[index] = {
+                    vec3Array: vec3Array.slice(),
+                    countArray: countArray.slice()
+                };
+                if (vec3Array.length <= 1) 
                     console.warn(`Consecutive data missing detected: from ${lineCount * resolution + startPos - (targetPointNum-1) * resolution} to ${lineCount * resolution + startPos} in chromosome ${chr}.`);
-                Vec3Array = [];
+                vec3Array = [];
+                countArray = [];
             }
 
             this.resolution = resolution;
@@ -250,7 +263,20 @@ Object.assign(DataManager.prototype, {
         if (startIndex !== endIndex)
             return console.warn("Merge failure: new object locates in more than one current split objects.");
 
-        
+        const parentObject = this.objects[startIndex];
+        const parentRawData = this.rawData[startIndex];
+        const startPercentage = (object.uniqueID.start - parentObject.start) / (parentObject.end - parentObject.start);
+        const endPercentage = (object.uniqueID.end - parentObject.start) / (parentObject.end - parentObject.start);
+        const parentCountArrayPercentage = parentRawData.countArray.map(x => x / this.targetPointNum);
+
+        if (parentCountArrayPercentage[0] > startPercentage || parentCountArrayPercentage[parentCountArrayPercentage.length-1] < endPercentage)
+            return console.warn("Merge failure: new object locates in an area where part of required 3D data is missing.");
+
+        // Find indexs of where new object should be merged
+        for (let i=0; i<parentCountArrayPercentage.length; i+=1) {
+
+            
+        }
     },
 
     //////////////////////////////////////////////////////////////////////////////
