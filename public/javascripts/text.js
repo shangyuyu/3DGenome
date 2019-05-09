@@ -59,6 +59,7 @@ Object.assign(TEXT.prototype, {
         $("#leftInfoPanel").css("opacity", 0.8);
 
         return null;
+
         // Default tab
         // document.getElementById("FocusButton").click();
         // Fetch text divs

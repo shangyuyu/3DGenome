@@ -10,6 +10,7 @@ function LeftListController($scope) {
 
     let self = this;
 
+    // Default open tab
     self.open = "Focus";
 
     $scope.openTab = function (name, event) {
@@ -75,6 +76,11 @@ function LeftListController($scope) {
 
         if (!removeSuccess)
             console.warn(`Critical error: leftList controller failed to remove ${JSON.stringify(object.uniqueID)} from desertArray.`);
+    };
+
+    $scope.getStringUID = function (object) {
+
+        return JSON.stringify(object.uniqueID);
     };
 
     $scope.refresh = function () {

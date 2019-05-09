@@ -95,7 +95,7 @@ Object.assign(MousePick.prototype, {
         // but visual effect can be omitted
 
             // Desert Array cannot be picked
-            let node = document.getElementById("F" + this.INTERSECTED.name);  // FIXME
+            let node = document.getElementById(JSON.stringify(this.INTERSECTED.uniqueID));
             if (node) node.className = "objectInfoHover";  // simulate :hover effect
         }
 
@@ -114,7 +114,7 @@ Object.assign(MousePick.prototype, {
             if (text.leftInfoPanelEnable === true) {
         
                 // Desert Array cannot be picked
-                let node = document.getElementById("F" + this.INTERSECTED.name);
+                let node = document.getElementById(JSON.stringify(this.INTERSECTED.uniqueID));
                 if (node) node.className = "objectInfo";  // undo simulation hover effects
             }
 
