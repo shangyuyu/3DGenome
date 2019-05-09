@@ -41,18 +41,23 @@ function getRandomArbitrary (min, max) {
 }
 
 
+/* Deprecated. Name is not universal anymore
 function nameParse (name) {
 
     return Number(name.slice(7));  // Segment/Lineseg
 }
+*/
 
 
+/* Deprecated. Name is not universal anymore
 function nameParseStr (name) {
 
     return name.slice(7);  // Segment/Lineseg
 }
+*/
 
 
+/* Deprecated. Check angular.left-list.component
 function openTab (event, Name) {
 // Triggered by leftInfoPanel.html event
 
@@ -73,8 +78,10 @@ function openTab (event, Name) {
     document.getElementById(Name).style.display = "block";
     event.currentTarget.className += " active";
 }
+*/
 
 
+/* Deprecated. Check angular.left-list.component
 function removeObject (id) {
 // Triggered by leftInfoPanel.html event
 // NOTE: Not supposed to be called by any other function
@@ -92,12 +99,7 @@ function removeObject (id) {
     else
         mousePick.removeFromDesertArray( id.slice(1) );
 }
-
-
-function uniqueID2string (uniqueID) {
-
-    return `CHR-${uniqueID.CHR}\u00A0\u00A0\u00A0${uniqueID.start}-${uniqueID.end}`;
-}
+*/
 
 
 function disposeNode (node) {

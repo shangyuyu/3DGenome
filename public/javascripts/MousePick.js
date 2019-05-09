@@ -180,8 +180,10 @@ Object.assign(MousePick.prototype, {
         }
     },
 
-    removeFromFocusArray: function (uidStr) {
+    removeFromFocusArray: function (uid) {
     // Return true if successfully removed and false if not found
+
+        const uidStr = JSON.stringify(uid);
 
         for (let i=0; i<this.focusArray.length; i+=1) {
 
@@ -309,8 +311,10 @@ Object.assign(MousePick.prototype, {
         }
     },
 
-    removeFromDesertArray: function (uidStr) {
+    removeFromDesertArray: function (uid) {
     // Return true if successfully removed and false if not found
+
+        const uidStr = JSON.stringify(uid);
 
         for (let i=0; i<this.desertArray.length; i+=1) {
 

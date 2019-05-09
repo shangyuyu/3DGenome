@@ -57,6 +57,8 @@ Object.assign(TEXT.prototype, {
 
         // leftInfoPanel opacity
         $("#leftInfoPanel").css("opacity", 0.8);
+
+        return null;
         // Default tab
         // document.getElementById("FocusButton").click();
         // Fetch text divs
@@ -107,11 +109,6 @@ Object.assign(TEXT.prototype, {
         return {self: self, searchBar: searchBarDiv, searchList: searchListDiv};
     },
 
-    newInfoPanel: function () {
-
-
-    },
-
     newTextSprite: function (message, opts) {
     // return a sprite object
 
@@ -149,6 +146,7 @@ Object.assign(TEXT.prototype, {
 
     //////////////////////////////////////////////////////////////
     // topInfoPanel
+
     setText: function (object, message) {
     // object: {canvas:..., context:..., ratio:...}
 
@@ -166,6 +164,8 @@ Object.assign(TEXT.prototype, {
 
     //////////////////////////////////////////////////////////////
     // leftInfoPanel
+
+    /* Deprecated. Check angular.left-list.component
     addToLeftInfoPanel: function (object, tab) {
     // tab: {"focus", "desert"}
 
@@ -195,7 +195,9 @@ Object.assign(TEXT.prototype, {
             mousePick.enable = gui.mousePickConfig.enable;
         } );
     },
+    */
 
+    /* Deprecated. Check angular.left-list.component
     removeFromLeftInfoPanel: function (name) {
     // return true if successfully removed
 
@@ -207,23 +209,29 @@ Object.assign(TEXT.prototype, {
 
         return false;
     },
+    */
 
+    /* Deprecated. Check angular.left-list.component
     removeAllFocusLeftInfoPanel: function () {
     // Remove all data but keep prototype
 
         while (this.leftInfoPanel.focus.lastChild)
             this.leftInfoPanel.focus.removeChild(this.leftInfoPanel.focus.lastChild);
     },
+    */
 
+    /* Deprecated. Check angular.left-list.component
     removeAllDesertLeftInfoPanel: function () {
     // Remove all data but keep prototype
 
         while (this.leftInfoPanel.desert.lastChild)
             this.leftInfoPanel.desert.removeChild(this.leftInfoPanel.desert.lastChild);
     },
+    */
 
     //////////////////////////////////////////////////////////////
     // Visibility
+
     showTopInfoPanel: function () {
 
         $("#topInfoContainer").css("display", "block");
@@ -246,6 +254,7 @@ Object.assign(TEXT.prototype, {
 
     //////////////////////////////////////////////////////////////
     // auxiliary
+
     pixelRatio: function (ctx) {
 
         let dpr = window.devicePixelRatio || 1;

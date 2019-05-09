@@ -36,8 +36,33 @@ function LeftListController($scope) {
         return mousePick ? mousePick.desertArray : [];
     };
 
+    $scope.removeFocus = function (object) {
+
+        // jQuery mouseleave
+        // Assume "mouseover" has been triggered
+        $("#F"+object.name).trigger("mouseleave");
+        // MousePick
+        const removeSuccess = mousePick.removeFromFocusArray(object.uniqueID);
+
+        if (!removeSuccess)
+            console.warn(`Critical error: leftList controller failed to remove ${JSON.stringify(object.uniqueID)} from focusArray.`);
+    };
+
+    $scope.removeDesert = function (object) {
+
+        // jQuery mouseleave
+        // Assume "mouseover" has been triggered
+        $("#D"+object.name).trigger("mouseleave");
+        // MousePick
+        const removeSuccess = mousePick.removeFromDesertArray(object.uniqueID);
+
+        if (!removeSuccess)
+            console.warn(`Critical error: leftList controller failed to remove ${JSON.stringify(object.uniqueID)} from desertArray.`);
+    };
+
     $scope.refresh = function () {
     // Auxiliary function, cannot be empty for unknown reason
+    // FIXME Against angular.js design
 
         return null;
     };
