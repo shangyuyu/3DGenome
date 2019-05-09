@@ -36,11 +36,6 @@ body {
     height: 40px;
 }
 /* Left Info Panel:: Tabs */
-.tab {
-    overflow: hidden;
-    border: none;
-    background-color: #1a1a1a;
-}
 .tablinks {
     background-color: #2d2d2d;
     float: left;
@@ -78,9 +73,11 @@ body {
 /* Left Info Panel:: Objects */
 .objectInfo{
     background-color: #1a1a1a;
+    border: none;
 }
 .objectInfo:hover, .objectInfoHover {
     color: #8a8a8a;
+    background: #111111;
 }
 .objectName {
     background-color: #2d2d2d;
@@ -94,14 +91,6 @@ body {
 .objectName:hover {
     background-color: #1a1a1a;
     color: white;
-}
-.objectInfo1 {
-    font: 14px Arial;
-    line-height: 16px;
-}
-.objectInfo2 {
-    font: 14px Arial;
-    line-height: 16px;
 }
 /* Search Panel:: Button (for objects) */
 .searchFocus, .searchPopulate {

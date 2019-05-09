@@ -97,9 +97,9 @@ Object.assign(TEXT.prototype, {
             dragit: false,
         } );
 
-        // searchPanel opacity FIXME DEBUG PURPOSE
+        // searchPanel opacity
         $("#searchPanel").css( {
-            "opacity": 0.9,  // Debug purpose
+            "opacity": 0.9,
             "display": "none"
         } );
         // Fetch divs
@@ -250,6 +250,16 @@ Object.assign(TEXT.prototype, {
     hideLeftInfoPanel: function () {
 
         $("#leftInfoPanel").css("display", "none");
+    },
+
+    showSearchPanel: function () {
+
+        $("#searchPanel").css("display", "block");
+    },
+
+    hideSearchPanel: function () {
+
+        $("#searchPanel").css("display", "none");
     },
 
     //////////////////////////////////////////////////////////////

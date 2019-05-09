@@ -32,13 +32,13 @@ Object.assign(DataManager.prototype, {
         function onLoad (data_) {
 
             let data = data_.split(/(\s+)/).filter( e => e.trim().length > 0 );
-    
+
             const chr = Number(data[0].slice(3));
             const resolution = Number(data[1]);
             const startPos = Number(data[2]);
             const dataScale = 50.0;
             const targetObjectSize = 200;  // 5Kb * 200 -> 1Mb
-    
+
             data.splice(0, 3);  // delete chr, resolution, startPos
     
             // this.objects
@@ -46,14 +46,14 @@ Object.assign(DataManager.prototype, {
             let count = 0;
             let tempVec3Array = [];
             for (let i = 0; i < data.length; i+=4) {
-                
+
                 count += 1;
-                
+
                 if (data[i+1] !== "nan")
                     tempVec3Array.push( new THREE.Vector3( Number(data[i+1])*dataScale, Number(data[i+2])*dataScale, Number(data[i+3])*dataScale ) );
 
                 if (count === targetObjectSize) {
-    
+
                     count = 0;
 
                     if (tempVec3Array.length > 1)
@@ -84,12 +84,12 @@ Object.assign(DataManager.prototype, {
                     console.warn(`Consecutive data missing detected: from ${index*targetObjectSize*resolution+startPos} to ${(index+1)*targetObjectSize*resolution+startPos} in chromosome ${chr}.`);
                 tempVec3Array = [];
             }
-    
+
             // this.rawData
             this.rawData[chr] = data;
             this.resolution = resolution;
             data = [];
-    
+
             init();
         }
     },
@@ -141,7 +141,7 @@ Object.assign(DataManager.prototype, {
 
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Segment" + String(i);  // Name used for shadow mouse pick
+            mesh.name = "Segment" + String(i);  // FIXME
             mesh.uniqueID = {
                 CHR: this.objects[i].CHR,
                 start: this.objects[i].startLocus,
@@ -197,7 +197,12 @@ Object.assign(DataManager.prototype, {
             );
 
             line = new THREE.Line(lineGeometry);
-            line.name = "Lineseg" + String(i);  // Name used for shadow mouse pick
+            line.name = "Lineseg" + String(i);  // FIXME
+            line.uniqueID = {
+                CHR: data.objects[i].CHR,
+                start: data.objects[i].startLocus,
+                end: data.objects[i].startLocus + data.resolution * data.objects[i].objectSize
+            };
 
             parent.add(line);
         }

@@ -40,7 +40,10 @@ Object.assign(MousePick.prototype, {
         let first = -1;
         for (let i=0; i<intersects.length; i+=1) {
 
-            if (shadowArray[ nameParse(intersects[i].object.name) ].deserted === false) {
+            const index = getIndex(shadowArray, intersects[i].object.uniqueID);
+            if (index == -1)
+                console.warn("Fatal error::objectArraya and shadowArray do not match.");
+            if (shadowArray[ index ].deserted === false) {
             // Note: intersects are objectArray data, deserted property defined in shadowArray
 
                 first = i;
@@ -53,10 +56,13 @@ Object.assign(MousePick.prototype, {
             // new intersected detected
                 this.onLeft();
 
-                if (shadowArray)
-                    // The index in 'objectArray' and 'shadowArray' must match
-                    this.INTERSECTED = shadowArray[ nameParse(intersects[first].object.name) ];
-                else
+                if (shadowArray) {
+                    // 'objectArray' and 'shadowArray' must match
+                    const index = getIndex(shadowArray, intersects[first].object.uniqueID);
+                    if (index == -1)
+                        console.warn("Fatal error::objectArraya and shadowArray do not match.");
+                    this.INTERSECTED = shadowArray[ index ];
+                } else
                     this.INTERSECTED = intersects[first].object;
 
                 this.onPick();
@@ -125,7 +131,6 @@ Object.assign(MousePick.prototype, {
     // Assume this.INTERSECTED not null
 
         // Index is not universal, use UID instead
-        // let index = nameParse( this.INTERSECTED.name );
         const uidStr = JSON.stringify(this.INTERSECTED.uniqueID);
 
         if (!this.focusArray.find( e => JSON.stringify(e.uniqueID) === uidStr )) {
@@ -260,7 +265,6 @@ Object.assign(MousePick.prototype, {
     // Assume this.INTERSECTED not null
 
         // Index is not universal, use UID instead
-        // let index = nameParse( this.INTERSECTED.name );
         const uidStr = JSON.stringify(this.INTERSECTED.uniqueID);
 
         if (!this.desertArray.find( e => JSON.stringify(e.uniqueID) === uidStr )) {

@@ -36,11 +36,28 @@ function LeftListController($scope) {
         return mousePick ? mousePick.desertArray : [];
     };
 
+    $scope.mouseover = function (object) {
+
+        mousePick.onLeft();
+        mousePick.enable = false;
+        mousePick.INTERSECTED = object;
+        mousePick.onPick();
+    };
+
+    $scope.mouseleave = function () {
+
+        mousePick.enable = true;
+        mousePick.onLeft();
+        mousePick.enable = gui.mousePickConfig.enable;
+        // SearchPanel can override mousePick.enable
+        if (text.searchPanelEnable) mousePick.enable = false;
+    };
+
     $scope.removeFocus = function (object) {
 
-        // jQuery mouseleave
+        // mouseleave
         // Assume "mouseover" has been triggered
-        $("#F"+object.name).trigger("mouseleave");
+        $scope.mouseleave();
         // MousePick
         const removeSuccess = mousePick.removeFromFocusArray(object.uniqueID);
 
@@ -50,9 +67,9 @@ function LeftListController($scope) {
 
     $scope.removeDesert = function (object) {
 
-        // jQuery mouseleave
+        // mouseleave
         // Assume "mouseover" has been triggered
-        $("#D"+object.name).trigger("mouseleave");
+        $scope.mouseleave();
         // MousePick
         const removeSuccess = mousePick.removeFromDesertArray(object.uniqueID);
 

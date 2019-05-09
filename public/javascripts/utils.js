@@ -49,14 +49,6 @@ function nameParse (name) {
 */
 
 
-/* Deprecated. Name is not universal anymore
-function nameParseStr (name) {
-
-    return name.slice(7);  // Segment/Lineseg
-}
-*/
-
-
 /* Deprecated. Check angular.left-list.component
 function openTab (event, Name) {
 // Triggered by leftInfoPanel.html event
@@ -100,6 +92,23 @@ function removeObject (id) {
         mousePick.removeFromDesertArray( id.slice(1) );
 }
 */
+
+
+function getIndex (array, uid) {
+// Search array (objectArray/shadowArray) by UID
+// return the index if found or -1 if not found
+
+    const uidStr = JSON.stringify(uid);
+
+    for (let i=0; i<array.length; i+=1) {
+
+        if (JSON.stringify(array[i].uniqueID) === uidStr)
+
+            return i;
+    }
+
+    return -1;
+}
 
 
 function disposeNode (node) {
@@ -197,12 +206,17 @@ function onDocumentKeyDown (event) {
     if (event.keyCode === 9){  // tab
 
         text.searchPanelEnable = (text.searchPanelEnable == false) ? true : false;
-        $("#searchPanel").css("display", (text.searchPanelEnable == true) ? "block" : "none");
+        if (text.searchPanelEnable == true)
+            text.showSearchPanel();
+        else
+            text.hideSearchPanel();
         // leftInfoPanel opacity
         $("#leftInfoPanel").css("opacity", (text.searchPanelEnable == true) ? 1.0 : 0.8);
         // mousePick
-        // FIXME known bug: enable == false before calling search?
+        // enable == false before calling search?
         mousePick.enable = (text.searchPanelEnable == false) ? true : false;
+        if (text.searchPanelEnable == false)
+            mousePick.enable = gui.mousePickConfig.enable;
         // controls
         controls.enabled = (text.searchPanelEnable == false) ? true : false;
     }
