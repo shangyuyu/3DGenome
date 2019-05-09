@@ -79,10 +79,7 @@ body {
 .objectInfo{
     background-color: #1a1a1a;
 }
-.objectInfo:hover {
-    color: #8a8a8a;
-}
-.objectInfoHover {
+.objectInfo:hover, .objectInfoHover {
     color: #8a8a8a;
 }
 .objectName {
@@ -90,7 +87,8 @@ body {
     border: 1px solid #000000;
     cursor: e-resize;
     outline: none;
-    font-size: 1.0em;
+    font: 14px Arial;
+    line-height: 16px;
     color: inherit;
 }
 .objectName:hover {

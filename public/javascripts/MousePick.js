@@ -75,7 +75,7 @@ Object.assign(MousePick.prototype, {
     onPick: function () {
     // Assume INTERSECTED not null
 
-        // NOTE: this function cannot be disabled on "this.enable === false"
+        // NOTE: this function cannot be disabled even when "this.enable === false"
         //       leftInfoPanel will trigger this function when 
         //       "this.enable" is purposely set to false on hover
 
@@ -88,8 +88,8 @@ Object.assign(MousePick.prototype, {
         // leftInfoPanel should work regardless of its 'enable'
         // but visual effect can be omitted
 
-            // Don't need to search for desert array nodes
-            let node = document.getElementById("F" + this.INTERSECTED.name);
+            // Desert Array cannot be picked
+            let node = document.getElementById("F" + this.INTERSECTED.name);  // FIXME
             if (node) node.className = "objectInfoHover";  // simulate :hover effect
         }
 
@@ -107,7 +107,7 @@ Object.assign(MousePick.prototype, {
             text.hideTopInfoPanel();
             if (text.leftInfoPanelEnable === true) {
         
-                // Don't need to search for desert array nodes
+                // Desert Array cannot be picked
                 let node = document.getElementById("F" + this.INTERSECTED.name);
                 if (node) node.className = "objectInfo";  // undo simulation hover effects
             }
@@ -127,13 +127,10 @@ Object.assign(MousePick.prototype, {
         let index = nameParse( this.INTERSECTED.name );
         
         if (!this.focusArray.find( e => nameParse(e.name) === index )) {
-        // Cannot focus those who have been put in desert
-
-            // TEXT Left Info Panel
-            // text.addToLeftInfoPanel(this.INTERSECTED, "focus");
+        // Cannot focus (or even pick) those who have been put in desert
 
             // WARNING: The sequence here is non-interchangeable and bug-prone
-            this.focusArray.push( this.INTERSECTED );  // push by reference (not copy)?
+            this.focusArray.push( this.INTERSECTED );  // push by reference
             this.INTERSECTED.protected = true;
             this.INTERSECTED.protectedRecoverHex = this.INTERSECTED.recoverHex;
             this.INTERSECTED.material.emissive.setHex( gui.mousePickConfig.onFocusColor.replace("#", "0x") );
@@ -253,13 +250,14 @@ Object.assign(MousePick.prototype, {
 
         if (!this.desertArray.find( e => nameParse(e.name) === index )) {
 
-            // TEXT Left Info Panel
-            text.addToLeftInfoPanel(this.INTERSECTED, "desert");
-
             this.desertArray.push( this.INTERSECTED );
             this.INTERSECTED.deserted = true;
             this.INTERSECTED.material.transparent = true;
             this.INTERSECTED.material.opacity = gui.mousePickConfig.onDesertOpacity;
+
+            // Force angular "left-list.component" to refresh
+            // FIXME Against angular.js design
+            $("#refresh").trigger('click');
         }
     },
 
