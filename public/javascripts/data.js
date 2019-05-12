@@ -267,16 +267,53 @@ Object.assign(DataManager.prototype, {
         const parentRawData = this.rawData[startIndex];
         const startPercentage = (object.uniqueID.start - parentObject.start) / (parentObject.end - parentObject.start);
         const endPercentage = (object.uniqueID.end - parentObject.start) / (parentObject.end - parentObject.start);
-        const parentCountArrayPercentage = parentRawData.countArray.map(x => x / this.targetPointNum);
+        const parentCountArrayPercentage = parentRawData.countArray.map(x => (x - 1) / (this.targetPointNum - 1));
 
         if (parentCountArrayPercentage[0] > startPercentage || parentCountArrayPercentage[parentCountArrayPercentage.length-1] < endPercentage)
             return console.warn("Merge failure: new object locates in an area where part of required 3D data is missing.");
 
-        // Find indexs of where new object should be merged
+        // Split parentRawData into three parts
+        // FIXME next to start/end?
+        let left = -1, right = -1, current;
         for (let i=0; i<parentCountArrayPercentage.length; i+=1) {
 
-            
+            current = parentCountArrayPercentage[i];
+
+            if (left === -1 && current >= startPercentage)
+                left = i - 1;
+            if (right === -1 && current >= endPercentage)
+                right = i;
         }
+
+        // Find Vec3 representation of object boundary
+        const startVec = parentObject.geometry.getPoint(startPercentage);
+        const endVec = parentObject.geometry.getPoint(endPercentage);
+
+        // Create left split block
+        let Vec3Array = parentRawData.vec3Array.slice(0, left+1);
+        Vec3Array.push(startVec);
+        this.objects.push({
+            geometry: new THREE.CatmullRomCurve3(vec3Array),
+            pointNum: vec3Array.length,
+            CHR: parent.object.CHR,
+            start: parentObject.start,
+            end: object.uniqueID.start
+        });
+
+        // Create right split block
+        Vec3Array = parentRawData.vec3Array.slice(right);
+        Vec3Array.unshift(endVec);
+        this.objects.push({
+            geometry: new THREE.CatmullRomCurve3(vec3Array),
+            pointNum: vec3Array.length,
+            CHR: parent.object.CHR,
+            start: object.uniqueID.end,
+            end: parentObject.end
+        });
+
+        // Create target object block
+        
+
     },
 
     //////////////////////////////////////////////////////////////////////////////
