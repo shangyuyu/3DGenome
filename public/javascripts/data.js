@@ -294,12 +294,12 @@ Object.assign(DataManager.prototype, {
 
         // Create left split block
         //// Object
-        let Vec3Array = parentRawData.vec3Array.slice(0, left+1);
-        Vec3Array.push(startVec);
+        let vec3Array = parentRawData.vec3Array.slice(0, left+1);
+        vec3Array.push(startVec);
         this.objects.push({
             geometry: new THREE.CatmullRomCurve3(vec3Array),
             pointNum: vec3Array.length,
-            CHR: parent.object.CHR,
+            CHR: parentObject.CHR,
             start: parentObject.start,
             end: object.uniqueID.start
         });
@@ -307,20 +307,20 @@ Object.assign(DataManager.prototype, {
         
 
         // Create right split block
-        Vec3Array = parentRawData.vec3Array.slice(right);
-        Vec3Array.unshift(endVec);
+        vec3Array = parentRawData.vec3Array.slice(right);
+        vec3Array.unshift(endVec);
         this.objects.push({
             geometry: new THREE.CatmullRomCurve3(vec3Array),
             pointNum: vec3Array.length,
-            CHR: parent.object.CHR,
+            CHR: parentObject.CHR,
             start: object.uniqueID.end,
             end: parentObject.end
         });
 
         // Create target object block
-        Vec3Array = parentRawData.vec3Array.slice(left+1, right);  // might be empty
-        Vec3Array.unshift(startVec);
-        Vec3Array.push(endVec);
+        vec3Array = parentRawData.vec3Array.slice(left+1, right);  // might be empty
+        vec3Array.unshift(startVec);
+        vec3Array.push(endVec);
         parentObject.geometry = new THREE.CatmullRomCurve3(vec3Array);
         parentObject.pointNum = vec3Array.length;
         // CHR unchanged

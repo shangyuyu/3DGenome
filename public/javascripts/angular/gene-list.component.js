@@ -53,6 +53,21 @@ function GeneListController($scope, $http) {
 
                 // Clean data for output
                 self.genes.forEach(cleanData);
+
+                // DEBUG and TEST only (below) 
+                self.genes.push({
+                    name: "TEST-SEG1",
+                    chr: 0,
+                    start: 54321,
+                    end: 258765
+                });
+                self.genes.push({
+                    name: "TEST-SEG2",
+                    chr: 0,
+                    start: 1054321,
+                    end: 1258765
+                });
+                // DEBUG and TEST only (above)
             }, 
             // On failure
             function (res) {
