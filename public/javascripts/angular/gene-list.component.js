@@ -98,7 +98,18 @@ function GeneListController($scope, $http) {
             name: gene.name,
             info: gene
         };
+        
         data.merge(newObject);
+
+        // Re-render scene
+        // FIXME GUI must be binded to correct target
+        // FIXME do not call bindTube, which re-renders all objects
+        data.bindTube(gui.parent);
+        data.bindLine(gui.shadowParent);
+
+        // Focus newObject
+        const flag = mousePick.setAsFocus(gui.parent, newObject.uniqueID);
+        if (!flag) console.warn("Focus error:: New object failed to be set as focused.");
     };
 
     $scope.isString = function (object) {

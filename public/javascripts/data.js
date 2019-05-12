@@ -119,6 +119,7 @@ Object.assign(DataManager.prototype, {
 
             this.resolution = resolution;
             this.targetPointNum = targetPointNum;
+            // FIXME targetPointNum should be target's property
             data = [];
 
             init();
@@ -290,6 +291,7 @@ Object.assign(DataManager.prototype, {
         const endVec = parentObject.geometry.getPoint(endPercentage);
 
         // Create left split block
+        //// Object
         let Vec3Array = parentRawData.vec3Array.slice(0, left+1);
         Vec3Array.push(startVec);
         this.objects.push({
@@ -299,6 +301,8 @@ Object.assign(DataManager.prototype, {
             start: parentObject.start,
             end: object.uniqueID.start
         });
+        //// rawDara
+        
 
         // Create right split block
         Vec3Array = parentRawData.vec3Array.slice(right);
@@ -312,8 +316,14 @@ Object.assign(DataManager.prototype, {
         });
 
         // Create target object block
-        
-
+        Vec3Array = parentRawData.vec3Array.slice(left+1, right);  // might be empty
+        Vec3Array.unshift(startVec);
+        Vec3Array.push(endVec);
+        parentObject.geometry = new THREE.CatmullRomCurve3(vec3Array);
+        parentObject.pointNum = vec3Array.length;
+        // CHR unchanged
+        parentObject.start = object.uniqueID.start;
+        parentObject.end = object.uniqueID.end;
     },
 
     //////////////////////////////////////////////////////////////////////////////
