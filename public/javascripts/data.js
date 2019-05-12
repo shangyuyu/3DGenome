@@ -49,6 +49,7 @@ Object.assign(DataManager.prototype, {
             let lineCount = 0;
             let vec3Array = [];
             let countArray = [];
+            let lastEnd = 0;  // To fix a bug of trailing segment start miss-counting
             for (let i = 0; i < data.length; i+=4) {
 
                 count += 1;
@@ -63,13 +64,14 @@ Object.assign(DataManager.prototype, {
 
                     if (vec3Array.length > 1) {
                     // New object should be created
+                        lastEnd = lineCount * resolution + startPos;
                         // Bind to this.objects
                         this.objects[index] = {
                             geometry: new THREE.CatmullRomCurve3(vec3Array),  // NOTE: Look out for consecutive data missing!
                             pointNum: vec3Array.length,
                             CHR: chr,
                             start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
-                            end: lineCount * resolution + startPos
+                            end: lastEnd
                         };
                         // Bind vec3Array to this.rawData
                         this.rawData[index] = {
@@ -104,7 +106,7 @@ Object.assign(DataManager.prototype, {
                         geometry: new THREE.CatmullRomCurve3(vec3Array),
                         pointNum: vec3Array.length,
                         CHR: chr,
-                        start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
+                        start: lastEnd,
                         end: lineCount * resolution + startPos
                     };
                 this.rawData[index] = {
@@ -350,7 +352,9 @@ Object.assign(DataManager.prototype, {
 // FIXME
 $(window).on('load', function() {
     data = new DataManager();  // FIXME How to trigger?
-    data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+    //data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+    // Test dataset
+    data.loadData("../data/chr0");
 });
 
 // End of data.js
