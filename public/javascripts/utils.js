@@ -115,9 +115,10 @@ function getCenterPoint (mesh) {
 // https://stackoverflow.com/questions/38305408/threejs-get-center-of-object
 
     const geometry = mesh.geometry;
+    let center = new THREE.Vector3();
 
     geometry.computeBoundingBox();   
-    center = geometry.boundingBox.getCenter();
+    geometry.boundingBox.getCenter( center );
     mesh.localToWorld( center );
 
     return center;

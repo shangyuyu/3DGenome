@@ -67,6 +67,12 @@ function GeneListController($scope, $http) {
                     start: 1054321,
                     end: 1258765
                 });
+                self.genes.push({
+                    name: "TEST-SEG3",
+                    chr: 0,
+                    start: 2054321,
+                    end: 2258765
+                });
                 // DEBUG and TEST only (above)
             }, 
             // On failure

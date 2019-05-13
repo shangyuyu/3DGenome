@@ -165,18 +165,32 @@ Object.assign(GUIManager.prototype, {
     autoAdjustViewPoint: function () {
 
         const focusArray = mousePick.focusArray;
-        let center, centerArray = [], vectors;
+        let directionVec = new THREE.Vector3();
+        let center, centerArray = [], sum = [0, 0, 0], vectors;
 
         for (let i=0; i<focusArray.length; i+=1) {
 
             center = getCenterPoint(focusArray[i]);
             centerArray.push([center.x, center.y, center.z]);
+            sum[0] += center.x;
+            sum[1] += center.y;
+            sum[2] += center.z;
         }
 
         vectors = PCA.getEigenVectors(centerArray);
 
-        const vec1 = new THREE.Vector3(vectors[0].vector);
-        const vec2 = new THREE.Vector3(vectors[1].vector);
+        const vec1 = new THREE.Vector3(vectors[0].vector[0], vectors[0].vector[1], vectors[0].vector[2]);
+        const vec2 = new THREE.Vector3(vectors[1].vector[0], vectors[1].vector[1], vectors[1].vector[2]);
+        directionVec.crossVectors(vec1, vec2).normalize();
+
+        // Find centroid of centerArray
+        sum = sum.map(x => x / centerArray.length);
+        const centroid = new THREE.Vector3(sum[0], sum[1], sum[2]);
+
+        // Set view point
+        controls.target.copy(centroid);
+        camera.position.copy(centroid);
+        camera.position.addScaledVector(directionVec, -100);
     }
 
 } );
