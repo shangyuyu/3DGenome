@@ -10,7 +10,7 @@ class MousePick {
 // different Object3Ds. focusArray will be shared among them.
 
     constructor () {
-        
+
         this.enable = true;  // Does NOT disable the execution of member functions
         this.function = true;  // true for Focus, false for Desert
         this.rayCaster = new THREE.Raycaster();

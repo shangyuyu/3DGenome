@@ -69,6 +69,7 @@ Object.assign(DataManager.prototype, {
                         this.objects[index] = {
                             geometry: new THREE.CatmullRomCurve3(vec3Array),  // NOTE: Look out for consecutive data missing!
                             pointNum: vec3Array.length,
+                            targetPointNum: targetPointNum,
                             CHR: chr,
                             start: lineCount * resolution + startPos - (targetPointNum-1) * resolution,
                             end: lastEnd
@@ -105,6 +106,7 @@ Object.assign(DataManager.prototype, {
                     this.objects[index] = {
                         geometry: new THREE.CatmullRomCurve3(vec3Array),
                         pointNum: vec3Array.length,
+                        targetPointNum: targetPointNum,
                         CHR: chr,
                         start: lastEnd,
                         end: lineCount * resolution + startPos
@@ -120,7 +122,6 @@ Object.assign(DataManager.prototype, {
             }
 
             this.resolution = resolution;
-            this.targetPointNum = targetPointNum;
             // FIXME targetPointNum should be target's property
             data = [];
 
@@ -292,40 +293,74 @@ Object.assign(DataManager.prototype, {
         const startVec = parentObject.geometry.getPoint(startPercentage);
         const endVec = parentObject.geometry.getPoint(endPercentage);
 
+        let vec3Array, countArray, targetPointNum;
+
         // Create left split block
         //// Object
-        let vec3Array = parentRawData.vec3Array.slice(0, left+1);
+        vec3Array = parentRawData.vec3Array.slice(0, left+1);
         vec3Array.push(startVec);
+        const leftAnchorPointIndex = Math.ceil((parentObject.targetPointNum - 1) * startPercentage + 1);
+        targetPointNum = leftAnchorPointIndex; // targetPointNum = .. - 1 + 1;
         this.objects.push({
             geometry: new THREE.CatmullRomCurve3(vec3Array),
             pointNum: vec3Array.length,
+            targetPointNum: targetPointNum,
             CHR: parentObject.CHR,
             start: parentObject.start,
             end: object.uniqueID.start
         });
-        //// rawDara
-        
+        //// rawData
+        countArray = parentRawData.countArray.slice(0, left+1);
+        countArray.push(targetPointNum);  // corresponding to startVec
+        this.rawData.push({
+            vec3Array: vec3Array,
+            countArray: countArray
+        });
 
         // Create right split block
+        //// Object
         vec3Array = parentRawData.vec3Array.slice(right);
         vec3Array.unshift(endVec);
+        const rightAnchorPointIndex = Math.ceil((parentObject.targetPointNum - 1) * endPercentage + 1);
+        targetPointNum = parentObject.targetPointNum - rightAnchorPointIndex + 2;
         this.objects.push({
             geometry: new THREE.CatmullRomCurve3(vec3Array),
             pointNum: vec3Array.length,
+            targetPointNum: targetPointNum,
             CHR: parentObject.CHR,
             start: object.uniqueID.end,
             end: parentObject.end
         });
+        //// rawData
+        countArray = parentRawData.countArray.slice(right);
+        countArray = countArray.map(x => x - rightAnchorPointIndex + 2);
+        countArray.unshift(1);  // corresponding to endVec
+        this.rawData.push({
+            vec3Array: vec3Array,
+            countArray: countArray
+        });
 
         // Create target object block
+        //// Object
         vec3Array = parentRawData.vec3Array.slice(left+1, right);  // might be empty
         vec3Array.unshift(startVec);
         vec3Array.push(endVec);
+        targetPointNum = rightAnchorPointIndex - leftAnchorPointIndex + 2;
+
         parentObject.geometry = new THREE.CatmullRomCurve3(vec3Array);
         parentObject.pointNum = vec3Array.length;
-        // CHR unchanged
+        parentObject.targetPointNum = targetPointNum;
+            // CHR unchanged
         parentObject.start = object.uniqueID.start;
         parentObject.end = object.uniqueID.end;
+        //// rawData
+        countArray = parentRawData.countArray.slice(left+1, right);  // might be empty
+        countArray = countArray.map(x => x - leftAnchorPointIndex + 2);
+        countArray.unshift(1);  // corresponding to startVec
+        countArray.push(targetPointNum);  // corresponding to endVec
+
+        parentRawData.vec3Array = vec3Array;
+        parentRawData.countArray = countArray;
     },
 
     //////////////////////////////////////////////////////////////////////////////
@@ -344,7 +379,22 @@ Object.assign(DataManager.prototype, {
         }
 
         return -1;
-    }
+    },
+
+    getIndexByUID: function (uid) {
+    // Search through data.objects by uniqueID
+    // Return index if found, -1 if not found
+
+        const objects = this.objects;
+
+        for (let i=0; i<objects.length; i+=1) {
+
+            if (uid.CHR === objects[i].CHR && uid.start === objects[i].start && uid.end === objects[i].end)
+                return i;
+        }
+
+        return -1;
+    },
 
 } );
 
@@ -352,9 +402,9 @@ Object.assign(DataManager.prototype, {
 // FIXME
 $(window).on('load', function() {
     data = new DataManager();  // FIXME How to trigger?
-    //data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+    data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
     // Test dataset
-    data.loadData("../data/chr0");
+    // data.loadData("../data/chr0");
 });
 
 // End of data.js

@@ -38,6 +38,7 @@ class GUIManager {
         this.infoDispConfig = {
             topInfoPanelEnable: true,
             leftInfoPanelEnable: true,
+            "Auto Adjust View": function(){gui.autoAdjustViewPoint();},
         };
     }
 }
@@ -144,6 +145,7 @@ Object.assign(GUIManager.prototype, {
             else
                 text.hideLeftInfoPanel();
         } );
+        this.folders[2].add(this.infoDispConfig, "Auto Adjust View");
 
         // this.folders[2].open();
 
@@ -158,6 +160,21 @@ Object.assign(GUIManager.prototype, {
     bindShadowParent: function (shadowParent) {
 
         this.shadowParent = shadowParent;
+    },
+
+    autoAdjustViewPoint: function () {
+
+        const focusArray = mousePick.focusArray;
+
+        for (let i=0; i<focusArray.length; i+=1) {
+
+            const index = data.getIndexByUID(focusArray[i].uniqueID);
+
+            if (index === -1)
+                return console.warn("Fatal error:: focusArray Object does not find corresponding data in dataManager.");
+
+            
+        }
     }
 
 } );
