@@ -165,16 +165,18 @@ Object.assign(GUIManager.prototype, {
     autoAdjustViewPoint: function () {
 
         const focusArray = mousePick.focusArray;
+        let center, centerArray = [], vectors;
 
         for (let i=0; i<focusArray.length; i+=1) {
 
-            const index = data.getIndexByUID(focusArray[i].uniqueID);
-
-            if (index === -1)
-                return console.warn("Fatal error:: focusArray Object does not find corresponding data in dataManager.");
-
-            
+            center = getCenterPoint(focusArray[i]);
+            centerArray.push([center.x, center.y, center.z]);
         }
+
+        vectors = PCA.getEigenVectors(centerArray);
+
+        const vec1 = new THREE.Vector3(vectors[0].vector);
+        const vec2 = new THREE.Vector3(vectors[1].vector);
     }
 
 } );

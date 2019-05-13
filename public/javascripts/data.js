@@ -17,7 +17,6 @@ class DataManager {
         this.objects = [];
         this.rawData = [];  // rawData[i] => {vec3Array, countArray}
         this.resolution = null;
-        this.targetPointNum = null;
     }
 }
 
@@ -106,7 +105,7 @@ Object.assign(DataManager.prototype, {
                     this.objects[index] = {
                         geometry: new THREE.CatmullRomCurve3(vec3Array),
                         pointNum: vec3Array.length,
-                        targetPointNum: targetPointNum,
+                        targetPointNum: count,
                         CHR: chr,
                         start: lastEnd,
                         end: lineCount * resolution + startPos
@@ -271,7 +270,7 @@ Object.assign(DataManager.prototype, {
         const parentRawData = this.rawData[startIndex];
         const startPercentage = (object.uniqueID.start - parentObject.start) / (parentObject.end - parentObject.start);
         const endPercentage = (object.uniqueID.end - parentObject.start) / (parentObject.end - parentObject.start);
-        const parentCountArrayPercentage = parentRawData.countArray.map(x => (x - 1) / (this.targetPointNum - 1));
+        const parentCountArrayPercentage = parentRawData.countArray.map(x => (x - 1) / (parentObject.targetPointNum - 1));
 
         if (parentCountArrayPercentage[0] > startPercentage || parentCountArrayPercentage[parentCountArrayPercentage.length-1] < endPercentage)
             return console.warn("Merge failure: new object locates in an area where part of required 3D data is missing.");
@@ -402,9 +401,9 @@ Object.assign(DataManager.prototype, {
 // FIXME
 $(window).on('load', function() {
     data = new DataManager();  // FIXME How to trigger?
-    data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+    // data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
     // Test dataset
-    // data.loadData("../data/chr0");
+    data.loadData("../data/chr0");
 });
 
 // End of data.js

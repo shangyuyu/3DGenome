@@ -111,6 +111,19 @@ function getIndex (array, uid) {
 }
 
 
+function getCenterPoint (mesh) {
+// https://stackoverflow.com/questions/38305408/threejs-get-center-of-object
+
+    const geometry = mesh.geometry;
+
+    geometry.computeBoundingBox();   
+    center = geometry.boundingBox.getCenter();
+    mesh.localToWorld( center );
+
+    return center;
+}
+
+
 function disposeNode (node) {
     // REF: https://stackoverflow.com/a/33199591/9338178
 
