@@ -166,8 +166,9 @@ Object.assign(MousePick.prototype, {
                 this.INTERSECTED = object;
                 this.onPick();
                 this.onFocus();
-                // this.onLeft(); 
-                // Logically should onLeft, but does not change anything and thus can be omitted
+                this.onLeft(); 
+                //// Logically should onLeft, but does not change anything and thus can be omitted
+                // NOTE: After re-write with angular, this property no longer holds
 
                 this.INTERSECTED = temp;
             }
