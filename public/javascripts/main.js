@@ -34,8 +34,8 @@ function init() {
     // GUI
     document.getElementById("guiContainer").append(gui.gui.domElement);
         // Re-append GUI to custom div
-    gui.bindParent(chromosome);
-    gui.bindShadowParent(auxiChromosome);
+    gui.bindParent(auxiChromosome);
+    gui.bindShadowParent(chromosome);
     gui.activate();
 
     // Renderer

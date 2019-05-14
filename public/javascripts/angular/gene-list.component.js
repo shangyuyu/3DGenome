@@ -125,8 +125,8 @@ function GeneListController($scope, $http) {
         // Re-render scene
         // FIXME GUI must be binded to correct target
         // FIXME do not call bindTube, which re-renders all objects
-        data.bindTube(gui.parent);
-        data.bindLine(gui.shadowParent);
+        data.bindTube(gui.shadowParent);
+        data.bindLine(gui.parent);
 
         // Focus newObject
         const flag = mousePick.setAsFocus(gui.parent, newObject.uniqueID);

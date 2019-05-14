@@ -189,6 +189,7 @@ Object.assign(DataManager.prototype, {
             mesh.recoverHex = "";
             mesh.protectedRecoverHex = "";
             mesh.deserted = false;
+            mesh.center = getCenterPoint(mesh);
 
             parent.add(mesh);
         }

@@ -38,7 +38,9 @@ class GUIManager {
         this.infoDispConfig = {
             topInfoPanelEnable: true,
             leftInfoPanelEnable: true,
+            autoTransparent: true,
             "Auto Adjust View": function(){gui.autoAdjustViewPoint();},
+            "Auto Transparent": function(){gui.autoTransparent();},
         };
     }
 }
@@ -85,27 +87,27 @@ Object.assign(GUIManager.prototype, {
             scene.fog.color.setHex( value.replace("#", "0x") );
         } );
         this.folders[0].addColor(this.renderConfig, "materialColor").onChange( 
-            gui.colorUpdate( gui.parent, "color" )
+            gui.colorUpdate( gui.shadowParent, "color" )
         );
         this.folders[0].addColor(this.renderConfig, "materialEmissive").onChange(
-            gui.colorUpdate( gui.parent, "emissive" )
+            gui.colorUpdate( gui.shadowParent, "emissive" )
         );
         this.folders[0].addColor(this.renderConfig, "materialSpecular").onChange(
-            gui.colorUpdate( gui.parent, "specular" )
+            gui.colorUpdate( gui.shadowParent, "specular" )
         );
         this.folders[0].add(this.renderConfig, "ambientIntensity", 0, 1, 0.01).onChange( function (value) {
             let ambientLight = scene.getObjectByProperty("type", "AmbientLight");
             ambientLight.intensity = value;
         } );
         this.folders[0].add(this.renderConfig, "tubularSegment", 1, 20, 1).onFinishChange( function () {
-            data.bindTube(gui.parent);
-            data.bindLine(gui.shadowParent);
+            data.bindTube(gui.shadowParent);
+            data.bindLine(gui.parent);
         } );
         this.folders[0].add(this.renderConfig, "radialSegment", 1, 8, 1).onFinishChange( function () {
-            data.bindTube(gui.parent);
+            data.bindTube(gui.shadowParent);
         } );
         this.folders[0].add(this.renderConfig, "radius", 0.05, 1).onFinishChange( function () {
-            data.bindTube(gui.parent);
+            data.bindTube(gui.shadowParent);
         } );
 
         // this.folders[0].open();
@@ -145,7 +147,11 @@ Object.assign(GUIManager.prototype, {
             else
                 text.hideLeftInfoPanel();
         } );
+        this.folders[2].add(this.infoDispConfig, "autoTransparent").onChange( function (value) {
+            
+        } );
         this.folders[2].add(this.infoDispConfig, "Auto Adjust View");
+        this.folders[2].add(this.infoDispConfig, "Auto Transparent");
 
         // this.folders[2].open();
 
@@ -170,7 +176,7 @@ Object.assign(GUIManager.prototype, {
 
         for (let i=0; i<focusArray.length; i+=1) {
 
-            center = getCenterPoint(focusArray[i]);
+            center = focusArray[i].center;
             centerArray.push([center.x, center.y, center.z]);
             sum[0] += center.x;
             sum[1] += center.y;
@@ -191,7 +197,53 @@ Object.assign(GUIManager.prototype, {
         controls.target.copy(centroid);
         camera.position.copy(centroid);
         camera.position.addScaledVector(directionVec, -100);
-    }
+    },
+
+    autoTransparent: function () {
+
+        const objects = this.shadowParent.children;
+
+        let transparentArray = new Array(objects.length);
+        for (let i=0; i<transparentArray.length; i+=1) {
+
+            transparentArray[i] = false;
+        }
+
+        let cameraPos = camera.position.clone();
+        cameraPos.applyMatrix4( camera.matrixWorld );
+
+        let focusCameraVec = new THREE.Vector3(),
+            focusObjectVec = new THREE.Vector3(),
+            dotProduct = 0;
+
+        for (let i=0; i<objects.length; i+=1) {
+
+            if (objects[i].deserted || objects[i].protected)
+                continue;
+
+            for (let j=0; j<mousePick.focusArray.length; j+=1) {
+
+                focusCameraVec.subVectors(cameraPos, mousePick.focusArray[j].center).normalize();
+                focusObjectVec.subVectors(objects[i].center, mousePick.focusArray[j].center).normalize();
+                dotProduct = focusCameraVec.dot(focusObjectVec);
+
+                if (dotProduct > advancedConfig.autoTransparentDotProduct) {
+
+                    transparentArray[i] = true;
+                }
+            }
+        }
+
+        // Conduct calculation results
+        for (let i=0; i<transparentArray.length; i+=1) {
+
+            if (transparentArray[0] === true) {
+
+                objects[i].meterial.transparent = true;
+                objects[i].material.opacity = 0.5;
+            }
+        }
+    },
 
 } );
 
