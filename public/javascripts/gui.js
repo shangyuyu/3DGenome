@@ -203,14 +203,16 @@ Object.assign(GUIManager.prototype, {
 
         const objects = this.shadowParent.children;
 
+        // Initialize "transparentArray"
         let transparentArray = new Array(objects.length);
         for (let i=0; i<transparentArray.length; i+=1) {
 
             transparentArray[i] = false;
         }
 
+        // camera.updateMatrixWorld();
         let cameraPos = camera.position.clone();
-        cameraPos.applyMatrix4( camera.matrixWorld );
+        // camera.localToWorld(cameraPos);
 
         let focusCameraVec = new THREE.Vector3(),
             focusObjectVec = new THREE.Vector3(),
@@ -235,14 +237,17 @@ Object.assign(GUIManager.prototype, {
         }
 
         // Conduct calculation results
+        let count = 0;
         for (let i=0; i<transparentArray.length; i+=1) {
 
-            if (transparentArray[0] === true) {
+            if (transparentArray[i] === true) {
 
-                objects[i].meterial.transparent = true;
-                objects[i].material.opacity = 0.5;
+                objects[i].material.transparent = true;
+                objects[i].material.opacity = gui.mousePickConfig.onDesertOpacity;
+                count += 1;
             }
         }
+        console.log(`Auto-transparent hides ${count} objects.`);
     },
 
 } );
