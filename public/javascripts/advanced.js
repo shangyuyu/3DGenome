@@ -14,7 +14,7 @@ const advancedConfig = {
     mousePickInterval: 400,     // Two calls of rayCaster should wait at least 'mouseSelInterval' ms
     mouseStayTime: 150,         // Mouse pick will be called after mouse stay still for 'mouseStayTime' ms
                                 // NOTE: Suggested that 'mouseStayTime' + 100 < 'mousePickInterval'
-    autoTransparentDotProduct: 0.9  // (0, 1)
+    autoTransparentDotProduct: 0.8  // (0, 1)
 };
 
 // End of advanced.js

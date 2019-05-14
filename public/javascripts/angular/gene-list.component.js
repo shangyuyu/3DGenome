@@ -129,7 +129,7 @@ function GeneListController($scope, $http) {
         data.bindLine(gui.parent);
 
         // Focus newObject
-        const flag = mousePick.setAsFocus(gui.parent, newObject.uniqueID);
+        const flag = mousePick.setAsFocus(gui.shadowParent, newObject.uniqueID);
         if (!flag) console.warn("Focus error:: New object failed to be set as focused. This could be a fatal error and could damage the underlying structure.");
     };
 

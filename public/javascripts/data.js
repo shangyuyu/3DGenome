@@ -402,9 +402,9 @@ Object.assign(DataManager.prototype, {
 // FIXME
 $(window).on('load', function() {
     data = new DataManager();  // FIXME How to trigger?
-    // data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
+    data.loadData("../data/chr1_5kb_miniMDS_structure.tsv");
     // Test dataset
-    data.loadData("../data/chr0");
+    // data.loadData("../data/chr0");
 });
 
 // End of data.js
