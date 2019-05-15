@@ -12,6 +12,7 @@ class GUIManager {
 
         this.parent = parent;
         this.shadowParent = shadowParent;
+        this.autoTransparentArray = null;
         this.gui = new dat.GUI( {autoPlace: false} );
         this.folders = [];
 
@@ -41,6 +42,7 @@ class GUIManager {
             autoTransparent: true,
             "Auto Adjust View": function(){gui.autoAdjustViewPoint();},
             "Auto Transparent": function(){gui.autoTransparent();},
+            autoTransparentOpacity: 0.3
         };
     }
 }
@@ -152,6 +154,9 @@ Object.assign(GUIManager.prototype, {
         } );
         this.folders[2].add(this.infoDispConfig, "Auto Adjust View");
         this.folders[2].add(this.infoDispConfig, "Auto Transparent");
+        this.folders[2].add(this.infoDispConfig, "autoTransparentOpacity", 0, 1, 0.01).onChange( function () {
+            gui.reRenderAutoTransparentArray();
+        } );
 
         // this.folders[2].open();
 
@@ -203,11 +208,11 @@ Object.assign(GUIManager.prototype, {
 
         const objects = this.shadowParent.children;
 
-        // Initialize "transparentArray"
-        let transparentArray = new Array(objects.length);
-        for (let i=0; i<transparentArray.length; i+=1) {
+        // Initialize "this.autoTransparentArray"
+        this.autoTransparentArray = new Array(objects.length);
+        for (let i=0; i<this.autoTransparentArray.length; i+=1) {
 
-            transparentArray[i] = false;
+            this.autoTransparentArray[i] = false;
         }
 
         // camera.updateMatrixWorld();
@@ -216,7 +221,7 @@ Object.assign(GUIManager.prototype, {
 
         let focusCameraVec = new THREE.Vector3(),
             focusObjectVec = new THREE.Vector3(),
-            dotProduct = 0;
+            dotProduct = 0, length;
 
         for (let i=0; i<objects.length; i+=1) {
 
@@ -226,28 +231,47 @@ Object.assign(GUIManager.prototype, {
             for (let j=0; j<mousePick.focusArray.length; j+=1) {
 
                 focusCameraVec.subVectors(cameraPos, mousePick.focusArray[j].center).normalize();
-                focusObjectVec.subVectors(objects[i].center, mousePick.focusArray[j].center).normalize();
+                focusObjectVec.subVectors(objects[i].center, mousePick.focusArray[j].center);
+                length = focusObjectVec.length();
+                focusObjectVec.normalize();
                 dotProduct = focusCameraVec.dot(focusObjectVec);
 
-                if (dotProduct > advancedConfig.autoTransparentDotProduct) {
+                if (dotProduct > advancedConfig.autoTransparentDotProduct || 
+                    (dotProduct > 0 && length < advancedConfig.autoTransparentLength)) {
 
-                    transparentArray[i] = true;
+                    this.autoTransparentArray[i] = true;
                 }
             }
         }
 
         // Conduct calculation results
         let count = 0;
-        for (let i=0; i<transparentArray.length; i+=1) {
+        for (let i=0; i<this.autoTransparentArray.length; i+=1) {
 
-            if (transparentArray[i] === true) {
+            if (this.autoTransparentArray[i] === true) {
 
                 objects[i].material.transparent = true;
-                objects[i].material.opacity = gui.mousePickConfig.onDesertOpacity;
+                objects[i].material.opacity = gui.infoDispConfig.autoTransparentOpacity;
                 count += 1;
             }
         }
         console.log(`Auto-transparent hides ${count} objects.`);
+    },
+
+    //////////////////////////////////////////////////////////////////////////////
+    // Auxiliary
+
+    reRenderAutoTransparentArray: function () {
+    // Re-render auto-transparent array on opacity config change
+    // Not completely re-render
+
+        const objects = this.shadowParent.children;
+
+        for (let i=0; i<this.autoTransparentArray.length; i+=1) {
+
+            if (this.autoTransparentArray[i] === true)
+                objects[i].material.opacity = gui.infoDispConfig.autoTransparentOpacity;
+        }
     },
 
 } );
