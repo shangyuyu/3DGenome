@@ -10,7 +10,7 @@
     <div ng-repeat="object in getFocusArray() track by $index">
         <div class="objectInfo" ng-attr-id="{{getStringUID(object)}}" ng-mouseover="mouseover(object)" ng-mouseleave="mouseleave()">
             <button class="objectName" ng-click="removeFocus(object)">{{object.name}}</button> 
-            <json-formatter json=object.uniqueID open="1" class="json-formatter-dark"></json-formatter>
+            <json-formatter json=object.info open="2" class="json-formatter-dark"></json-formatter>
         </div>
     </div>
 </div>

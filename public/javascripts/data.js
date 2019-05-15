@@ -178,7 +178,9 @@ Object.assign(DataManager.prototype, {
 
             // bind Geometry and Material
             mesh = new THREE.Mesh(geometry, material);
-            mesh.name = "Segment" + String(i);
+            mesh.name = (this.objects[i].hasOwnProperty("info")) ?
+                         this.objects[i].info.name :
+                         "Segment" + String(i);
             mesh.uniqueID = {
                 CHR: this.objects[i].CHR,
                 start: this.objects[i].start,
@@ -190,6 +192,12 @@ Object.assign(DataManager.prototype, {
             mesh.protectedRecoverHex = "";
             mesh.deserted = false;
             mesh.center = getCenterPoint(mesh);
+            // "info" is used to display in leftInfoPanel
+            mesh.info = (this.objects[i].hasOwnProperty("info")) ? {
+                location: mesh.uniqueID,
+                feature: this.objects[i].info
+            } : 
+            mesh.uniqueID;
 
             parent.add(mesh);
         }
@@ -353,6 +361,7 @@ Object.assign(DataManager.prototype, {
             // CHR unchanged
         parentObject.start = object.uniqueID.start;
         parentObject.end = object.uniqueID.end;
+        parentObject.info = object.info;  // GFF Full info
         //// rawData
         countArray = parentRawData.countArray.slice(left+1, right);  // might be empty
         countArray = countArray.map(x => x - leftAnchorPointIndex + 2);
